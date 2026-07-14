@@ -294,7 +294,7 @@ const projects: Project[] = [
         id: "wavely",
         category: "Streaming Musicale",
         title: "Wave.ly",
-        src: "/assets/projects-screenshots/wavely/landing.png",
+        src: "/assets/projects-screenshots/wave.ly/home.png",
         screenshots: ["landing.png"],
         skills: {
             frontend: [
