@@ -245,17 +245,33 @@ const KeyboardScene = ({ maxDpr }: { maxDpr: number }) => {
         kbd.visible = true;
         setKeyboardRevealed(true);
 
-        // ✨ LA MAGIA PER IL MOBILE ✨
-        // Forziamo l'aggiornamento di GSAP e Spline sbloccando lo scroll virtuale.
+        // ✨ HACK ESTREMO PER SAFARI / IOS / ANDROID ✨
+        // 1. Salviamo la posizione di scroll attuale
+        const currentY = window.scrollY;
+
+        // 2. Facciamo un micro-scroll invisibile di 1 pixel per svegliare Safari
+        window.scrollTo(0, currentY + 1);
+
+        // 3. Cambiamo fisicamente l'altezza del div per un istante per far scattare il ResizeObserver di Spline
+        if (splineContainer.current) {
+            splineContainer.current.style.height = "99dvh";
+        }
+
         setTimeout(() => {
+            // 4. Ripristiniamo tutto
+            window.scrollTo(0, currentY);
+            if (splineContainer.current) {
+                splineContainer.current.style.height = "100dvh";
+            }
+            // 5. Costringiamo GSAP e Spline a ricalcolare tutto ora che il browser è sveglio
             window.dispatchEvent(new Event("resize"));
             ScrollTrigger.refresh();
-        }, 50);
-        setTimeout(() => {
-            ScrollTrigger.refresh();
-        }, 500);
+        }, 100);
 
-        const currentState = getKeyboardState({ section: activeSection, isMobile });
+        // FAILSAFE: Garantiamo che sappia di essere su mobile anche se Next.js è in ritardo
+        const actualIsMobile = typeof window !== 'undefined' ? window.innerWidth <= 767 : isMobile;
+        const currentState = getKeyboardState({ section: activeSection, isMobile: actualIsMobile });
+
         gsap.fromTo(
             kbd.scale,
             { x: 0.01, y: 0.01, z: 0.01 },
@@ -271,7 +287,7 @@ const KeyboardScene = ({ maxDpr }: { maxDpr: number }) => {
 
         await sleep(900);
 
-        if (isMobile) {
+        if (actualIsMobile) {
             const mobileKeyCaps = allObjects.filter((obj) => obj.name === "keycap-mobile");
             mobileKeyCaps.forEach((keycap) => { keycap.visible = true; });
         } else {
