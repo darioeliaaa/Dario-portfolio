@@ -166,7 +166,7 @@ const projects: Project[] = [
         id: "ohima",
         category: "Sito Web & Gestionale",
         title: "Ohima che pizza",
-        src: "/assets/projects-screenshots/ohima/landing.png",
+        src: "/assets/projects-screenshots/ohimachepizza/home.png",
         screenshots: ["landing.png"],
         live: "www.ohimachepizza.it",
         github: "https://github.com/darioeliaaa/ohima-che-pizza",
@@ -206,7 +206,7 @@ const projects: Project[] = [
         id: "moneymind",
         category: "Gestionale Fondi",
         title: "MoneyMind",
-        src: "/assets/projects-screenshots/moneymind/landing.png",
+        src: "/assets/projects-screenshots/moneyMind/home.png",
         screenshots: ["landing.png"],
         skills: {
             frontend: [
