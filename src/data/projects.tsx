@@ -168,7 +168,7 @@ const projects: Project[] = [
         title: "Ohima che pizza",
         src: "/assets/projects-screenshots/ohimachepizza/home.png",
         screenshots: ["landing.png"],
-        live: "www.ohimachepizza.it",
+        live: "https://www.ohimachepizza.it",
         github: "https://github.com/darioeliaaa/ohima-che-pizza",
         skills: {
             frontend: [
