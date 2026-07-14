@@ -254,7 +254,7 @@ const projects: Project[] = [
         id: "tripify",
         category: "Enterprise Travel App",
         title: "Tripify",
-        src: "/assets/projects-screenshots/tripify/landing.png",
+        src: "/assets/projects-screenshots/tripify/Title.jpg",
         screenshots: ["landing.png"],
         skills: {
             frontend: [
@@ -333,7 +333,7 @@ const projects: Project[] = [
         id: "bulloneco",
         category: "Gestionale Ferramenta",
         title: "Bullone&Co",
-        src: "/assets/projects-screenshots/bulloneco/landing.png",
+        src: "/assets/projects-screenshots/bulloneeco/home.png",
         screenshots: ["landing.png"],
         skills: {
             frontend: [

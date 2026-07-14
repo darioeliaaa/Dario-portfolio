@@ -235,54 +235,64 @@ const KeyboardScene = ({ maxDpr }: { maxDpr: number }) => {
     return { start, stop };
   };
 
-  const updateKeyboardTransform = async () => {
-    if (!splineApp) return;
-    const kbd = splineApp.findObjectByName("keyboard");
-    if (!kbd) return;
+    const updateKeyboardTransform = async () => {
+        if (!splineApp) return;
+        const kbd = splineApp.findObjectByName("keyboard");
+        if (!kbd) return;
 
-    kbd.visible = false;
-    await sleep(400);
-    kbd.visible = true;
-    setKeyboardRevealed(true);
+        kbd.visible = false;
+        await sleep(400);
+        kbd.visible = true;
+        setKeyboardRevealed(true);
 
-    const currentState = getKeyboardState({ section: activeSection, isMobile });
-    gsap.fromTo(
-      kbd.scale,
-      { x: 0.01, y: 0.01, z: 0.01 },
-      {
-        ...currentState.scale,
-        duration: 1.5,
-        ease: "elastic.out(1, 0.6)",
-      }
-    );
+        // ✨ LA MAGIA PER IL MOBILE ✨
+        // Forziamo l'aggiornamento di GSAP e Spline sbloccando lo scroll virtuale.
+        setTimeout(() => {
+            window.dispatchEvent(new Event("resize"));
+            ScrollTrigger.refresh();
+        }, 50);
+        setTimeout(() => {
+            ScrollTrigger.refresh();
+        }, 500);
 
-    const allObjects = splineApp.getAllObjects();
-    const keycaps = allObjects.filter((obj) => obj.name === "keycap");
+        const currentState = getKeyboardState({ section: activeSection, isMobile });
+        gsap.fromTo(
+            kbd.scale,
+            { x: 0.01, y: 0.01, z: 0.01 },
+            {
+                ...currentState.scale,
+                duration: 1.5,
+                ease: "elastic.out(1, 0.6)",
+            }
+        );
 
-    await sleep(900);
+        const allObjects = splineApp.getAllObjects();
+        const keycaps = allObjects.filter((obj) => obj.name === "keycap");
 
-    if (isMobile) {
-      const mobileKeyCaps = allObjects.filter((obj) => obj.name === "keycap-mobile");
-      mobileKeyCaps.forEach((keycap) => { keycap.visible = true; });
-    } else {
-      const desktopKeyCaps = allObjects.filter((obj) => obj.name === "keycap-desktop");
-      desktopKeyCaps.forEach(async (keycap, idx) => {
-        await sleep(idx * 70);
-        keycap.visible = true;
-      });
-    }
+        await sleep(900);
 
-    keycaps.forEach(async (keycap, idx) => {
-      keycap.visible = false;
-      await sleep(idx * 70);
-      keycap.visible = true;
-      gsap.fromTo(
-        keycap.position,
-        { y: 200 },
-        { y: 50, duration: 0.5, delay: 0.1, ease: "bounce.out" }
-      );
-    });
-  };
+        if (isMobile) {
+            const mobileKeyCaps = allObjects.filter((obj) => obj.name === "keycap-mobile");
+            mobileKeyCaps.forEach((keycap) => { keycap.visible = true; });
+        } else {
+            const desktopKeyCaps = allObjects.filter((obj) => obj.name === "keycap-desktop");
+            desktopKeyCaps.forEach(async (keycap, idx) => {
+                await sleep(idx * 70);
+                keycap.visible = true;
+            });
+        }
+
+        keycaps.forEach(async (keycap, idx) => {
+            keycap.visible = false;
+            await sleep(idx * 70);
+            keycap.visible = true;
+            gsap.fromTo(
+                keycap.position,
+                { y: 200 },
+                { y: 50, duration: 0.5, delay: 0.1, ease: "bounce.out" }
+            );
+        });
+    };
 
   // --- Effects ---
 
@@ -482,17 +492,15 @@ const KeyboardScene = ({ maxDpr }: { maxDpr: number }) => {
     return (
         <Suspense fallback={<div>Loading...</div>}>
             <Spline
-                className="w-full h-full fixed"
+                className="w-full h-[100dvh] fixed inset-0"
                 ref={splineContainer}
                 onLoad={(app: Application) => {
-                    // 1. Le tue funzioni originali (NON TOCCARE)
                     setSplineApp(app);
                     bypassLoading();
 
-                    // 2. IL FIX PER IL MOBILE: Forza Spline a svegliarsi e prendere le misure giuste!
                     setTimeout(() => {
                         window.dispatchEvent(new Event("resize"));
-                    }, 150); // Messo a 150ms per dare al telefono un attimo in più per renderizzare
+                    }, 150);
                 }}
                 scene="/assets/skills-keyboard.spline"
             />
