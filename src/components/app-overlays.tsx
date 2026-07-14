@@ -5,7 +5,7 @@ import Particles from "@/components/Particles";
 import RemoteCursors from "@/components/realtime/remote-cursors";
 import EasterEggs from "@/components/easter-eggs";
 import ElasticCursor from "@/components/ui/ElasticCursor";
-import RadialMenu from "@/components/radial-menu/index";
+
 import MotionNudge from "@/components/motion-nudge";
 import { usePerfProfile } from "@/hooks/use-perf-profile";
 
@@ -29,7 +29,6 @@ export default function AppOverlays() {
       {isHome && <RemoteCursors />}
       <EasterEggs />
       {!isResume && !disableDecorative && <ElasticCursor />}
-      {isHome && <RadialMenu />}
       {isHome && <MotionNudge />}
     </>
   );
