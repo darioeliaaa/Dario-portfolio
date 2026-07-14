@@ -479,19 +479,25 @@ const KeyboardScene = ({ maxDpr }: { maxDpr: number }) => {
     return () => document.removeEventListener("visibilitychange", onVisibility);
   }, [splineApp]);
 
-  return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <Spline
-        className="w-full h-full fixed"
-        ref={splineContainer}
-        onLoad={(app: Application) => {
-          setSplineApp(app);
-          bypassLoading();
-        }}
-        scene="/assets/skills-keyboard.spline"
-      />
-    </Suspense>
-  );
+    return (
+        <Suspense fallback={<div>Loading...</div>}>
+            <Spline
+                className="w-full h-full fixed"
+                ref={splineContainer}
+                onLoad={(app: Application) => {
+                    // 1. Le tue funzioni originali (NON TOCCARE)
+                    setSplineApp(app);
+                    bypassLoading();
+
+                    // 2. IL FIX PER IL MOBILE: Forza Spline a svegliarsi e prendere le misure giuste!
+                    setTimeout(() => {
+                        window.dispatchEvent(new Event("resize"));
+                    }, 150); // Messo a 150ms per dare al telefono un attimo in più per renderizzare
+                }}
+                scene="/assets/skills-keyboard.spline"
+            />
+        </Suspense>
+    );
 };
 
 /**
