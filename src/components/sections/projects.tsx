@@ -1,9 +1,9 @@
 "use client";
 import React from "react";
 import {
-  ResponsiveDialog,
-  ResponsiveDialogContent,
-  ResponsiveDialogTrigger,
+    ResponsiveDialog,
+    ResponsiveDialogContent,
+    ResponsiveDialogTrigger,
 } from "../ui/responsive-dialog";
 import { FloatingDock } from "../ui/floating-dock";
 import { ScrollArea } from "../ui/scroll-area";
@@ -16,18 +16,19 @@ import { SectionHeader } from "./section-header";
 
 import SectionWrapper from "../ui/section-wrapper";
 import ScrollingPreview from "../scrolling-preview";
+import { DialogTitle } from "@radix-ui/react-dialog";
 
 const ProjectsSection = () => {
-  return (
-    <SectionWrapper id="projects" className="max-w-7xl mx-auto md:min-h-[130vh] px-4">
-      <SectionHeader id="projects" title="Projects" />
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        {projects.map((project) => (
-          <ProjectCard key={project.id} project={project} />
-        ))}
-      </div>
-    </SectionWrapper>
-  );
+    return (
+        <SectionWrapper id="projects" className="max-w-7xl mx-auto md:min-h-[130vh] px-4">
+            <SectionHeader id="projects" title="Projects" />
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {projects.map((project) => (
+                    <ProjectCard key={project.id} project={project} />
+                ))}
+            </div>
+        </SectionWrapper>
+    );
 };
 
 const ProjectCard = ({ project }: { project: Project }) => {
@@ -60,6 +61,8 @@ const ProjectCard = ({ project }: { project: Project }) => {
                 {/* MODAL CONTENT: Versione Blindata per Mobile */}
                 <ResponsiveDialogContent className="flex flex-col h-[85vh] w-full md:max-w-4xl overflow-hidden p-0 gap-0">
 
+                    <DialogTitle className="sr-only">{project.title}</DialogTitle>
+
                     {/* HEADER: Titolo a capo automatico e zero tagli */}
                     <div className="shrink-0 border-b border-border bg-background/95 backdrop-blur-sm p-4 md:p-6 w-full z-20">
                         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 w-full">
@@ -88,8 +91,12 @@ const ProjectCard = ({ project }: { project: Project }) => {
                         </div>
                     </div>
 
-                    {/* AREA SCORREVOLE: Scorrimento nativo (no ScrollArea) con blocco trascinamento Drawer */}
-                    <div className="flex-1 overflow-y-auto overscroll-contain w-full" data-vaul-no-drag>
+                    {/* AREA SCORREVOLE: Scorrimento nativo (no ScrollArea) con blocco trascinamento Drawer e blocco Lenis */}
+                    <div
+                        className="flex-1 overflow-y-auto overscroll-contain w-full"
+                        data-vaul-no-drag
+                        data-lenis-prevent /* <-- AGGIUNTO QUESTO ATTRIBUTO */
+                    >
                         <div className="p-4 md:p-8 flex flex-col gap-8 w-full overflow-x-hidden">
 
                             {/* SKILLS SU MOBILE: Etichette minimal per non rompere lo schermo */}

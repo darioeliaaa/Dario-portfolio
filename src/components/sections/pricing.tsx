@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 const pricingPlans = [
     {
         name: "Landing Page",
-        price: "A partire da 250€",
+        price: "A partire da 300€",
         description: "Una singola pagina d'impatto, perfetta per eventi, promozioni o lancio di servizi.",
         features: ["Sezioni a scorrimento", "Modulo di contatto", "Call-to-action chiare"],
         isPopular: false,
