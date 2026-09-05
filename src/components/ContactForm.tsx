@@ -215,7 +215,7 @@ const ContactForm = () => {
                     value={subject}
                     onChange={(e) => setSubject(e.target.value)}
                     className={cn(
-                        "h-10 w-full rounded-md border border-border bg-secondary/40 px-3 text-sm",
+                        "h-10 w-full rounded-md border border-border bg-secondary/40 px-3 text-base md:text-sm",
                         "transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                     )}
                 >
