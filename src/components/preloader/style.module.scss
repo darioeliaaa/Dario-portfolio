@@ -1,3 +1,15 @@
+// Pure-CSS failsafe: if the JS-driven exit (Framer Motion + React state) ever
+// fails to unmount this overlay — it happened in production, blocking every
+// click/tap on the page behind an invisible full-screen div — this guarantees
+// it stops intercepting the pointer after a fixed delay regardless of any JS
+// bug. The real loading sequence finishes well under this (~2.5s tween +
+// ~1s exit), so the extra margin here is invisible under normal conditions.
+@keyframes preloader-failsafe-unlock {
+  to {
+    pointer-events: none;
+  }
+}
+
 .introduction {
   height: 100dvh;
   width: 100dvw;
@@ -8,6 +20,7 @@
   padding-bottom: 30px;
   position: fixed;
   z-index: 99;
+  animation: preloader-failsafe-unlock 0.01s linear 5s forwards !important;
   // TODO: Add a better color instead of just the background to make it pop more
   background-color: hsl(var(--background));
   svg {
