@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils";
 import SectionWrapper from "../ui/section-wrapper";
 import { motion } from "motion/react";
 import { Briefcase, GraduationCap } from "lucide-react";
+import { TiltCard } from "../ui/tilt-card";
 
 const ExperienceSection = () => {
   return (
@@ -68,7 +69,7 @@ const ExperienceCard = ({
         )}
       </span>
 
-      <article
+      <TiltCard
         className={cn(
           "pointer-events-auto rounded-xl border border-border bg-card/70 p-5 backdrop-blur-md md:p-6",
           "lift"
@@ -135,7 +136,7 @@ const ExperienceCard = ({
             })}
           </div>
         )}
-      </article>
+      </TiltCard>
     </motion.li>
   );
 };

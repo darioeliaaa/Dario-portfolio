@@ -17,10 +17,10 @@ export default function ScrollProgress({ className }: { className?: string }) {
             aria-hidden
             className={cn(
                 // Above the header (z-[1000]) so it's never clipped by it.
-                "no-print pointer-events-none fixed inset-x-0 top-0 z-[1001] h-[3px] origin-left bg-spark",
+                "no-print pointer-events-none fixed inset-x-0 top-0 z-[1001] h-[3px] origin-left accent-gradient",
                 className
             )}
-            style={{ scaleX }}
+            style={{ scaleX, boxShadow: "0 0 12px hsl(var(--accent-hue) / 0.5)" }}
         />
     );
 }

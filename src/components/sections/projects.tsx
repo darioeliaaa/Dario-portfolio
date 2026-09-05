@@ -32,7 +32,11 @@ const ProjectsSection = () => {
                 cramped single-column stack — native scroll-snap, no JS. The
                 bento grid (sm+) stays exactly as it was. */}
             <div className="-mx-4 sm:hidden">
-                <div className="scrollbar-none flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-2 [-webkit-overflow-scrolling:touch]">
+                <div
+                    className="scrollbar-none flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-2 [-webkit-overflow-scrolling:touch] [touch-action:pan-x]"
+                    data-lenis-prevent
+                    style={{ transform: "translateZ(0)" }}
+                >
                     {projects.map((project) => (
                         <div
                             key={project.id}

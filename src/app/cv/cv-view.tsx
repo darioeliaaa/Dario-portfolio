@@ -15,51 +15,47 @@ import {
 import { SiGithub, SiLinkedin } from "react-icons/si";
 import { Button } from "@/components/ui/button";
 import { config } from "@/data/config";
-import { EXPERIENCE, SKILLS, SkillNames } from "@/data/constants";
+import { EXPERIENCE } from "@/data/constants";
 import projects from "@/data/projects";
 import { cn } from "@/lib/utils";
 
 /**
- * Curriculum generated from the same data the homepage uses — one source of
- * truth, so it can never drift out of date. "Salva PDF" goes through the
- * browser's own print dialog (see the @media print block in globals.css), which
- * means there's no binary to keep in sync either.
+ * Curriculum generated from the same data the homepage uses (EXPERIENCE,
+ * projects) — one source of truth for those, so they can never drift out of
+ * date. "Salva PDF" goes through the browser's own print dialog (see the
+ * @media print block in globals.css), which means there's no binary to keep
+ * in sync either.
+ *
+ * The skill groups below are plain strings on purpose, not the keyboard's
+ * `SkillNames`/`SKILLS` — that enum is keyed to what's physically engraved on
+ * the 3D keyboard's keycaps, a completely different (and more volatile)
+ * concern than "what goes on the CV". Sharing it here meant a keyboard
+ * re-shuffle could silently rewrite claimed skills on the résumé.
  */
 
-const SKILL_GROUPS: { title: string; skills: SkillNames[] }[] = [
+const SKILL_GROUPS: { title: string; skills: string[] }[] = [
   {
     title: "Linguaggi",
-    skills: [SkillNames.JS, SkillNames.TS, SkillNames.HTML, SkillNames.CSS],
+    skills: ["JavaScript", "TypeScript", "HTML", "CSS"],
   },
   {
     title: "Frontend",
-    skills: [
-      SkillNames.REACT,
-      SkillNames.NEXTJS,
-      SkillNames.VUE,
-      SkillNames.TAILWIND,
-    ],
+    skills: ["React", "Next.js", "Vue.js", "Tailwind"],
   },
   {
     title: "Backend & Dati",
-    skills: [
-      SkillNames.NODE,
-      SkillNames.EXPRESS,
-      SkillNames.POSTGRES,
-      SkillNames.MONGODB,
-      SkillNames.PRISMA,
-    ],
+    skills: ["Node.js", "Express", "PostgreSQL", "MongoDB", "Prisma"],
   },
   {
     title: "Tooling & Cloud",
     skills: [
-      SkillNames.GIT,
-      SkillNames.GITHUB,
-      SkillNames.DOCKER,
-      SkillNames.LINUX,
-      SkillNames.NGINX,
-      SkillNames.VERCEL,
-      SkillNames.AWS,
+      "Git",
+      "GitHub",
+      "Docker",
+      "Linux",
+      "NGINX",
+      "Vercel",
+      "AWS",
     ],
   },
 ];
@@ -189,7 +185,7 @@ export default function CvView() {
                   {group.title}
                 </h3>
                 <p className="mt-1.5 text-sm leading-relaxed">
-                  {group.skills.map((s) => SKILLS[s].label).join(" · ")}
+                  {group.skills.join(" · ")}
                 </p>
               </div>
             ))}
@@ -198,7 +194,7 @@ export default function CvView() {
                 Altro
               </h3>
               <p className="mt-1.5 text-sm leading-relaxed">
-                Java · Spring Boot · Angular · JavaFX · SQLite · Spline (Web 3D)
+                Java · Spring Boot · Kotlin · JavaFX · SQLite · Spline (Web 3D)
               </p>
             </div>
           </div>
