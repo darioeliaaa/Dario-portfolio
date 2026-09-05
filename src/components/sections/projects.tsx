@@ -17,8 +17,11 @@ import SectionWrapper from "../ui/section-wrapper";
 import ScrollingPreview from "../scrolling-preview";
 import { DialogTitle } from "@radix-ui/react-dialog";
 import { TiltCard } from "../ui/tilt-card";
+import { useDragScroll } from "@/hooks/use-drag-scroll";
 
 const ProjectsSection = () => {
+    const drag = useDragScroll<HTMLDivElement>();
+
     return (
         <SectionWrapper id="projects" className="mx-auto max-w-7xl px-4 md:min-h-[130vh]">
             <SectionHeader
@@ -29,13 +32,18 @@ const ProjectsSection = () => {
                 desc="Cose che ho progettato, sviluppato e messo online. Clicca su una card per i dettagli."
             />
             {/* Phones get a swipeable, one-card-at-a-time strip instead of a
-                cramped single-column stack — native scroll-snap, no JS. The
-                bento grid (sm+) stays exactly as it was. */}
+                cramped single-column stack. Dragged by hand (useDragScroll)
+                rather than relying on native touch-scroll — see that hook for
+                why. The bento grid (sm+) stays exactly as it was. */}
             <div className="-mx-4 sm:hidden">
                 <div
-                    className="scrollbar-none flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-2 [-webkit-overflow-scrolling:touch] [touch-action:pan-x]"
+                    ref={drag.ref}
+                    onPointerDown={drag.onPointerDown}
+                    onPointerMove={drag.onPointerMove}
+                    onPointerUp={drag.onPointerUp}
+                    onPointerCancel={drag.onPointerCancel}
+                    className="scrollbar-none flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-2 [touch-action:none]"
                     data-lenis-prevent
-                    style={{ transform: "translateZ(0)" }}
                 >
                     {projects.map((project) => (
                         <div

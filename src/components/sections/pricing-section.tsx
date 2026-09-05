@@ -9,6 +9,7 @@ import SectionWrapper from "../ui/section-wrapper";
 import { SectionHeader } from "./section-header";
 import { Button } from "../ui/button";
 import { TiltCard } from "../ui/tilt-card";
+import { useDragScroll } from "@/hooks/use-drag-scroll";
 
 type Plan = {
     name: string;
@@ -141,6 +142,8 @@ const PlanCard = ({ plan, index = 0 }: { plan: Plan; index?: number }) => (
 );
 
 export default function PricingSection() {
+    const drag = useDragScroll<HTMLDivElement>();
+
     return (
         <SectionWrapper id="tariffe" className="py-24 md:py-32">
             <div className="container relative z-10 mx-auto max-w-7xl px-4">
@@ -155,14 +158,18 @@ export default function PricingSection() {
 
                 <div className="mb-16">
                     {/* Phones get the same swipeable, one-card-at-a-time strip as
-                        the Projects section — a 6-card single-column stack made
-                        every plan feel like a wall of text to scroll past. The
-                        grid (sm+) stays exactly as it was. */}
+                        the Projects section — dragged by hand (useDragScroll)
+                        rather than relying on native touch-scroll, see that hook
+                        for why. The grid (sm+) stays exactly as it was. */}
                     <div className="-mx-4 sm:hidden">
                         <div
-                            className="scrollbar-none flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-2 [-webkit-overflow-scrolling:touch] [touch-action:pan-x]"
+                            ref={drag.ref}
+                            onPointerDown={drag.onPointerDown}
+                            onPointerMove={drag.onPointerMove}
+                            onPointerUp={drag.onPointerUp}
+                            onPointerCancel={drag.onPointerCancel}
+                            className="scrollbar-none flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-2 [touch-action:none]"
                             data-lenis-prevent
-                            style={{ transform: "translateZ(0)" }}
                         >
                             {pricingPlans.map((plan) => (
                                 <div
