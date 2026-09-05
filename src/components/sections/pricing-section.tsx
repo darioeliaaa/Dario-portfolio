@@ -8,6 +8,7 @@ import { cn } from "@/lib/utils";
 import SectionWrapper from "../ui/section-wrapper";
 import { SectionHeader } from "./section-header";
 import { Button } from "../ui/button";
+import { TiltCard } from "../ui/tilt-card";
 
 type Plan = {
     name: string;
@@ -84,56 +85,58 @@ const PlanCard = ({ plan, index = 0 }: { plan: Plan; index?: number }) => (
             delay: (index % 3) * 0.08,
             ease: [0.16, 1, 0.3, 1],
         }}
-        className={cn(
-            "pointer-events-auto relative flex h-full flex-col rounded-2xl border bg-card/70 p-7 backdrop-blur-md",
-            "lift glow-border",
-            plan.isPopular
-                ? "border-spark/45 shadow-elevated md:-translate-y-2"
-                : "border-border"
-        )}
+        className={cn("relative h-full", plan.isPopular && "md:-translate-y-2")}
     >
-        {plan.isPopular && (
-            <>
-                <span
-                    aria-hidden
-                    className="pointer-events-none absolute inset-x-8 -top-px h-px bg-gradient-to-r from-transparent via-spark to-transparent"
-                />
-                <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full border border-spark/45 bg-background px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-foreground">
-                    Più richiesto
-                </span>
-            </>
-        )}
-
-        <h3 className="text-lg font-semibold tracking-tight">{plan.name}</h3>
-
-        <div className="mt-3 flex items-baseline gap-1.5">
-            <span className="text-xs text-muted-foreground">da</span>
-            <span className="font-display text-3xl font-bold leading-none">
-                {plan.price}
-            </span>
-        </div>
-
-        <p className="mt-3 min-h-[3.5rem] text-sm leading-relaxed text-muted-foreground">
-            {plan.description}
-        </p>
-
-        <ul className="mt-6 flex-grow space-y-3 border-t border-border pt-6">
-            {plan.features.map((feature) => (
-                <li key={feature} className="flex items-start gap-2.5">
-                    <span className="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-spark-soft">
-                        <Check className="h-2.5 w-2.5 text-spark" strokeWidth={3} />
+        <TiltCard
+            className={cn(
+                "pointer-events-auto flex h-full flex-col rounded-2xl border bg-card/70 p-7 backdrop-blur-md",
+                "lift glow-border",
+                plan.isPopular ? "border-spark/45 shadow-elevated" : "border-border"
+            )}
+        >
+            {plan.isPopular && (
+                <>
+                    <span
+                        aria-hidden
+                        className="pointer-events-none absolute inset-x-8 -top-px h-px bg-gradient-to-r from-transparent via-spark to-transparent"
+                    />
+                    <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full border border-spark/45 bg-background px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-foreground">
+                        Più richiesto
                     </span>
-                    <span className="text-sm text-muted-foreground">{feature}</span>
-                </li>
-            ))}
-        </ul>
+                </>
+            )}
 
-        <Link href="#contact" className="mt-7 block">
-            <Button variant={plan.isPopular ? "default" : "outline"} className="w-full">
-                Richiedi un preventivo
-                <ArrowUpRight className="h-4 w-4" />
-            </Button>
-        </Link>
+            <h3 className="text-lg font-semibold tracking-tight">{plan.name}</h3>
+
+            <div className="mt-3 flex items-baseline gap-1.5">
+                <span className="text-xs text-muted-foreground">da</span>
+                <span className="font-display text-3xl font-bold leading-none">
+                    {plan.price}
+                </span>
+            </div>
+
+            <p className="mt-3 min-h-[3.5rem] text-sm leading-relaxed text-muted-foreground">
+                {plan.description}
+            </p>
+
+            <ul className="mt-6 flex-grow space-y-3 border-t border-border pt-6">
+                {plan.features.map((feature) => (
+                    <li key={feature} className="flex items-start gap-2.5">
+                        <span className="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-spark-soft">
+                            <Check className="h-2.5 w-2.5 text-spark" strokeWidth={3} />
+                        </span>
+                        <span className="text-sm text-muted-foreground">{feature}</span>
+                    </li>
+                ))}
+            </ul>
+
+            <Link href="#contact" className="mt-7 block">
+                <Button variant={plan.isPopular ? "default" : "outline"} className="w-full">
+                    Richiedi un preventivo
+                    <ArrowUpRight className="h-4 w-4" />
+                </Button>
+            </Link>
+        </TiltCard>
     </motion.div>
 );
 
@@ -156,7 +159,11 @@ export default function PricingSection() {
                         every plan feel like a wall of text to scroll past. The
                         grid (sm+) stays exactly as it was. */}
                     <div className="-mx-4 sm:hidden">
-                        <div className="scrollbar-none flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-2 [-webkit-overflow-scrolling:touch]">
+                        <div
+                            className="scrollbar-none flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-2 [-webkit-overflow-scrolling:touch] [touch-action:pan-x]"
+                            data-lenis-prevent
+                            style={{ transform: "translateZ(0)" }}
+                        >
                             {pricingPlans.map((plan) => (
                                 <div
                                     key={plan.name}

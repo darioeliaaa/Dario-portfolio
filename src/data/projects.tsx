@@ -125,6 +125,18 @@ const PROJECT_SKILLS = {
         icon: <span className="text-xs font-bold">MQ</span>,
     },
     cloudflare: brand("Cloudflare", "cloudflare-mono.svg"),
+    androidStudio: {
+        title: "Android Studio",
+        bg: "black",
+        fg: "white",
+        icon: <span className="text-xs font-bold">AS</span>,
+    },
+    jetpackCompose: {
+        title: "Jetpack Compose",
+        bg: "black",
+        fg: "white",
+        icon: <span className="text-xs font-bold">JC</span>,
+    },
 };
 
 export type Project = {
@@ -234,10 +246,9 @@ const projects: Project[] = [
         screenshots: ["landing.png"],
         skills: {
             frontend: [
-                PROJECT_SKILLS.angular,
-                PROJECT_SKILLS.ts,
-                PROJECT_SKILLS.tailwind,
                 PROJECT_SKILLS.kotlin,
+                PROJECT_SKILLS.jetpackCompose,
+                PROJECT_SKILLS.androidStudio,
             ],
             backend: [
                 PROJECT_SKILLS.java,

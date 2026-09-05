@@ -1,34 +1,46 @@
-// Le tue skill principali! I nomi nell'enum combaciano
-// ESATTAMENTE con i nomi dei layer dei tasti sulla tastiera Spline originale.
+// Le tue skill principali! Il valore di ogni voce (la stringa a destra) DEVE
+// combaciare ESATTAMENTE col nome del layer del tasto sulla tastiera Spline
+// originale — è quello con cui il codice riconosce quale tasto è stato
+// premuto — non con l'etichetta che ha il tasto stesso.
+//
+// Alcuni tasti sono stati "riassegnati": la tastiera 3D originale (un asset
+// da editor Spline, non modificabile da qui — servirebbe riaprire il file
+// in spline.design) aveva un set fisso di loghi web/JS incisi. Non
+// rappresentavano le tue vere competenze, quindi il CONTENUTO di quei tasti è
+// stato sostituito con le tecnologie reali (Kotlin/Java/C/C++/Python/Android
+// Studio) mantenendo lo stesso valore-tasto sottostante. Il logo inciso sul
+// tasto fisico resta quello vecchio.
 export enum SkillNames {
     JS = "js",
     TS = "ts",
     HTML = "html",
     CSS = "css",
     REACT = "react",
-    VUE = "vue",
+    // Era il tasto "Vue.js" — riassegnato a Kotlin.
+    KOTLIN = "vue",
     NEXTJS = "nextjs",
     TAILWIND = "tailwind",
-    // Era "node": il layer sulla tastiera Spline si chiama davvero "nodejs",
-    // quindi con "node" questo tasto non è mai stato cliccabile (SKILLS["nodejs"]
-    // non esisteva). Corretto per farlo combaciare col tasto vero.
-    NODE = "nodejs",
-    EXPRESS = "express",
+    // Era il tasto "Node.js" ("node" non combaciava col vero nome tasto
+    // "nodejs", quindi non era mai cliccabile) — riassegnato ad Android Studio.
+    ANDROID_STUDIO = "nodejs",
+    // Era il tasto "Express" — riassegnato a Python.
+    PYTHON = "express",
     POSTGRES = "postgres",
-    MONGODB = "mongodb",
+    // Era il tasto "MongoDB" — riassegnato a C.
+    C = "mongodb",
     GIT = "git",
     GITHUB = "github",
     PRISMA = "prisma",
     NPM = "npm",
-    WORDPRESS = "wordpress",
+    // Era il tasto "WordPress" — riassegnato a Java.
+    JAVA = "wordpress",
     LINUX = "linux",
     DOCKER = "docker",
     NGINX = "nginx",
     AWS = "aws",
     VERCEL = "vercel",
-    // Questi 3 tasti esistono sulla tastiera 3D (col loro logo inciso) ma non
-    // avevano nessuna voce qui, quindi cliccarli non faceva nulla.
-    FIREBASE = "firebase",
+    // Era il tasto "Firebase" — riassegnato a C++.
+    CPLUSPLUS = "firebase",
     VIM = "vim",
     PRETTIER = "prettier",
 }
@@ -83,13 +95,13 @@ export const SKILLS: Record<SkillNames, Skill> = {
         color: "#61DAFB",
         icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/react/react-original.svg",
     },
-    [SkillNames.VUE]: {
+    [SkillNames.KOTLIN]: {
         id: 6,
         name: "vue",
-        label: "Vue.js",
-        shortDescription: "Framework progressivo, pulito e intuitivo per frontend scattanti 🖖",
-        color: "#4FC08D",
-        icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/vuejs/vuejs-original.svg",
+        label: "Kotlin",
+        shortDescription: "Linguaggio moderno per Android: conciso e sicuro, la base di Jetpack Compose 🤖",
+        color: "#7F52FF",
+        icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/kotlin/kotlin-original.svg",
     },
     [SkillNames.NEXTJS]: {
         id: 7,
@@ -107,21 +119,21 @@ export const SKILLS: Record<SkillNames, Skill> = {
         color: "#38bdf8",
         icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/tailwindcss/tailwindcss-original.svg",
     },
-    [SkillNames.NODE]: {
+    [SkillNames.ANDROID_STUDIO]: {
         id: 9,
         name: "nodejs",
-        label: "Node.js",
-        shortDescription: "JavaScript portato sul server per backend agili e scattanti 🟢",
-        color: "#339933",
-        icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nodejs/nodejs-original.svg",
+        label: "Android Studio",
+        shortDescription: "L'IDE ufficiale per lo sviluppo Android: emulatori, debug e build in un colpo solo 🤖",
+        color: "#3DDC84",
+        icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/androidstudio/androidstudio-original.svg",
     },
-    [SkillNames.EXPRESS]: {
+    [SkillNames.PYTHON]: {
         id: 10,
         name: "express",
-        label: "Express",
-        shortDescription: "Il framework minimalista per eccellenza per creare API in Node.js 🚂",
-        color: "#000000",
-        icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/express/express-original.svg",
+        label: "Python",
+        shortDescription: "Sintassi pulita e una libreria per (quasi) tutto: script, dati, backend 🐍",
+        color: "#3776AB",
+        icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/python/python-original.svg",
     },
     [SkillNames.POSTGRES]: {
         id: 11,
@@ -131,13 +143,13 @@ export const SKILLS: Record<SkillNames, Skill> = {
         color: "#336791",
         icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/postgresql/postgresql-original.svg",
     },
-    [SkillNames.MONGODB]: {
+    [SkillNames.C]: {
         id: 12,
         name: "mongodb",
-        label: "MongoDB",
-        shortDescription: "Database NoSQL flessibile e scalabile, perfetto per dati non strutturati 🍃",
-        color: "#47A248",
-        icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/mongodb/mongodb-original.svg",
+        label: "C",
+        shortDescription: "Vicino al metallo: memoria, puntatori e le basi vere di come gira un computer ⚙️",
+        color: "#A8B9CC",
+        icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/c/c-original.svg",
     },
     [SkillNames.GIT]: {
         id: 13,
@@ -171,13 +183,13 @@ export const SKILLS: Record<SkillNames, Skill> = {
         color: "#CB3837",
         icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/npm/npm-original-wordmark.svg",
     },
-    [SkillNames.WORDPRESS]: {
+    [SkillNames.JAVA]: {
         id: 17,
         name: "wordpress",
-        label: "WordPress",
-        shortDescription: "Il CMS più famoso al mondo, versatile e onnipresente 📝",
-        color: "#21759B",
-        icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/wordpress/wordpress-plain.svg",
+        label: "Java",
+        shortDescription: "Il linguaggio enterprise per eccellenza: tipizzato, solido e ovunque nel backend ☕",
+        color: "#ED8B00",
+        icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/java/java-original.svg",
     },
     [SkillNames.LINUX]: {
         id: 18,
@@ -219,13 +231,13 @@ export const SKILLS: Record<SkillNames, Skill> = {
         color: "#000000",
         icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/vercel/vercel-original.svg",
     },
-    [SkillNames.FIREBASE]: {
+    [SkillNames.CPLUSPLUS]: {
         id: 23,
         name: "firebase",
-        label: "Firebase",
-        shortDescription: "Backend-as-a-service di Google: auth, database realtime e hosting senza server da gestire 🔥",
-        color: "#FFCA28",
-        icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/firebase/firebase-plain.svg",
+        label: "C++",
+        shortDescription: "C con le sovrastrutture: OOP, performance e la base di tanti corsi di algoritmi 🧠",
+        color: "#00599C",
+        icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/cplusplus/cplusplus-original.svg",
     },
     [SkillNames.VIM]: {
         id: 24,

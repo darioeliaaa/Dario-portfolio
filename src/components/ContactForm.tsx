@@ -93,6 +93,26 @@ const ContactForm = () => {
                 className: cn("top-0 mx-auto flex fixed md:top-4 md:right-4"),
             });
 
+            // A little reward for taking the time to write — origin follows
+            // the submit button so the burst feels tied to the click itself.
+            const rect = (e.currentTarget as HTMLFormElement)
+                .querySelector('button[type="submit"]')
+                ?.getBoundingClientRect();
+            import("canvas-confetti").then(({ default: confetti }) => {
+                confetti({
+                    particleCount: 90,
+                    spread: 75,
+                    startVelocity: 35,
+                    colors: ["#61A6FA", "#B877F9", "#ffffff"],
+                    origin: rect
+                        ? {
+                              x: (rect.left + rect.width / 2) / window.innerWidth,
+                              y: (rect.top + rect.height / 2) / window.innerHeight,
+                          }
+                        : { y: 0.6 },
+                });
+            });
+
             setFullName("");
             setEmail("");
             setMessage("");

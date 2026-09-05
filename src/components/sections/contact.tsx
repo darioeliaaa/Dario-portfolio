@@ -7,6 +7,7 @@ import ContactForm from "../ContactForm";
 import { config } from "@/data/config";
 import { SectionHeader } from "./section-header";
 import SectionWrapper from "../ui/section-wrapper";
+import { TiltCard } from "../ui/tilt-card";
 
 const SOCIALS = [
   { href: config.social.github, label: "GitHub", handle: "@darioeliaaa", Icon: SiGithub },
@@ -41,7 +42,7 @@ const ContactSection = () => {
 
       <div className="mx-auto grid w-full max-w-6xl grid-cols-1 gap-6 lg:grid-cols-[1.15fr_1fr]">
         {/* Form */}
-        <div className="pointer-events-auto rounded-2xl surface glow-border p-6 md:p-8">
+        <TiltCard className="pointer-events-auto rounded-2xl surface glow-border p-6 md:p-8">
           <h3 className="font-display text-2xl font-bold tracking-tight md:text-3xl">
             Scrivimi due righe
           </h3>
@@ -51,11 +52,11 @@ const ContactSection = () => {
           <div className="mt-6">
             <ContactForm />
           </div>
-        </div>
+        </TiltCard>
 
         {/* Direct channels */}
         <div className="flex flex-col gap-4">
-          <div className="pointer-events-auto rounded-2xl surface glow-border p-6 md:p-8">
+          <TiltCard className="pointer-events-auto rounded-2xl surface glow-border p-6 md:p-8">
             <h3 className="text-lg font-semibold tracking-tight">
               Preferisci un altro canale?
             </h3>
@@ -95,9 +96,9 @@ const ContactSection = () => {
                 </li>
               ))}
             </ul>
-          </div>
+          </TiltCard>
 
-          <div className="pointer-events-auto rounded-2xl surface glow-border p-6 md:p-8">
+          <TiltCard className="pointer-events-auto rounded-2xl surface glow-border p-6 md:p-8">
             <dl className="flex flex-col gap-4 text-sm">
               <div className="flex items-center gap-3">
                 <dt className="flex items-center gap-2 text-muted-foreground">
@@ -132,7 +133,7 @@ const ContactSection = () => {
                 </dd>
               </div>
             </dl>
-          </div>
+          </TiltCard>
         </div>
       </div>
     </SectionWrapper>
