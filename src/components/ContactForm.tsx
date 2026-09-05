@@ -1,5 +1,5 @@
 "use client";
-import { ChevronRight, Loader2 } from "lucide-react";
+import { CheckCircle2, ChevronRight, Loader2 } from "lucide-react";
 import React from "react";
 import { Label } from "./ui/label";
 import { Input } from "./ui/ace-input";
@@ -7,12 +7,25 @@ import { Textarea } from "./ui/ace-textarea";
 import { cn } from "@/lib/utils";
 import { useToast } from "./ui/use-toast";
 import { Button } from "./ui/button";
-import { useRouter } from "next/navigation";
 import { z } from "zod";
+
+/** Formspree endpoint. Override per-environment without touching the code. */
+const FORM_ENDPOINT =
+    process.env.NEXT_PUBLIC_FORM_ENDPOINT || "https://formspree.io/f/maqljbod";
+
+const SUBJECTS = [
+    "Sito vetrina / Landing page",
+    "E-commerce",
+    "Web app / Portale su misura",
+    "Manutenzione o restyling",
+    "Proposta di lavoro",
+    "Altro",
+] as const;
 
 const formSchema = z.object({
     fullName: z.string().min(2, "Il nome completo deve contenere almeno 2 caratteri"),
     email: z.string().email("Inserisci un indirizzo email valido"),
+    subject: z.string().min(1, "Seleziona di cosa hai bisogno"),
     message: z.string().min(10, "Il messaggio deve contenere almeno 10 caratteri"),
 });
 
@@ -21,18 +34,27 @@ type FieldErrors = Partial<Record<keyof z.infer<typeof formSchema>, string>>;
 const ContactForm = () => {
     const [fullName, setFullName] = React.useState("");
     const [email, setEmail] = React.useState("");
+    const [subject, setSubject] = React.useState<string>(SUBJECTS[0]);
     const [message, setMessage] = React.useState("");
     const [loading, setLoading] = React.useState(false);
+    const [sent, setSent] = React.useState(false);
     const [errors, setErrors] = React.useState<FieldErrors>({});
+    // Honeypot: real people never see this field, bots fill everything.
+    const honeypot = React.useRef<HTMLInputElement>(null);
 
     const { toast } = useToast();
-    const router = useRouter();
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setErrors({});
 
-        const result = formSchema.safeParse({ fullName, email, message });
+        // Silently accept-and-drop bot submissions.
+        if (honeypot.current?.value) {
+            setSent(true);
+            return;
+        }
+
+        const result = formSchema.safeParse({ fullName, email, subject, message });
         if (!result.success) {
             const fieldErrors: FieldErrors = {};
             result.error.issues.forEach((issue) => {
@@ -45,39 +67,40 @@ const ContactForm = () => {
 
         setLoading(true);
         try {
-            // Chiamata AJAX diretta a Formspree
-            const res = await fetch("https://formspree.io/f/maqljbod", {
+            const res = await fetch(FORM_ENDPOINT, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    "Accept": "application/json"
+                    Accept: "application/json",
                 },
-                body: JSON.stringify({ name: fullName, email, message }),
+                body: JSON.stringify({
+                    name: fullName,
+                    email,
+                    _subject: `Nuovo contatto dal portfolio — ${subject}`,
+                    subject,
+                    message,
+                }),
             });
 
             if (!res.ok) {
-                const data = await res.json();
+                const data = await res.json().catch(() => ({}));
                 throw new Error(data.error || `Request failed (${res.status})`);
             }
 
             toast({
-                title: "Grazie!",
-                description: "Ti risponderò il prima possibile.",
-                variant: "default",
+                title: "Messaggio inviato 🎉",
+                description: "Grazie! Ti rispondo il prima possibile.",
                 className: cn("top-0 mx-auto flex fixed md:top-4 md:right-4"),
             });
 
-            setLoading(false);
             setFullName("");
             setEmail("");
             setMessage("");
-
-            const timer = setTimeout(() => {
-                router.push("/");
-                clearTimeout(timer);
-            }, 1000);
-
-        } catch (err) {
+            setSubject(SUBJECTS[0]);
+            // Stay put: the old version pushed back to "/", yanking the reader
+            // away from the section they were reading.
+            setSent(true);
+        } catch {
             toast({
                 title: "Errore",
                 description: "Qualcosa è andato storto! Per favore riprova.",
@@ -86,13 +109,45 @@ const ContactForm = () => {
                 ),
                 variant: "destructive",
             });
+        } finally {
+            setLoading(false);
         }
-        setLoading(false);
     };
 
+    if (sent) {
+        return (
+            <div
+                role="status"
+                className="flex flex-col items-center gap-3 rounded-xl border border-border bg-secondary/30 px-6 py-10 text-center"
+            >
+                <CheckCircle2 className="h-8 w-8 text-spark" />
+                <p className="font-display text-lg font-bold">Messaggio inviato!</p>
+                <p className="max-w-sm text-sm text-muted-foreground">
+                    Grazie per avermi scritto. Ti rispondo di solito entro 24 ore.
+                </p>
+                <Button variant="outline" size="sm" onClick={() => setSent(false)}>
+                    Invia un altro messaggio
+                </Button>
+            </div>
+        );
+    }
+
     return (
-        <form className="min-w-7xl mx-auto sm:mt-4" onSubmit={handleSubmit} aria-busy={loading}>
-            <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-2 mb-4">
+        <form className="mx-auto w-full" onSubmit={handleSubmit} aria-busy={loading} noValidate>
+            {/* Honeypot — hidden from people and from screen readers. */}
+            <div className="absolute h-0 w-0 overflow-hidden" aria-hidden>
+                <label htmlFor="company-website">Non compilare questo campo</label>
+                <input
+                    ref={honeypot}
+                    id="company-website"
+                    name="company-website"
+                    type="text"
+                    tabIndex={-1}
+                    autoComplete="off"
+                />
+            </div>
+
+            <div className="mb-4 flex flex-col space-y-4 md:flex-row md:space-x-3 md:space-y-0">
                 <LabelInputContainer>
                     <Label htmlFor="fullname">Nome completo</Label>
                     <Input
@@ -100,54 +155,90 @@ const ContactForm = () => {
                         name="name"
                         placeholder="Il tuo nome"
                         type="text"
+                        autoComplete="name"
                         value={fullName}
-                        onChange={(e) => { setFullName(e.target.value); setErrors((p) => ({ ...p, fullName: undefined })); }}
+                        aria-invalid={Boolean(errors.fullName)}
+                        aria-describedby={errors.fullName ? "err-fullname" : undefined}
+                        onChange={(e) => {
+                            setFullName(e.target.value);
+                            setErrors((p) => ({ ...p, fullName: undefined }));
+                        }}
                     />
-                    {errors.fullName && <p className="text-sm text-red-500">{errors.fullName}</p>}
+                    <FieldError id="err-fullname" message={errors.fullName} />
                 </LabelInputContainer>
-                <LabelInputContainer className="mb-4">
-                    <Label htmlFor="email">Indirizzo Email</Label>
+
+                <LabelInputContainer>
+                    <Label htmlFor="email">Indirizzo email</Label>
                     <Input
                         id="email"
                         name="email"
                         placeholder="tu@esempio.com"
                         type="email"
+                        autoComplete="email"
                         value={email}
-                        onChange={(e) => { setEmail(e.target.value); setErrors((p) => ({ ...p, email: undefined })); }}
+                        aria-invalid={Boolean(errors.email)}
+                        aria-describedby={errors.email ? "err-email" : undefined}
+                        onChange={(e) => {
+                            setEmail(e.target.value);
+                            setErrors((p) => ({ ...p, email: undefined }));
+                        }}
                     />
-                    {errors.email && <p className="text-sm text-red-500">{errors.email}</p>}
+                    <FieldError id="err-email" message={errors.email} />
                 </LabelInputContainer>
             </div>
-            <div className="grid w-full gap-1.5 mb-4">
-                <Label htmlFor="content">Il tuo Messaggio</Label>
+
+            <div className="mb-4 grid w-full gap-2">
+                <Label htmlFor="subject">Di cosa hai bisogno?</Label>
+                <select
+                    id="subject"
+                    name="subject"
+                    value={subject}
+                    onChange={(e) => setSubject(e.target.value)}
+                    className={cn(
+                        "h-10 w-full rounded-md border border-border bg-secondary/40 px-3 text-sm",
+                        "transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                    )}
+                >
+                    {SUBJECTS.map((s) => (
+                        <option key={s} value={s}>
+                            {s}
+                        </option>
+                    ))}
+                </select>
+            </div>
+
+            <div className="mb-4 grid w-full gap-2">
+                <Label htmlFor="content">Il tuo messaggio</Label>
                 <Textarea
-                    placeholder="Parlami del tuo progetto..."
+                    placeholder="Parlami del tuo progetto: obiettivi, tempi e budget indicativo…"
                     id="content"
                     name="message"
                     value={message}
-                    onChange={(e) => { setMessage(e.target.value); setErrors((p) => ({ ...p, message: undefined })); }}
+                    aria-invalid={Boolean(errors.message)}
+                    aria-describedby={errors.message ? "err-message" : "hint-message"}
+                    onChange={(e) => {
+                        setMessage(e.target.value);
+                        setErrors((p) => ({ ...p, message: undefined }));
+                    }}
                 />
-                {errors.message && <p className="text-sm text-red-500">{errors.message}</p>}
-                <p className="text-sm text-muted-foreground">
-                    Non condividerò mai i tuoi dati con nessun altro. Promesso!
+                <FieldError id="err-message" message={errors.message} />
+                <p id="hint-message" className="text-xs text-muted-foreground">
+                    Non condividerò mai i tuoi dati con nessun altro. Promesso.
                 </p>
             </div>
-            <Button
-                disabled={loading}
-                className="bg-gradient-to-br relative group/btn from-black dark:from-zinc-900 dark:to-zinc-900 to-neutral-600 block dark:bg-zinc-800 w-full text-white rounded-md h-10 font-medium shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] dark:shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]"
-                type="submit"
-            >
+
+            <Button disabled={loading} className="w-full" size="lg" type="submit">
                 {loading ? (
-                    <div className="flex items-center justify-center">
-                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        <p>Attendi...</p>
-                    </div>
+                    <>
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                        Invio in corso…
+                    </>
                 ) : (
-                    <div className="flex items-center justify-center">
-                        Invia Messaggio <ChevronRight className="w-4 h-4 ml-4" />
-                    </div>
+                    <>
+                        Invia messaggio
+                        <ChevronRight className="h-4 w-4" />
+                    </>
                 )}
-                <BottomGradient />
             </Button>
         </form>
     );
@@ -155,25 +246,23 @@ const ContactForm = () => {
 
 export default ContactForm;
 
+const FieldError = ({ id, message }: { id: string; message?: string }) =>
+    message ? (
+        <p id={id} role="alert" className="text-sm text-destructive">
+            {message}
+        </p>
+    ) : null;
+
 const LabelInputContainer = ({
-                                 children,
-                                 className,
-                             }: {
+    children,
+    className,
+}: {
     children: React.ReactNode;
     className?: string;
 }) => {
     return (
-        <div className={cn("flex flex-col space-y-2 w-full", className)}>
+        <div className={cn("flex w-full flex-col space-y-2", className)}>
             {children}
         </div>
-    );
-};
-
-const BottomGradient = () => {
-    return (
-        <>
-            <span className="group-hover/btn:opacity-100 block transition duration-500 opacity-0 absolute h-px w-full -bottom-px inset-x-0 bg-gradient-to-r from-transparent via-brand to-transparent" />
-            <span className="group-hover/btn:opacity-100 blur-sm block transition duration-500 opacity-0 absolute h-px w-1/2 mx-auto -bottom-px inset-x-10 bg-gradient-to-r from-transparent orange-400 to-transparent" />
-        </>
     );
 };

@@ -1,22 +1,22 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-    devIndicators: false,
+  devIndicators: false,
   cacheComponents: true,
-  eslint: {
-    ignoreDuringBuilds: true
-  },
   async headers() {
     return [
       {
         source: "/(.*)",
         headers: [
-          // SAMEORIGIN (not DENY) so the resume page can embed its own PDF;
+          // SAMEORIGIN (not DENY) so the site can frame its own documents;
           // still blocks other sites from framing us (clickjacking protection).
           { key: "X-Frame-Options", value: "SAMEORIGIN" },
           { key: "X-Content-Type-Options", value: "nosniff" },
           { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
-          { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=()" },
+          {
+            key: "Permissions-Policy",
+            value: "camera=(), microphone=(), geolocation=(), interest-cohort=()",
+          },
         ],
       },
       {
@@ -25,12 +25,9 @@ const nextConfig = {
           { key: "Cache-Control", value: "public, max-age=31536000, immutable" },
         ],
       },
-      {
-        source: "/_next/static/(.*)",
-        headers: [
-          { key: "Cache-Control", value: "public, max-age=31536000, immutable" },
-        ],
-      },
+      // NOTE: no custom Cache-Control for /_next/static — Next already serves
+      // those immutable in production, and overriding it breaks dev HMR
+      // (Next 16 warns about exactly this).
     ];
   },
 };

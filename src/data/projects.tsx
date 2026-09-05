@@ -1,15 +1,7 @@
-import AceTernityLogo from "@/components/logos/aceternity";
-import SlideShow from "@/components/slide-show";
-import { Button } from "@/components/ui/button";
 import { TypographyH3, TypographyP } from "@/components/ui/typography";
-import { ArrowUpRight, ExternalLink, Link2, MoveUpRight } from "lucide-react";
-import Image from "next/image";
-import Link from "next/link";
 import { ReactNode } from "react";
 // Spline has no thesvg entry — keep the Three.js mark as its stand-in.
 import { SiThreedotjs } from "react-icons/si";
-
-const BASE_PATH = "/assets/projects-screenshots";
 
 // Renders a brand SVG from /public as a monochrome glyph that inherits the
 // surrounding text color (the skill dock styles every icon via currentColor).
@@ -32,39 +24,6 @@ const MaskIcon = ({ src, title }: { src: string; title?: string }) => (
         }}
     />
 );
-
-const ProjectsLinks = ({ live, repo }: { live?: string; repo?: string }) => {
-    return (
-        <div className="flex flex-col md:flex-row items-center justify-start gap-3 my-3 mb-8">
-            {live && live !== "#" && (
-                <Link
-                    className="font-mono underline flex gap-2"
-                    rel="noopener"
-                    target="_new"
-                    href={live}
-                >
-                    <Button variant={"default"} size={"sm"}>
-                        Visit Website
-                        <ArrowUpRight className="ml-3 w-5 h-5" />
-                    </Button>
-                </Link>
-            )}
-            {repo && repo !== "#" && (
-                <Link
-                    className="font-mono underline flex gap-2"
-                    rel="noopener"
-                    target="_new"
-                    href={repo}
-                >
-                    <Button variant={"default"} size={"sm"}>
-                        Github
-                        <ArrowUpRight className="ml-3 w-5 h-5" />
-                    </Button>
-                </Link>
-            )}
-        </div>
-    );
-};
 
 export type Skill = {
     title: string;
@@ -147,6 +106,25 @@ const PROJECT_SKILLS = {
         fg: "white",
         icon: <span className="text-xs font-bold">Neon</span>,
     },
+    kotlin: {
+        title: "Kotlin",
+        bg: "black",
+        fg: "white",
+        icon: <span className="text-xs font-bold">Kt</span>,
+    },
+    keycloak: {
+        title: "Keycloak",
+        bg: "black",
+        fg: "white",
+        icon: <span className="text-xs font-bold">Key</span>,
+    },
+    rabbitmq: {
+        title: "RabbitMQ",
+        bg: "black",
+        fg: "white",
+        icon: <span className="text-xs font-bold">MQ</span>,
+    },
+    cloudflare: brand("Cloudflare", "cloudflare-mono.svg"),
 };
 
 export type Project = {
@@ -190,7 +168,6 @@ const projects: Project[] = [
                     <TypographyP className="font-mono mt-4">
                         Sviluppo di un ecosistema digitale completo gestendo l'intero ciclo di vita del software, dal frontend interattivo fino all'infrastruttura cloud e al database serverless.
                     </TypographyP>
-                    <ProjectsLinks live={this.live} repo={this.github} />
 
                     <TypographyH3 className="my-4 mt-8">🚀 Architettura e Stack</TypographyH3>
                     <ul className="list-disc list-inside font-mono mb-4 space-y-2">
@@ -230,7 +207,6 @@ const projects: Project[] = [
                     <TypographyP className="font-mono mt-4">
                         Ho sviluppato MoneyMind per unire il tracciamento delle spese personali e il mondo del trading in un'unica piattaforma intuitiva e reattiva, affrontando sfide architetturali legate alla concorrenza transazionale e all'ottimizzazione delle API.
                     </TypographyP>
-                    <ProjectsLinks live={this.live} repo={this.github} />
 
                     <TypographyH3 className="my-4 mt-8">✨ Funzionalità Principali</TypographyH3>
                     <ul className="list-disc list-inside font-mono mb-4 space-y-2">
@@ -261,12 +237,16 @@ const projects: Project[] = [
                 PROJECT_SKILLS.angular,
                 PROJECT_SKILLS.ts,
                 PROJECT_SKILLS.tailwind,
+                PROJECT_SKILLS.kotlin,
             ],
             backend: [
                 PROJECT_SKILLS.java,
                 PROJECT_SKILLS.springBoot,
                 PROJECT_SKILLS.postgres,
                 PROJECT_SKILLS.docker,
+                PROJECT_SKILLS.keycloak,
+                PROJECT_SKILLS.rabbitmq,
+                PROJECT_SKILLS.cloudflare,
             ],
         },
         live: "#",
@@ -278,13 +258,26 @@ const projects: Project[] = [
                         Piattaforma enterprise per la gestione dei viaggi e delle prenotazioni, sviluppata in team.
                     </TypographyP>
                     <TypographyP className="font-mono mt-4">
-                        Progetto universitario enterprise realizzato tra Aprile e Luglio collaborando in un team di 4 persone. Tripify offre un'esperienza completa per la pianificazione e l'organizzazione di itinerari complessi.
+                        Progetto universitario enterprise realizzato tra Aprile e Luglio collaborando in un team di 4 persone. Tripify offre un'esperienza completa per la pianificazione e l'organizzazione di itinerari complessi, con un backend a microservizi e un client mobile nativo.
                     </TypographyP>
-                    <ProjectsLinks live={this.live} repo={this.github} />
 
-                    <TypographyH3 className="my-4 mt-8">Sviluppo in Team & Architettura</TypographyH3>
+                    <TypographyH3 className="my-4 mt-8">🏗️ Backend a Microservizi</TypographyH3>
+                    <ul className="list-disc list-inside font-mono mb-4 space-y-2">
+                        <li><strong>Servizi:</strong> Spring Boot su Java 17 e Maven, con Spring Cloud Gateway come unico punto d'ingresso verso i client.</li>
+                        <li><strong>Dati:</strong> Spring Data JPA su PostgreSQL per entità relazionali complesse (voli, hotel, prenotazioni, utenti).</li>
+                        <li><strong>Sicurezza:</strong> OAuth2/OIDC con Keycloak come authorization server, per l'autenticazione centralizzata di tutti i servizi.</li>
+                        <li><strong>Comunicazione:</strong> REST sincrono via Feign, messaggistica asincrona con RabbitMQ e aggiornamenti realtime via WebSocket/STOMP.</li>
+                        <li><strong>Infrastruttura:</strong> containerizzato con Docker Compose ed esposto in HTTPS tramite tunnel Cloudflare.</li>
+                    </ul>
+
+                    <TypographyH3 className="my-4 mt-8">📱 Client Mobile Nativo</TypographyH3>
                     <p className="font-mono mb-2">
-                        Lavorare in un gruppo di 4 ha richiesto una forte coordinazione, un flusso Git ben strutturato e una rigorosa suddivisione dei task. L'applicazione si basa su un'architettura robusta in Spring Boot per gestire entità relazionali complesse legate a voli, hotel e utenti.
+                        App Android nativa in Kotlin e Jetpack Compose, con Retrofit/OkHttp verso il gateway, AppAuth per il login OIDC e DataStore per la persistenza locale di preferenze e token.
+                    </p>
+
+                    <TypographyH3 className="my-4 mt-8">👥 Sviluppo in Team</TypographyH3>
+                    <p className="font-mono mb-2">
+                        Lavorare in un gruppo di 4 ha richiesto una forte coordinazione, un flusso Git ben strutturato e una rigorosa suddivisione dei task tra backend, mobile e infrastruttura.
                     </p>
                 </div>
             );
@@ -316,7 +309,6 @@ const projects: Project[] = [
                     <TypographyP className="font-mono mt-4">
                         Wave.ly consente agli utenti di esplorare playlist, artisti e brani, con una coda di riproduzione dinamica e un'interfaccia interattiva progettata in JavaFX.
                     </TypographyP>
-                    <ProjectsLinks live={this.live} repo={this.github} />
 
                     <TypographyH3 className="my-4 mt-8">🎵 Funzionalità Sviluppate</TypographyH3>
                     <ul className="list-disc list-inside font-mono mb-4 space-y-2">
@@ -356,7 +348,6 @@ const projects: Project[] = [
                     <TypographyP className="font-mono mt-4">
                         Una sfida che mi ha permesso di mettere in pratica concetti avanzati di ingegneria del software e design pattern architetturali per garantire massima scalabilità.
                     </TypographyP>
-                    <ProjectsLinks live={this.live} repo={this.github} />
 
                     <TypographyH3 className="my-4 mt-8">✨ UI/UX & Pattern</TypographyH3>
                     <p className="font-mono mb-2">
@@ -398,7 +389,6 @@ const projects: Project[] = [
                     <TypographyP className="font-mono mt-4">
                         Progettato e sviluppato per raccontare chi sono e i progetti che ho realizzato. Ho puntato su un'interfaccia moderna e "fuori dagli schemi", integrando animazioni fluide e web 3D.
                     </TypographyP>
-                    <ProjectsLinks live={this.live} repo={this.github} />
 
                     <TypographyH3 className="my-4 mt-8">Esperienza Immersiva</TypographyH3>
                     <p className="font-mono mb-2">

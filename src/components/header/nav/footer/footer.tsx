@@ -13,7 +13,7 @@ export default function Footer() {
                     animate="enter"
                     exit="exit"
                 >
-                    <span>Inspired by:</span> Studio Lumio
+                    <span>Costruito con:</span> Next.js
                 </motion.li>
             </ul>
             <ul>
@@ -24,7 +24,7 @@ export default function Footer() {
                     animate="enter"
                     exit="exit"
                 >
-                    <span>Typography:</span> Inter
+                    <span>Typography:</span> Unbounded &amp; Space Grotesk
                 </motion.li>
             </ul>
             <ul>
@@ -35,7 +35,7 @@ export default function Footer() {
                     animate="enter"
                     exit="exit"
                 >
-                    <span>Images:</span> Unsplash
+                    <span>3D:</span> Spline
                 </motion.li>
             </ul>
             {/* Blog e Newsletter sono stati rimossi */}

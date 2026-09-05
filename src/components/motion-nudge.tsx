@@ -51,24 +51,24 @@ export default function MotionNudge() {
     >
       <button
         onClick={dismiss}
-        aria-label="Dismiss"
+        aria-label="Chiudi"
         className="absolute right-2 top-2 rounded-md p-1 text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
       >
         <X className="size-4" />
       </button>
       <p className="pr-6 text-sm font-medium text-foreground">
-        Reduced motion is on
+        Animazioni ridotte attive
       </p>
       <p className="mt-1 text-xs text-muted-foreground">
-        The interactive 3D scene and animations are turned off. Want the full
-        experience?
+        La scena 3D interattiva e le animazioni sono disattivate. Vuoi
+        l&apos;esperienza completa?
       </p>
       <div className="mt-3 flex gap-2">
         <Button size="sm" onClick={enableMotion}>
-          Enable 3D
+          Attiva il 3D
         </Button>
         <Button size="sm" variant="ghost" onClick={dismiss}>
-          No thanks
+          No, grazie
         </Button>
       </div>
     </div>

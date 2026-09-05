@@ -1,7 +1,9 @@
 "use client";
 
 import { motion, useScroll, useSpring } from "motion/react";
+import { cn } from "@/lib/utils";
 
+/** Thin reading-progress rail pinned above the header. */
 export default function ScrollProgress({ className }: { className?: string }) {
     const { scrollYProgress } = useScroll();
     const scaleX = useSpring(scrollYProgress, {
@@ -12,7 +14,12 @@ export default function ScrollProgress({ className }: { className?: string }) {
 
     return (
         <motion.div
-            className={`fixed top-0 left-0 right-0 h-1 bg-primary origin-left z-50 ${className}`}
+            aria-hidden
+            className={cn(
+                // Above the header (z-[1000]) so it's never clipped by it.
+                "no-print pointer-events-none fixed inset-x-0 top-0 z-[1001] h-[3px] origin-left bg-spark",
+                className
+            )}
             style={{ scaleX }}
         />
     );

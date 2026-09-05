@@ -7,12 +7,17 @@ const links: Link[] = [
         thumbnail: '/assets/nav-link-previews/landing.png'
     },
     {
+        title: 'Chi sono',
+        href: '/#about',
+        thumbnail: '/assets/nav-link-previews/landing.png'
+    },
+    {
         title: 'Skills',
         href: '/#skills',
         thumbnail: '/assets/nav-link-previews/skills.png'
     },
     {
-        title: 'Projects',
+        title: 'Progetti',
         href: '/#projects',
         thumbnail: '/assets/nav-link-previews/projects.png'
     },
@@ -21,18 +26,13 @@ const links: Link[] = [
         href: '/#tariffe',
         thumbnail: '/assets/nav-link-previews/tariffe.png'
     },
-    // {
-    //   title: 'Skills',
-    //   href: '/skills',
-    //   thumbnail: '/assets/nav-link-previews/skills.png'
-    // },
-    // {
-    //   title: 'Testimonials',
-    //   href: '/testimonials',
-    //   thumbnail: '/assets/nav-link-previews/testimonials.png'
-    // },
     {
-        title: 'Contact',
+        title: 'CV',
+        href: '/cv',
+        thumbnail: '/assets/nav-link-previews/landing.png'
+    },
+    {
+        title: 'Contatti',
         href: '/#contact',
         thumbnail: '/assets/nav-link-previews/contact.png'
     }

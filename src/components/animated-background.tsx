@@ -29,10 +29,29 @@ const KeyboardScene = ({ maxDpr }: { maxDpr: number }) => {
   const [activeSection, setActiveSection] = useState<Section>("hero");
 
   // Animation controllers refs
-  const bongoAnimationRef = useRef<{ start: () => void; stop: () => void }>(null);
   const keycapAnimationsRef = useRef<{ start: () => void; stop: () => void }>(null);
 
   const [keyboardRevealed, setKeyboardRevealed] = useState(false);
+
+  /**
+   * Write the scene's text variables, but only if the published file actually
+   * declares them. The current .spline doesn't, and every unguarded
+   * `setVariable` logged "No variable named heading was found" on each keypress.
+   * The visible label is rendered as HTML below instead.
+   */
+  const setSceneText = (heading: string, desc: string) => {
+    if (!splineApp) return;
+    try {
+      if (splineApp.getVariable("heading") !== undefined) {
+        splineApp.setVariable("heading", heading);
+      }
+      if (splineApp.getVariable("desc") !== undefined) {
+        splineApp.setVariable("desc", desc);
+      }
+    } catch {
+      /* scene without those variables — the HTML card covers it */
+    }
+  };
 
   // --- Event Handlers ---
 
@@ -43,10 +62,7 @@ const KeyboardScene = ({ maxDpr }: { maxDpr: number }) => {
       if (selectedSkillRef.current) playReleaseSound();
       setSelectedSkill(null);
       selectedSkillRef.current = null;
-      if (splineApp.getVariable("heading") && splineApp.getVariable("desc")) {
-        splineApp.setVariable("heading", "");
-        splineApp.setVariable("desc", "");
-      }
+      setSceneText("", "");
     } else {
       if (!selectedSkillRef.current || selectedSkillRef.current.name !== e.target.name) {
         const skill = SKILLS[e.target.name as SkillNames];
@@ -76,8 +92,7 @@ const KeyboardScene = ({ maxDpr }: { maxDpr: number }) => {
     splineApp.addEventListener("keyUp", () => {
       if (!splineApp || isInputFocused()) return;
       playReleaseSound();
-      splineApp.setVariable("heading", "");
-      splineApp.setVariable("desc", "");
+      setSceneText("", "");
     });
     splineApp.addEventListener("keyDown", (e) => {
       if (!splineApp || isInputFocused()) return;
@@ -86,8 +101,7 @@ const KeyboardScene = ({ maxDpr }: { maxDpr: number }) => {
         playPressSound();
         setSelectedSkill(skill);
         selectedSkillRef.current = skill;
-        splineApp.setVariable("heading", skill.label);
-        splineApp.setVariable("desc", skill.shortDescription);
+        setSceneText(skill.label, skill.shortDescription);
       }
     });
     splineApp.addEventListener("mouseHover", handleMouseHover);
@@ -148,37 +162,15 @@ const KeyboardScene = ({ maxDpr }: { maxDpr: number }) => {
     ].filter(Boolean) as gsap.core.Timeline[];
   };
 
-  const getBongoAnimation = () => {
+  /**
+   * The published scene ships a "bongo-cat" easter egg (an animated cat
+   * typing) that used to pop up over the projects section. Permanently
+   * hidden per design direction — kept as a no-op hide instead of leaving a
+   * dead reference to "bongo-cat"/"frame-1"/"frame-2" scattered around.
+   */
+  const hideBongoCat = () => {
     const framesParent = splineApp?.findObjectByName("bongo-cat");
-    const frame1 = splineApp?.findObjectByName("frame-1");
-    const frame2 = splineApp?.findObjectByName("frame-2");
-
-    if (!frame1 || !frame2 || !framesParent) {
-      return { start: () => { }, stop: () => { } };
-    }
-
-    let interval: NodeJS.Timeout;
-    const start = () => {
-      let i = 0;
-      framesParent.visible = true;
-      interval = setInterval(() => {
-        if (i % 2) {
-          frame1.visible = false;
-          frame2.visible = true;
-        } else {
-          frame1.visible = true;
-          frame2.visible = false;
-        }
-        i++;
-      }, 100);
-    };
-    const stop = () => {
-      clearInterval(interval);
-      framesParent.visible = false;
-      frame1.visible = false;
-      frame2.visible = false;
-    };
-    return { start, stop };
+    if (framesParent) framesParent.visible = false;
   };
 
   const getKeycapsAnimation = () => {
@@ -239,6 +231,12 @@ const KeyboardScene = ({ maxDpr }: { maxDpr: number }) => {
         if (!splineApp) return;
         const kbd = splineApp.findObjectByName("keyboard");
         if (!kbd) return;
+
+        // Re-assert here too: the scene graph isn't fully populated yet the
+        // first time hideBongoCat() runs (right as splineApp is set), so that
+        // early call can silently no-op. By now "keyboard" itself resolves
+        // fine, so "bongo-cat" reliably will too.
+        hideBongoCat();
 
         kbd.visible = false;
         await sleep(400);
@@ -317,10 +315,22 @@ const KeyboardScene = ({ maxDpr }: { maxDpr: number }) => {
     if (!splineApp) return;
     handleSplineInteractions();
     const timelines = setupScrollAnimations();
-    bongoAnimationRef.current = getBongoAnimation();
+    hideBongoCat();
     keycapAnimationsRef.current = getKeycapsAnimation();
+
+    // The published scene has its own internal trigger (set up in the Spline
+    // editor, entirely outside this JS layer) that re-shows "bongo-cat" on
+    // some scroll/state event of its own, re-asserted continuously enough
+    // that even a 400ms interval lost the race. Force it hidden every frame
+    // instead — cheap (one boolean write) and wins against whatever cadence
+    // the scene's own trigger runs on.
+    let bongoWatchdog = requestAnimationFrame(function tick() {
+      hideBongoCat();
+      bongoWatchdog = requestAnimationFrame(tick);
+    });
+
     return () => {
-      bongoAnimationRef.current?.stop()
+      cancelAnimationFrame(bongoWatchdog);
       keycapAnimationsRef.current?.stop()
       // Kill the section ScrollTriggers so they don't orphan when the scene
       // unmounts (e.g. toggling reduced motion) and fire on the disposed app.
@@ -369,8 +379,7 @@ const KeyboardScene = ({ maxDpr }: { maxDpr: number }) => {
 
   useEffect(() => {
     if (!selectedSkill || !splineApp) return;
-    splineApp.setVariable("heading", selectedSkill.label);
-    splineApp.setVariable("desc", selectedSkill.shortDescription);
+    setSceneText(selectedSkill.label, selectedSkill.shortDescription);
   }, [selectedSkill]);
 
   // Handle rotation and teardown animations based on active section
@@ -419,8 +428,7 @@ const KeyboardScene = ({ maxDpr }: { maxDpr: number }) => {
     const manageAnimations = async () => {
       // Reset text if not in skills
       if (activeSection !== "skills") {
-        splineApp.setVariable("heading", "");
-        splineApp.setVariable("desc", "");
+        setSceneText("", "");
       }
 
       // Handle Rotate/Teardown Tweens
@@ -432,17 +440,6 @@ const KeyboardScene = ({ maxDpr }: { maxDpr: number }) => {
       } else {
         rotateKeyboard?.pause();
         teardownKeyboard?.pause();
-      }
-
-      // Handle Bongo Cat
-      if (activeSection === "projects") {
-        await sleep(300);
-        if (cancelled) return;
-        bongoAnimationRef.current?.start();
-      } else {
-        await sleep(200);
-        if (cancelled) return;
-        bongoAnimationRef.current?.stop();
       }
 
       // Handle Contact Section Animations
@@ -506,21 +503,32 @@ const KeyboardScene = ({ maxDpr }: { maxDpr: number }) => {
   }, [splineApp]);
 
     return (
-        <Suspense fallback={<div>Loading...</div>}>
-            <Spline
-                className="w-full h-[100dvh] fixed inset-0"
-                ref={splineContainer}
-                onLoad={(app: Application) => {
-                    setSplineApp(app);
-                    bypassLoading();
+        <>
+            <Suspense fallback={null}>
+                <Spline
+                    className="w-full h-[100dvh] fixed inset-0"
+                    ref={splineContainer}
+                    onLoad={(app: Application) => {
+                        setSplineApp(app);
+                        bypassLoading();
 
-                    setTimeout(() => {
-                        window.dispatchEvent(new Event("resize"));
-                    }, 150);
-                }}
-                scene="/assets/skills-keyboard.spline"
-            />
-        </Suspense>
+                        setTimeout(() => {
+                            window.dispatchEvent(new Event("resize"));
+                        }, 150);
+                    }}
+                    scene="/assets/skills-keyboard.spline"
+                />
+            </Suspense>
+
+            {/* No floating HTML card here on purpose: the marquee pinned at the
+                bottom of the Skills section (skills.tsx) already lists every
+                technology by name+icon, and each keycap's own engraving shows
+                which one it is — a popup repeating that on hover/press was
+                redundant chrome. Hover/press sound feedback (playPressSound /
+                playReleaseSound) and setSceneText still run for whenever the
+                published .spline scene starts declaring "heading"/"desc"
+                variables of its own. */}
+        </>
     );
 };
 

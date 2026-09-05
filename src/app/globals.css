@@ -2,73 +2,108 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
-  scroll-behavior: smooth;
-}
-
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    color-scheme: light;
+
+    /* Neutrals — warm off-white paper instead of clinical pure white. */
+    --background: 40 20% 98%;
+    --foreground: 222 47% 8%;
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card-foreground: 222 47% 8%;
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-    /* space accent — monochrome ink (theme-aware) */
+    --popover-foreground: 222 47% 8%;
+
+    /* Ink — the site's primary is monochrome on purpose. */
     --primary: 222 47% 11%;
     --primary-foreground: 210 40% 98%;
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222 84% 5%;
-    --radius: 0.5rem;
+    --secondary: 220 20% 94%;
+    --secondary-foreground: 222 47% 11%;
+    --muted: 220 20% 94%;
+    --muted-foreground: 220 12% 42%;
+    --accent: 220 20% 94%;
+    --accent-foreground: 222 47% 11%;
+    --destructive: 0 72% 48%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 220 16% 88%;
+    --input: 220 16% 88%;
+    --ring: 217 91% 52%;
+    --radius: 0.75rem;
+
     --chart-1: 12 76% 61%;
     --chart-2: 173 58% 39%;
     --chart-3: 197 37% 24%;
     --chart-4: 43 74% 66%;
     --chart-5: 27 87% 67%;
-    /* accent helpers — monochrome ink */
-    --brand: #171717;
-    --accent-solid: #171717;
-    --accent-glow: transparent;
+
+    /* Accent — status dots, focus, active rails, headline gradients, glows. */
+    --accent-hue: 217 91% 52%;
+    --accent-solid: hsl(217 91% 52%);
+    --accent-soft: hsl(217 91% 52% / 0.12);
+    --accent-glow: hsl(217 91% 52% / 0.28);
+    /* Second stop for the two-tone gradients (headline text, glow orbs,
+       card borders) — violet, a fixed hop around the wheel from the accent
+       so light/dark just rotates both together. */
+    --accent-2-hue: 262 83% 58%;
+    --accent-2-solid: hsl(262 83% 58%);
+    --brand: #111318;
+
+    /* Elevation — one shadow scale for the whole site. */
+    --shadow-sm: 0 1px 2px hsl(222 47% 8% / 0.06);
+    --shadow-md: 0 6px 20px -8px hsl(222 47% 8% / 0.18);
+    --shadow-lg: 0 24px 60px -24px hsl(222 47% 8% / 0.28);
+
+    /* Surfaces that sit on top of the 3D canvas need their own translucency. */
+    --glass: hsl(0 0% 100% / 0.72);
+    --glass-border: hsl(222 47% 8% / 0.08);
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
+    color-scheme: dark;
+
+    --background: 224 47% 4%;
     --foreground: 210 40% 98%;
-    --card: 222.2 84% 4.9%;
+    --card: 224 30% 8%;
     --card-foreground: 210 40% 98%;
-    --popover: 222.2 84% 4.9%;
+    --popover: 224 30% 8%;
     --popover-foreground: 210 40% 98%;
+
     --primary: 210 40% 98%;
     --primary-foreground: 222 47% 11%;
-    --secondary: 217.2 32.6% 17.5%;
+    --secondary: 222 24% 14%;
     --secondary-foreground: 210 40% 98%;
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-    --accent: 217.2 32.6% 17.5%;
+    --muted: 222 24% 14%;
+    --muted-foreground: 218 16% 65%;
+    --accent: 222 24% 14%;
     --accent-foreground: 210 40% 98%;
-    --destructive: 0 62.8% 30.6%;
+    --destructive: 0 62% 45%;
     --destructive-foreground: 210 40% 98%;
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212 27% 84%;
+
+    --border: 220 18% 18%;
+    --input: 220 18% 18%;
+    --ring: 213 94% 68%;
+
     --chart-1: 220 70% 50%;
     --chart-2: 160 60% 45%;
     --chart-3: 30 80% 55%;
     --chart-4: 280 65% 60%;
     --chart-5: 340 75% 55%;
-    /* accent helpers — monochrome ink */
-    --brand: #f5f5f5;
-    --accent-solid: #f5f5f5;
-    --accent-glow: transparent;
+
+    --accent-hue: 213 94% 68%;
+    --accent-solid: hsl(213 94% 68%);
+    --accent-soft: hsl(213 94% 68% / 0.14);
+    --accent-glow: hsl(213 94% 68% / 0.35);
+    --accent-2-hue: 270 91% 72%;
+    --accent-2-solid: hsl(270 91% 72%);
+    --brand: #f5f7fa;
+
+    --shadow-sm: 0 1px 2px hsl(0 0% 0% / 0.4);
+    --shadow-md: 0 8px 26px -10px hsl(0 0% 0% / 0.7);
+    --shadow-lg: 0 30px 70px -28px hsl(0 0% 0% / 0.85);
+
+    --glass: hsl(224 30% 8% / 0.62);
+    --glass-border: hsl(210 40% 98% / 0.08);
   }
 }
 
@@ -82,15 +117,16 @@ body {
      utility keep their own weight. */
   html {
     font-weight: 500;
+    -webkit-tap-highlight-color: transparent;
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground antialiased;
+    text-rendering: optimizeLegibility;
   }
 
   /* Headings use the display font (--font-display, Unbounded). Body and
-     everything else inherits Space Grotesk via `font-sans` on <html>. Elements
-     can still opt in explicitly with the `font-display` Tailwind class. */
+     everything else inherits Space Grotesk via `font-sans` on <html>. */
   h1,
   h2,
   h3,
@@ -98,6 +134,47 @@ body {
   h5,
   h6 {
     font-family: var(--font-display), sans-serif;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  ::selection {
+    background: var(--accent-soft);
+    color: hsl(var(--foreground));
+  }
+
+  /* One visible, consistent focus ring — keyboard users should never guess
+     where they are. (Mouse clicks don't trigger :focus-visible.) */
+  :focus-visible {
+    outline: 2px solid var(--accent-solid);
+    outline-offset: 2px;
+    border-radius: calc(var(--radius) - 4px);
+  }
+
+  /* Slim, theme-aware scrollbar. */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: hsl(var(--muted-foreground) / 0.35) transparent;
+  }
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: hsl(var(--muted-foreground) / 0.3);
+    border: 3px solid transparent;
+    background-clip: content-box;
+    border-radius: 9999px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--muted-foreground) / 0.55);
+    background-clip: content-box;
   }
 }
 
@@ -109,10 +186,141 @@ body > canvas {
 /* Project card scroll-preview: subtle zoom of the floating screenshot on hover.
    (Tailwind's `group-hover:scale-*` isn't emitted in this config, so it's here.) */
 .sp-shot {
-  transition: transform 0.5s ease-out;
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .group:hover .sp-shot {
-  transform: scale(1.02);
+  transform: scale(1.04);
+}
+
+@layer components {
+  /* Frosted surface used by every card that floats over the 3D canvas. */
+  .surface {
+    background: var(--glass);
+    border: 1px solid var(--glass-border);
+    backdrop-filter: blur(16px) saturate(140%);
+    -webkit-backdrop-filter: blur(16px) saturate(140%);
+    box-shadow: var(--shadow-md);
+  }
+
+  /* Hairline label above a section title. */
+  .eyebrow {
+    @apply inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.28em] text-muted-foreground;
+  }
+
+  /* Interactive card: lifts and warms its border on hover. */
+  .lift {
+    transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+      border-color 0.3s ease, box-shadow 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .lift:hover {
+    transform: translateY(-4px);
+    border-color: hsl(var(--foreground) / 0.22);
+    box-shadow: var(--shadow-lg);
+  }
+
+  /* Two-stop accent gradient, reused for headline text, glow orbs and
+     borders — the one deliberate spot of color on an otherwise monochrome
+     site, so it needed to exist as a single named thing, not five ad-hoc
+     `bg-gradient-to-r from-blue-500 to-purple-500`s that quietly drift. */
+  .accent-gradient {
+    background-image: linear-gradient(
+      100deg,
+      hsl(var(--accent-hue)),
+      hsl(var(--accent-2-hue))
+    );
+  }
+  .text-accent-gradient {
+    background-image: linear-gradient(
+      100deg,
+      hsl(var(--accent-hue)),
+      hsl(var(--accent-2-hue))
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  /* A border that lights up with the accent gradient on hover — an inset
+     glow via box-shadow rather than a background-image trick, so it layers
+     cleanly on top of a card's own translucent fill. */
+  .glow-border {
+    position: relative;
+    transition: box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .glow-border::before {
+    content: "";
+    position: absolute;
+    inset: -1px;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(
+      135deg,
+      hsl(var(--accent-hue) / 0.7),
+      hsl(var(--accent-2-hue) / 0.7)
+    );
+    -webkit-mask: linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    pointer-events: none;
+  }
+  .glow-border:hover::before {
+    opacity: 1;
+  }
+  .glow-border:hover {
+    box-shadow: 0 0 0 1px hsl(var(--accent-hue) / 0.15),
+      0 20px 60px -20px hsl(var(--accent-hue) / 0.35);
+  }
+
+  /* Faint, oversized numeral parked behind a section header — the
+     "editorial index" signature every high-end agency site leans on. Sized
+     with clamp() so it scales with the viewport instead of needing a
+     breakpoint per section. */
+  .ghost-number {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -55%);
+    font-family: var(--font-display), sans-serif;
+    font-weight: 800;
+    font-size: clamp(6rem, 22vw, 16rem);
+    line-height: 1;
+    color: transparent;
+    -webkit-text-stroke: 1px hsl(var(--foreground) / 0.08);
+    user-select: none;
+    pointer-events: none;
+    z-index: 0;
+    white-space: nowrap;
+  }
+
+  /* Subtle film-grain — breaks up flat gradients/backgrounds so the site
+     doesn't read as "banded CSS" on large screens. Cheap: one tiled SVG
+     turbulence filter, no JS, no image request. */
+  .grain {
+    position: relative;
+  }
+  .grain::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    opacity: 0.035;
+    mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+    background-size: 180px 180px;
+  }
+
+  /* Soft, blurred color blobs for section backdrops — CSS-only, no imagery. */
+  .glow-orb {
+    position: absolute;
+    border-radius: 9999px;
+    filter: blur(90px);
+    pointer-events: none;
+    z-index: 0;
+  }
 }
 
 @layer utilities {
@@ -138,6 +346,62 @@ body > canvas {
   .canvas-overlay-mode svg {
     pointer-events: auto;
   }
+
+  /* Ink gradient for display type — reads as solid at a glance, but gives the
+     big headings a bit of depth. */
+  .text-gradient {
+    background-image: linear-gradient(
+      170deg,
+      hsl(var(--foreground)) 20%,
+      hsl(var(--foreground) / 0.55) 100%
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  /* A single hairline that fades out at both ends. */
+  .rule-fade {
+    background-image: linear-gradient(
+      90deg,
+      transparent,
+      hsl(var(--border)),
+      transparent
+    );
+  }
+
+  /* Edge-fade mask for marquees / long scrollers. */
+  .mask-x-fade {
+    -webkit-mask-image: linear-gradient(
+      90deg,
+      transparent,
+      #000 8%,
+      #000 92%,
+      transparent
+    );
+    mask-image: linear-gradient(
+      90deg,
+      transparent,
+      #000 8%,
+      #000 92%,
+      transparent
+    );
+  }
+
+  .pause-on-hover:hover * {
+    animation-play-state: paused;
+  }
+
+  /* Hides the scrollbar on native-scroll strips (e.g. the mobile projects
+     carousel) while keeping the element scrollable. */
+  .scrollbar-none {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .scrollbar-none::-webkit-scrollbar {
+    display: none;
+  }
 }
 
 /* Radix ScrollArea wraps its children in a `display: table; min-width: 100%`
@@ -150,81 +414,32 @@ body > canvas {
   display: block !important;
 }
 
-/* SlideShow (Splide) — monochrome ink theming, scoped to `.portfolio-slider`
-   so it never leaks into any other carousel. */
-.portfolio-slider {
-  --slider-ctrl: hsl(var(--foreground));
-}
-.portfolio-slider .splide__arrow {
-  width: 2.25rem;
-  height: 2.25rem;
-  background: hsl(var(--background) / 0.72);
-  border: 1px solid hsl(var(--border));
-  border-radius: 9999px;
-  color: var(--slider-ctrl);
-  opacity: 0;
-  box-shadow: 0 6px 18px -8px rgb(0 0 0 / 0.35),
-    inset 0 1px 0 hsl(var(--foreground) / 0.06);
-  backdrop-filter: blur(10px);
-  transition: opacity 0.25s ease, transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
-    background-color 0.2s ease;
-}
-.portfolio-slider:hover .splide__arrow,
-.portfolio-slider:focus-within .splide__arrow {
-  opacity: 1;
-}
-.portfolio-slider .splide__arrow:hover {
-  background: hsl(var(--background) / 0.95);
-  transform: scale(1.07);
-}
-.portfolio-slider .splide__arrow:active {
-  transform: scale(0.94);
-}
-.portfolio-slider .splide__arrow:disabled {
-  opacity: 0 !important;
-  pointer-events: none;
-}
-.portfolio-slider .splide__arrow svg {
-  width: 1rem;
-  height: 1rem;
-  fill: none;
-}
-.portfolio-slider .splide__arrow--prev {
-  left: 0.75rem;
-}
-.portfolio-slider .splide__arrow--next {
-  right: 0.75rem;
-}
-
-.portfolio-slider .splide__pagination {
-  position: static;
-  margin-top: 0.9rem;
-  padding: 0;
-  gap: 0.4rem;
-}
-.portfolio-slider .splide__pagination__page {
-  width: 0.4rem;
-  height: 0.4rem;
-  margin: 0;
-  background: hsl(var(--muted-foreground) / 0.4);
-  border-radius: 9999px;
-  opacity: 1;
-  transition: width 0.35s cubic-bezier(0.16, 1, 0.3, 1),
-    background-color 0.25s ease;
-}
-.portfolio-slider .splide__pagination__page:hover {
-  background: hsl(var(--muted-foreground) / 0.7);
-}
-.portfolio-slider .splide__pagination__page.is-active {
-  width: 1.3rem;
-  background: hsl(var(--foreground));
-  transform: none;
-}
-
-/* Touch devices have no hover — keep arrows discoverable. */
-@media (hover: none) {
-  .portfolio-slider .splide__arrow {
-    opacity: 0.9;
+/* Print — the /cv route is meant to be saved as a PDF straight from the
+   browser, so strip the chrome and force a light, ink-on-paper rendering. */
+@media print {
+  html,
+  body {
+    background: #fff !important;
+    color: #000 !important;
+  }
+  header,
+  footer,
+  .no-print {
+    display: none !important;
+  }
+  .print-plain {
+    background: #fff !important;
+    border-color: #d4d4d8 !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+  }
+  a[href^="http"]::after {
+    content: " (" attr(href) ")";
+    font-size: 0.7em;
+    color: #555;
+  }
+  @page {
+    margin: 14mm;
   }
 }
 

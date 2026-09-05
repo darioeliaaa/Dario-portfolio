@@ -7,14 +7,18 @@ import { SKILLS } from "@/data/constants";
 import { usePerfProfile } from "@/hooks/use-perf-profile";
 import { cn } from "@/lib/utils";
 
+const ALL_SKILLS = Object.values(SKILLS);
+
 /**
  * Tech-stack section.
  *
  * On capable devices the skills live in the interactive 3D keyboard's keycaps,
- * so this is just a header and the section is tall (the keyboard scrubs through
- * it on scroll). When the 3D scene is disabled (low-end / reduced-motion), the
- * keyboard isn't there to convey the skills — so we render them as a real HTML
- * grid instead. Progressive enhancement: the content survives without WebGL.
+ * so this is mostly a header and the section is tall (the keyboard scrubs
+ * through it on scroll) — with a marquee pinned near the bottom so the stack is
+ * still readable (and indexable) for anyone who never touches the keyboard.
+ * When the 3D scene is disabled (low-end / reduced-motion), the keyboard isn't
+ * there to convey the skills at all — so we render them as a real HTML grid
+ * instead. Progressive enhancement: the content survives without WebGL.
  */
 const SkillsSection = () => {
   const { disable3D, ready } = usePerfProfile();
@@ -28,12 +32,14 @@ const SkillsSection = () => {
       >
         <SectionHeader
           id="skills"
-          title="Tech Stack"
-          desc="Tools I build with"
+          eyebrow="Competenze"
+          index={2}
+          title="Stack tecnologico"
+          desc="Gli strumenti con cui costruisco, ogni giorno."
           className="static mb-14"
         />
         <ul className="mx-auto grid w-full max-w-5xl grid-cols-2 gap-3 px-4 sm:grid-cols-3 sm:gap-4 md:grid-cols-4 lg:grid-cols-5">
-          {Object.values(SKILLS).map((skill) => (
+          {ALL_SKILLS.map((skill) => (
             <li
               key={skill.name}
               style={{ "--skill": skill.color } as CSSProperties}
@@ -43,10 +49,10 @@ const SkillsSection = () => {
                 // the whole card so hover isn't limited to the icon/label.
                 "pointer-events-auto",
                 "group relative flex flex-col items-center justify-center gap-3 overflow-hidden rounded-2xl p-5",
-                "border border-border/60 bg-secondary/20 backdrop-blur-sm",
-                "transition-[transform,border-color,background-color,box-shadow] duration-300",
-                "hover:-translate-y-1 hover:border-[var(--skill)] hover:bg-secondary/40",
-                "hover:shadow-[0_10px_40px_-12px_var(--skill)]"
+                "border border-border bg-card/60 backdrop-blur-sm",
+                "transition-[transform,border-color,background-color,box-shadow] duration-300 ease-smooth",
+                "hover:-translate-y-1 hover:border-[var(--skill)] hover:bg-card",
+                "hover:shadow-[0_10px_40px_-12px_var(--skill)]",
               )}
             >
               {/* per-skill colored glow */}
@@ -77,9 +83,42 @@ const SkillsSection = () => {
   return (
     <SectionWrapper
       id="skills"
-      className="w-full h-screen md:h-[150dvh] pointer-events-none"
+      className="pointer-events-none w-full h-screen md:h-[150dvh]"
     >
-      <SectionHeader id="skills" title="Tech Stack" desc="(hint: press a key)" />
+      {/* SectionWrapper renders a `w-full h-full` motion.div around children,
+          so the column lives here (one level in) for `mt-auto` to reach the
+          bottom of the section. */}
+      <div className="flex h-full flex-col">
+        <SectionHeader
+          id="skills"
+          eyebrow="Competenze"
+          title="Stack tecnologico"
+          desc="Ogni tasto della tastiera è una tecnologia: passaci sopra o premine uno."
+        />
+
+        {/* Readable (and crawlable) fallback for anyone who never touches the
+          3D keyboard — parked at the bottom so it never covers it. */}
+        <div className="mt-auto w-full overflow-hidden pb-10 mask-x-fade">
+          <div className="flex w-max animate-marquee items-center gap-3 pause-on-hover">
+            {[...ALL_SKILLS, ...ALL_SKILLS].map((skill, i) => (
+              <span
+                key={`${skill.name}-${i}`}
+                className="inline-flex shrink-0 items-center gap-2 rounded-full border border-border bg-background/50 px-3 py-1.5 text-xs text-muted-foreground backdrop-blur-md"
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={skill.icon}
+                  alt=""
+                  aria-hidden
+                  loading="lazy"
+                  className="h-3.5 w-3.5 object-contain"
+                />
+                {skill.label}
+              </span>
+            ))}
+          </div>
+        </div>
+      </div>
     </SectionWrapper>
   );
 };

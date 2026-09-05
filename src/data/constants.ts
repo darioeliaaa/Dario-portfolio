@@ -9,7 +9,10 @@ export enum SkillNames {
     VUE = "vue",
     NEXTJS = "nextjs",
     TAILWIND = "tailwind",
-    NODE = "node",
+    // Era "node": il layer sulla tastiera Spline si chiama davvero "nodejs",
+    // quindi con "node" questo tasto non è mai stato cliccabile (SKILLS["nodejs"]
+    // non esisteva). Corretto per farlo combaciare col tasto vero.
+    NODE = "nodejs",
     EXPRESS = "express",
     POSTGRES = "postgres",
     MONGODB = "mongodb",
@@ -23,6 +26,11 @@ export enum SkillNames {
     NGINX = "nginx",
     AWS = "aws",
     VERCEL = "vercel",
+    // Questi 3 tasti esistono sulla tastiera 3D (col loro logo inciso) ma non
+    // avevano nessuna voce qui, quindi cliccarli non faceva nulla.
+    FIREBASE = "firebase",
+    VIM = "vim",
+    PRETTIER = "prettier",
 }
 
 export type Skill = {
@@ -101,7 +109,7 @@ export const SKILLS: Record<SkillNames, Skill> = {
     },
     [SkillNames.NODE]: {
         id: 9,
-        name: "node",
+        name: "nodejs",
         label: "Node.js",
         shortDescription: "JavaScript portato sul server per backend agili e scattanti 🟢",
         color: "#339933",
@@ -211,6 +219,30 @@ export const SKILLS: Record<SkillNames, Skill> = {
         color: "#000000",
         icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/vercel/vercel-original.svg",
     },
+    [SkillNames.FIREBASE]: {
+        id: 23,
+        name: "firebase",
+        label: "Firebase",
+        shortDescription: "Backend-as-a-service di Google: auth, database realtime e hosting senza server da gestire 🔥",
+        color: "#FFCA28",
+        icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/firebase/firebase-plain.svg",
+    },
+    [SkillNames.VIM]: {
+        id: 24,
+        name: "vim",
+        label: "Vim",
+        shortDescription: "L'editor da terminale che divide gli sviluppatori. Una volta imparato non si torna più indietro ⌨️",
+        color: "#019733",
+        icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/vim/vim-original.svg",
+    },
+    [SkillNames.PRETTIER]: {
+        id: 25,
+        name: "prettier",
+        label: "Prettier",
+        shortDescription: "Formatta il codice al posto tuo, sempre uguale, senza discussioni su tab o spazi 🎯",
+        color: "#F7B93E",
+        icon: "https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/prettier.svg",
+    },
 };
 
 export type Experience = {
@@ -221,6 +253,10 @@ export type Experience = {
     company: string;
     description: string[];
     skills: SkillNames[];
+    /** Distingue formazione ed esperienza lavorativa nella timeline. */
+    kind: "education" | "work";
+    /** Mostra il pallino "in corso" sulla timeline. */
+    current?: boolean;
 };
 
 export const EXPERIENCE: Experience[] = [
@@ -230,6 +266,8 @@ export const EXPERIENCE: Experience[] = [
         endDate: "In corso",
         title: "Laurea Triennale in Informatica",
         company: "Università della Calabria (Unical) - DEMACS",
+        kind: "education",
+        current: true,
         description: [
             "Percorso di studi fortemente orientato al problem-solving e alla progettazione di sistemi complessi.",
             "Solide basi teoriche in ingegneria del software, algoritmi, basi di dati, architetture di rete e intelligenza artificiale.",
@@ -250,6 +288,7 @@ export const EXPERIENCE: Experience[] = [
         endDate: "Giu 2026",
         title: "Technical Assistant",
         company: "Medical Convention",
+        kind: "work",
         description: [
             "Assistenza tecnica e gestione infrastruttura informatica durante convention di medici professionisti.",
             "Gestione dei trasferimenti live delle slide in tempo reale tramite TeamViewer.",
@@ -262,6 +301,7 @@ export const EXPERIENCE: Experience[] = [
         endDate: "2022",
         title: "Diploma Conduzione del Mezzo Navale",
         company: "Istituto Tecnico Nautico 'Mario Ciliberto'",
+        kind: "education",
         description: [
             "Studio approfondito di materie tecnico-scientifiche (matematica, fisica, navigazione elettronica).",
             "Forma mentis analitica basata su logica e precisione, sviluppata tramite la gestione di strumenti navali complessi sotto pressione.",
