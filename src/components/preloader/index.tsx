@@ -78,8 +78,23 @@ function Preloader({ children, disabled = false }: PreloaderProps) {
         setIsLoading(false);
       },
     });
+
+    // GSAP's tween (like every rAF-driven animation, including the ones
+    // driving the exit transition below) only advances while the tab is
+    // actually painting frames. A backgrounded/throttled tab during this
+    // window — a notification, an app switch, the screen dimming on mobile —
+    // can leave it permanently stuck mid-tween, wedging the full-screen
+    // splash in place (with it, every click and every scroll on the page,
+    // since it still sits on top at pointer-events: auto). setTimeout still
+    // fires for backgrounded tabs where rAF doesn't, so it's a real fallback
+    // rather than the same failure mode twice.
+    const fallback = setTimeout(() => {
+      setIsLoading(false);
+    }, LOADING_TIME * 1000 + 1500);
+
     return () => {
       loadingTween.current?.kill();
+      clearTimeout(fallback);
     };
   }, [skip]);
 
