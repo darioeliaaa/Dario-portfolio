@@ -42,7 +42,7 @@ const ProjectsSection = () => {
                     onPointerMove={drag.onPointerMove}
                     onPointerUp={drag.onPointerUp}
                     onPointerCancel={drag.onPointerCancel}
-                    className="scrollbar-none flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-2 [touch-action:none]"
+                    className="scrollbar-none flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-2 [touch-action:pan-y]"
                     data-lenis-prevent
                 >
                     {projects.map((project) => (
