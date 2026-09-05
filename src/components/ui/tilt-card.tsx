@@ -62,6 +62,13 @@ export function TiltCard({
 
   return (
     <motion.div
+      // Forces a full remount when `disableTilt` flips instead of patching
+      // props on the same instance — `isMobile`/`reducedMotion` both start
+      // out `false` for one render before their detection effects resolve,
+      // and a prop update that just stops mentioning rotateX/rotateY doesn't
+      // necessarily clear the `transform` those already wrote, leaving the
+      // card stuck mid-tilt (visually scaled/skewed) instead of flat.
+      key={disableTilt ? "flat" : "tilt"}
       ref={ref}
       onMouseMove={disableTilt ? undefined : handleMove}
       onMouseLeave={disableTilt ? undefined : handleLeave}

@@ -36,6 +36,13 @@ const SectionWrapper = ({ id, className, children, ...props }: SectionWrapperPro
       {...props}
     >
       <motion.div
+        // `key` forces a full remount when `isMobile` flips instead of just
+        // patching props on the same instance — otherwise the very first
+        // render (before the media-query effect resolves, always `false`
+        // initially) can apply a `transform` that a later prop update simply
+        // stops mentioning rather than actually clearing, leaving the
+        // section stuck scaled down forever on mobile.
+        key={isMobile ? "mobile" : "desktop"}
         style={isMobile ? { opacity } : { opacity, scale }}
         className="w-full h-full"
       >
