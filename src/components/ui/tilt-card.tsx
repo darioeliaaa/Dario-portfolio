@@ -4,6 +4,7 @@ import { useRef } from "react";
 import { motion, useMotionTemplate, useMotionValue, useSpring } from "motion/react";
 import { cn } from "@/lib/utils";
 import { usePerfProfile } from "@/hooks/use-perf-profile";
+import { useMediaQuery } from "@/hooks/use-media-query";
 
 /**
  * Wraps children in a card that tilts toward the cursor (perspective +
@@ -11,6 +12,14 @@ import { usePerfProfile } from "@/hooks/use-perf-profile";
  * pointer — the tactile, premium-feeling hover every high-end portfolio
  * leans on for its project grid. Springs everything, so it settles instead
  * of snapping; falls back to a plain static card under reduced motion.
+ *
+ * Skipped on mobile entirely, not just visually inert: there's no cursor to
+ * track, so it's pure downside there — a `transform` (even the identity
+ * `perspective(900px) rotateX(0) rotateY(0)` this sits at when nothing is
+ * hovering) on an ancestor breaks iOS Safari's handling of drag gestures and
+ * input focus for anything nested inside it. Confirmed on real devices: it
+ * silently broke the mobile carousels' swipe and made the contact form's
+ * fields impossible to focus.
  */
 export function TiltCard({
   children,
@@ -21,6 +30,7 @@ export function TiltCard({
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const { reducedMotion } = usePerfProfile();
+  const isMobile = useMediaQuery("(max-width: 767px)");
 
   // Pointer position as 0–1 fractions of the card, for the sheen's origin.
   const px = useMotionValue(50);
@@ -48,20 +58,22 @@ export function TiltCard({
     rotateY.set(0);
   };
 
+  const disableTilt = reducedMotion || isMobile;
+
   return (
     <motion.div
       ref={ref}
-      onMouseMove={handleMove}
-      onMouseLeave={handleLeave}
-      style={{
-        rotateX: reducedMotion ? 0 : rotateX,
-        rotateY: reducedMotion ? 0 : rotateY,
-        transformPerspective: 900,
-      }}
+      onMouseMove={disableTilt ? undefined : handleMove}
+      onMouseLeave={disableTilt ? undefined : handleLeave}
+      // Omitting rotateX/rotateY/transformPerspective entirely on mobile
+      // (not just zeroing them) matters: Framer Motion writes a `transform`
+      // string onto the element as soon as any of these keys are present in
+      // `style`, even in their neutral 0deg/perspective(900px) state.
+      style={disableTilt ? undefined : { rotateX, rotateY, transformPerspective: 900 }}
       className={cn("group/tilt relative", className)}
     >
       {children}
-      {!reducedMotion && (
+      {!disableTilt && (
         <motion.span
           aria-hidden
           style={{ backgroundImage: sheen }}
