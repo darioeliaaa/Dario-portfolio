@@ -8,8 +8,11 @@
   backdrop-filter: blur(12px);
 
   .background {
-    background-color: hsl(240 10% 3.9%); // constant color instead of using a css variable
-    opacity: 0.5;
+    // Theme-aware: this used to be a constant dark color, so the full-screen
+    // menu backdrop stayed near-black even in light mode — foreground text
+    // (also theme-aware) landed dark-on-dark there and was unreadable.
+    background-color: hsl(var(--background));
+    opacity: 0.92;
     height: 100%;
     width: 100%;
     position: absolute;

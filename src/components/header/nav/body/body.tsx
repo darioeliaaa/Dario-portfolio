@@ -47,7 +47,11 @@ export default function Body({
           exit="exit"
           key={char + i}
         >
-          {char}
+          {/* A literal " " as the sole content of its own inline box gets
+              trimmed away by normal CSS whitespace collapsing — multi-word
+              titles ("Chi sono") rendered as "Chisono". nbsp isn't subject
+              to that collapsing. */}
+          {char === " " ? " " : char}
         </motion.span>
       );
     });
@@ -56,25 +60,42 @@ export default function Body({
 
   return (
     <div className={cn(styles.body, "flex flex-col items-end md:flex-row")}>
-      <FunnyThemeToggle className="w-6 h-6 mr-6 flex md:hidden" />
+      <FunnyThemeToggle className="mb-2 mr-0 flex h-6 w-6 self-end md:mb-0 md:mr-6 md:hidden" />
       {links.map((link, index) => {
         const { title, href, target } = link;
+        const isCurrent = currentHref === href;
 
         return (
           <Link
             key={`l_${index}`}
             href={href}
             target={target}
-            className="cursor-can-hover rounded-lg"
+            className="group/navlink cursor-can-hover flex w-full items-baseline justify-end gap-3 rounded-lg md:w-auto md:justify-start"
+            onMouseOver={() => setSelectedLink({ isActive: true, index })}
+            onMouseLeave={() => setSelectedLink({ isActive: false, index })}
           >
+            {/* Index number — editorial touch, and doubles as the "current
+                page" indicator via the accent color so the plain underline
+                the old design relied on isn't the only signal. */}
+            <span
+              className={cn(
+                "font-mono text-xs tabular-nums tracking-wider transition-colors duration-300 md:text-sm",
+                isCurrent
+                  ? "text-spark"
+                  : "text-muted-foreground/50 group-hover/navlink:text-spark"
+              )}
+            >
+              {String(index + 1).padStart(2, "0")}
+            </span>
+
             <motion.p
               className={cn(
-                "font-display rounded-lg",
-                currentHref !== href ? "text-muted-foreground" : "underline"
+                "font-display rounded-lg transition-colors duration-300",
+                isCurrent
+                  ? "text-foreground"
+                  : "text-muted-foreground group-hover/navlink:text-foreground"
               )}
               onClick={() => setIsActive(false)}
-              onMouseOver={() => setSelectedLink({ isActive: true, index })}
-              onMouseLeave={() => setSelectedLink({ isActive: false, index })}
               variants={blur}
               animate={
                 selectedLink.isActive && selectedLink.index !== index
@@ -83,6 +104,12 @@ export default function Body({
               }
             >
               {getChars(title)}
+              {isCurrent && (
+                <span
+                  aria-hidden
+                  className="ml-2 inline-block h-2 w-2 rounded-full bg-spark align-middle"
+                />
+              )}
             </motion.p>
           </Link>
         );

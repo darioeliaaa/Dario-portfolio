@@ -8,8 +8,11 @@ export const STATES = {
       rotation: { x: 0, y: 0, z: 0 },
     },
     mobile: {
-      scale: { x: 0.30, y: 0.30, z: 0.30 },
-      position: { x: 0, y: -200, z: 0 },
+      // Nudged down/smaller from the original (0.30, y:-200): the hero grew
+      // an availability badge, tagline and location row since this was
+      // tuned, and the keyboard sat right on top of the CTA/social row.
+      scale: { x: 0.22, y: 0.22, z: 0.22 },
+      position: { x: 0, y: -40, z: 0 },
       rotation: { x: 0, y: 0, z: 0 },
     },
   },
