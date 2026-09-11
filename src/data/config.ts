@@ -55,6 +55,22 @@ const config = {
     avatar: "",
     site: "https://dario-portfolio-phi.vercel.app",
 
+    /**
+     * Il CV vero e proprio, quello che viene scaricato dalla pagina /cv.
+     * È il PDF autentico messo in /public: la pagina /cv ne è la versione
+     * web (stessi contenuti, leggibile e indicizzabile), ma il file che
+     * finisce in mano a un recruiter è ESATTAMENTE questo.
+     *
+     * Per aggiornarlo: sostituisci public/Dario_Elia_CV.pdf con la nuova
+     * versione (stesso nome, così il link non cambia mai) e allinea i
+     * contenuti di src/app/cv/cv-view.tsx.
+     */
+    cv: {
+        href: "/Dario_Elia_CV.pdf",
+        /** Nome con cui il file viene salvato sul computer di chi scarica. */
+        filename: "Dario_Elia_CV_2026.pdf",
+    },
+
     // for github stars button
     githubUsername: "darioeliaaa",
     githubRepo: "Dario-portfolio",

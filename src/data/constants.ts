@@ -295,6 +295,24 @@ export const EXPERIENCE: Experience[] = [
         ],
     },
     {
+        id: 4,
+        startDate: "Apr 2026",
+        endDate: "Set 2026",
+        title: "Full-Stack Developer (Freelance)",
+        company: "Ohimà Che Pizza! — Marina di Strongoli",
+        kind: "work",
+        description: [
+            "Sito e gestionale per una pizzeria vera, progettato, sviluppato e consegnato come pacchetto chiuso: frontend Angular su Vercel, backend Spring Boot su Render, PostgreSQL su Neon. In produzione su ohimachepizza.it.",
+            "Pannello admin protetto da JWT per gestire menù e prezzi senza toccare il codice; consegna finale con redesign completo dell'estetica (Pop-Art/Neubrutalist).",
+        ],
+        skills: [
+            SkillNames.JAVA,
+            SkillNames.TS,
+            SkillNames.POSTGRES,
+            SkillNames.VERCEL,
+        ],
+    },
+    {
         id: 2,
         startDate: "Giu 2026",
         endDate: "Giu 2026",
