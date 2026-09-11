@@ -434,7 +434,7 @@ const demoProjects: Project[] = [
     {
         id: "pelaggi",
         category: "Sito Vetrina · Case Study",
-        title: "Agricola Pelaggi",
+        title: "Azienda Agricola",
         src: "/assets/projects-screenshots/pelaggi/home.png",
         screenshots: ["home.png"],
         skills: {
@@ -446,7 +446,7 @@ const demoProjects: Project[] = [
             backend: [PROJECT_SKILLS.ssr, PROJECT_SKILLS.express],
         },
         live: "https://sito-pelaggi.vercel.app",
-        github: "https://github.com/darioeliaaa/sitoPelaggi",
+        github: "https://github.com/darioeliaaa/sitoAziendaAgricola",
         get content() {
             return (
                 <div>
