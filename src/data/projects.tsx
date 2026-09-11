@@ -445,7 +445,7 @@ const demoProjects: Project[] = [
             ],
             backend: [PROJECT_SKILLS.ssr, PROJECT_SKILLS.express],
         },
-        live: "#",
+        live: "https://sito-pelaggi.vercel.app",
         github: "https://github.com/darioeliaaa/sitoPelaggi",
         get content() {
             return (
