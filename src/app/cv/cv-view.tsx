@@ -17,7 +17,7 @@ import { SiGithub, SiLinkedin } from "react-icons/si";
 import { buttonVariants } from "@/components/ui/button";
 import { config } from "@/data/config";
 import { EXPERIENCE } from "@/data/constants";
-import projects from "@/data/projects";
+import projects, { demoProjects } from "@/data/projects";
 import { cn } from "@/lib/utils";
 
 /**
@@ -270,9 +270,11 @@ export default function CvView() {
           </div>
         </Section>
 
+        {/* I case study dimostrativi chiudono la lista: la loro `category`
+            dice già che sono esercizi personali, come nel PDF. */}
         <Section title="Progetti selezionati">
           <div className="flex flex-col gap-4">
-            {projects.map((project) => (
+            {[...projects, ...demoProjects].map((project) => (
               <div key={project.id}>
                 <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
                   <h3 className="text-sm font-semibold">{project.title}</h3>

@@ -29,7 +29,7 @@ const ContactSection = () => {
       <SectionHeader
         id="contact"
         eyebrow="Contatti"
-        index={6}
+        index={7}
         className="relative mb-14"
         title={
           <>

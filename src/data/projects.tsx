@@ -125,6 +125,18 @@ const PROJECT_SKILLS = {
         icon: <span className="text-xs font-bold">MQ</span>,
     },
     cloudflare: brand("Cloudflare", "cloudflare-mono.svg"),
+    ssr: {
+        title: "Angular SSR",
+        bg: "black",
+        fg: "white",
+        icon: <span className="text-xs font-bold">SSR</span>,
+    },
+    express: {
+        title: "Express",
+        bg: "black",
+        fg: "white",
+        icon: <span className="text-xs font-bold">Ex</span>,
+    },
     androidStudio: {
         title: "Android Studio",
         bg: "black",
@@ -411,4 +423,72 @@ const projects: Project[] = [
     },
 ];
 
+/**
+ * Progetti dimostrativi: case study nati di mia iniziativa, non commissionati
+ * da nessun cliente. Stanno in un array separato — e in una sezione separata
+ * del sito — proprio per non sembrare lavori pagati: il committente che
+ * guarda il portfolio deve poter distinguere a colpo d'occhio cosa è stato
+ * consegnato davvero e cosa è un esercizio di stile.
+ */
+const demoProjects: Project[] = [
+    {
+        id: "pelaggi",
+        category: "Sito Vetrina · Case Study",
+        title: "Agricola Pelaggi",
+        src: "/assets/projects-screenshots/pelaggi/home.png",
+        screenshots: ["home.png"],
+        skills: {
+            frontend: [
+                PROJECT_SKILLS.angular,
+                PROJECT_SKILLS.ts,
+                PROJECT_SKILLS.html,
+            ],
+            backend: [PROJECT_SKILLS.ssr, PROJECT_SKILLS.express],
+        },
+        live: "#",
+        github: "https://github.com/darioeliaaa/sitoPelaggi",
+        get content() {
+            return (
+                <div>
+                    <TypographyP className="font-mono text-2xl text-center">
+                        Sito vetrina per un&apos;azienda agricola con frantoio di proprietà.
+                    </TypographyP>
+                    <TypographyP className="font-mono mt-4">
+                        Un case study personale, non un incarico commissionato: l&apos;ho
+                        costruito per mettere alla prova un&apos;estetica editoriale e il
+                        rendering server-side di Angular su un sito dove la SEO locale è
+                        tutto. I contatti e i dati aziendali nella demo sono volutamente
+                        dei segnaposto.
+                    </TypographyP>
+
+                    <TypographyH3 className="my-4 mt-8">🎨 Design editoriale</TypographyH3>
+                    <ul className="list-disc list-inside font-mono mb-4 space-y-2">
+                        <li><strong>Tipografia:</strong> Playfair Display per i titoli e Inter per il testo, l&apos;accoppiata serif/sans che dà il tono da rivista.</li>
+                        <li><strong>Palette:</strong> verde oliva, oro e crema come variabili CSS, così l&apos;intera identità si cambia da un punto solo.</li>
+                        <li><strong>Angoli vivi:</strong> raggi di 2px invece dei soliti bordi morbidi, per un&apos;impaginazione più asciutta e stampata.</li>
+                    </ul>
+
+                    <TypographyH3 className="my-4 mt-8">⚙️ Architettura</TypographyH3>
+                    <ul className="list-disc list-inside font-mono mb-4 space-y-2">
+                        <li><strong>Angular 21</strong> con componenti standalone e routing su quattro pagine (Home, Frantoio, Chi Siamo, Contatti).</li>
+                        <li><strong>SSR e prerendering:</strong> <code>@angular/ssr</code> su Express, con tutte le rotte generate staticamente in fase di build.</li>
+                        <li><strong>Form reattivi:</strong> la pagina contatti usa i Reactive Forms con validazione su nome, email e messaggio.</li>
+                        <li><strong>Galleria del frantoio:</strong> carosello scritto a mano, senza librerie, con navigazione avanti/indietro e puntini cliccabili.</li>
+                    </ul>
+
+                    <TypographyH3 className="my-4 mt-8">🔍 SEO locale</TypographyH3>
+                    <p className="font-mono mb-2">
+                        Il punto dell&apos;esercizio: title e meta description scritti attorno
+                        alla query che conta davvero (&quot;olio extravergine a Strongoli&quot;),
+                        Open Graph per l&apos;anteprima su WhatsApp e Instagram, <code>lang=&quot;it&quot;</code>,
+                        theme-color per la barra del browser su mobile e HTML già renderizzato
+                        alla prima richiesta, senza aspettare il JavaScript.
+                    </p>
+                </div>
+            );
+        },
+    },
+];
+
+export { demoProjects };
 export default projects;
