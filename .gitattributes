@@ -1,0 +1,3 @@
+# Il CV è un binario: niente diff testuali, niente normalizzazione dei
+# line-ending (corromperebbe il file).
+*.pdf binary

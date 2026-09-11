@@ -5,59 +5,115 @@ import Link from "next/link";
 import { motion } from "motion/react";
 import {
   ArrowLeft,
-  Printer,
+  Download,
   MapPin,
   Mail,
   Globe,
   Briefcase,
   GraduationCap,
+  Languages,
 } from "lucide-react";
 import { SiGithub, SiLinkedin } from "react-icons/si";
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import { config } from "@/data/config";
 import { EXPERIENCE } from "@/data/constants";
 import projects from "@/data/projects";
 import { cn } from "@/lib/utils";
 
 /**
- * Curriculum generated from the same data the homepage uses (EXPERIENCE,
- * projects) — one source of truth for those, so they can never drift out of
- * date. "Salva PDF" goes through the browser's own print dialog (see the
- * @media print block in globals.css), which means there's no binary to keep
- * in sync either.
+ * Versione web del curriculum. Il documento *autoritativo* è il PDF reale in
+ * /public (config.cv): è quello che il bottone consegna a chi scarica, ed è
+ * quello che conta quando il CV finisce in mano a un recruiter. Questa pagina
+ * è la sua trasposizione leggibile e indicizzabile, quindi i testi qui sotto
+ * sono trascritti dal PDF e vanno riallineati a mano ogni volta che il PDF
+ * cambia — meglio due file da tenere in pari che una pagina che promette
+ * qualcosa di diverso dal file scaricato.
  *
- * The skill groups below are plain strings on purpose, not the keyboard's
- * `SkillNames`/`SKILLS` — that enum is keyed to what's physically engraved on
- * the 3D keyboard's keycaps, a completely different (and more volatile)
- * concern than "what goes on the CV". Sharing it here meant a keyboard
- * re-shuffle could silently rewrite claimed skills on the résumé.
+ * Niente più "Salva come PDF" via window.print(): generava un *secondo* PDF,
+ * diverso da quello ufficiale. Il print stylesheet resta comunque valido se
+ * qualcuno stampa la pagina dal browser.
+ *
+ * Le skill sono stringhe semplici, non il `SkillNames`/`SKILLS` della
+ * tastiera: quell'enum è legato a ciò che è fisicamente inciso sui tasti del
+ * modello 3D, una preoccupazione diversa (e molto più volatile) da "cosa va
+ * scritto sul CV". Condividerlo significava che un rimescolamento della
+ * tastiera poteva riscrivere in silenzio le competenze dichiarate.
  */
 
+/** Trascritto dal PDF — sezione PROFILO. */
+const PROFILE =
+  "Studente di Informatica all'Unical (DEMACS) con il pallino per le interfacce fuori dagli schemi. Costruisco applicazioni intere, dal database al pixel che l'utente tocca per primo: ho sviluppato e consegnato il sito e il gestionale di una pizzeria vera, ho fatto assistenza tecnica dal vivo sotto pressione, e all'università ho affrontato progetti via via più grandi, fino a un sistema a microservizi con app Android nativa realizzato in team. Cerco la mia prima occasione come sviluppatore full-stack junior.";
+
+/** Trascritte dal PDF — sezione COMPETENZE TECNICHE. */
 const SKILL_GROUPS: { title: string; skills: string[] }[] = [
   {
     title: "Linguaggi",
-    skills: ["JavaScript", "TypeScript", "HTML", "CSS"],
+    skills: [
+      "Java",
+      "TypeScript",
+      "JavaScript",
+      "Kotlin",
+      "Python",
+      "C++",
+      "C",
+      "SQL",
+      "HTML5",
+      "CSS3",
+    ],
+  },
+  {
+    title: "Backend",
+    skills: [
+      "Spring Boot",
+      "Spring Security",
+      "JWT",
+      "OAuth2/OIDC",
+      "REST API",
+      "Microservizi",
+      "WebSocket",
+    ],
   },
   {
     title: "Frontend",
-    skills: ["React", "Next.js", "Vue.js", "Tailwind"],
-  },
-  {
-    title: "Backend & Dati",
-    skills: ["Node.js", "Express", "PostgreSQL", "MongoDB", "Prisma"],
-  },
-  {
-    title: "Tooling & Cloud",
     skills: [
-      "Git",
-      "GitHub",
-      "Docker",
-      "Linux",
-      "NGINX",
-      "Vercel",
-      "AWS",
+      "Angular",
+      "React",
+      "Next.js",
+      "Tailwind CSS",
+      "GSAP",
+      "Three.js/Spline",
     ],
   },
+  {
+    title: "Mobile",
+    skills: ["Kotlin", "Jetpack Compose"],
+  },
+  {
+    title: "Database",
+    skills: ["PostgreSQL", "MySQL", "SQLite"],
+  },
+  {
+    title: "Desktop UI",
+    skills: ["JavaFX", "Java Swing"],
+  },
+  {
+    title: "DevOps & Tool",
+    skills: [
+      "Docker",
+      "Git/GitHub",
+      "Vercel",
+      "Render",
+      "Keycloak",
+      "RabbitMQ",
+      "Maven",
+    ],
+  },
+];
+
+/** Trascritte dal PDF — sezione LINGUE. */
+const LANGUAGES: { name: string; level: string }[] = [
+  { name: "Italiano", level: "Madrelingua" },
+  { name: "Inglese", level: "B2" },
 ];
 
 export default function CvView() {
@@ -81,10 +137,21 @@ export default function CvView() {
             <ArrowLeft className="h-4 w-4" />
             Torna al portfolio
           </Link>
-          <Button onClick={() => window.print()}>
-            <Printer className="h-4 w-4" />
-            Salva come PDF
-          </Button>
+          {/* Link diretto al PDF vero, non una stampa della pagina: chi
+              scarica deve ritrovarsi in mano esattamente il documento
+              ufficiale. `download` impone anche il nome del file salvato.
+              È un <a> con lo stile del bottone, non <Button asChild>: quel
+              componente inietta `pointer-events-none` in tutti i figli e
+              passa un array a Radix Slot, che finirebbe per non renderizzare
+              nulla. */}
+          <a
+            href={config.cv.href}
+            download={config.cv.filename}
+            className={cn(buttonVariants(), "cursor-can-hover")}
+          >
+            <Download className="h-4 w-4" />
+            Scarica il CV (PDF)
+          </a>
         </motion.div>
       </div>
 
@@ -153,7 +220,7 @@ export default function CvView() {
 
         <Section title="Profilo">
           <p className="text-sm leading-relaxed text-muted-foreground">
-            {config.description.long}
+            {PROFILE}
           </p>
         </Section>
 
@@ -189,14 +256,17 @@ export default function CvView() {
                 </p>
               </div>
             ))}
-            <div>
-              <h3 className="text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">
-                Altro
-              </h3>
-              <p className="mt-1.5 text-sm leading-relaxed">
-                Java · Spring Boot · Kotlin · JavaFX · SQLite · Spline (Web 3D)
+          </div>
+        </Section>
+
+        <Section title="Lingue" icon={Languages}>
+          <div className="flex flex-wrap gap-x-8 gap-y-2">
+            {LANGUAGES.map((lang) => (
+              <p key={lang.name} className="text-sm">
+                {lang.name}{" "}
+                <span className="text-muted-foreground">— {lang.level}</span>
               </p>
-            </div>
+            ))}
           </div>
         </Section>
 
