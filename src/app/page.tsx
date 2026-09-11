@@ -9,6 +9,7 @@ import AboutSection from "@/components/sections/about";
 import SkillsSection from "@/components/sections/skills";
 import ExperienceSection from "@/components/sections/experience";
 import ProjectsSection from "@/components/sections/projects";
+import DemoProjectsSection from "@/components/sections/demo-projects";
 import PricingSection from "@/components/sections/pricing-section";
 import ContactSection from "@/components/sections/contact";
 
@@ -24,6 +25,7 @@ function MainPage() {
                 <SkillsSection />
                 <ExperienceSection />
                 <ProjectsSection />
+                <DemoProjectsSection />
                 <PricingSection />
                 <ContactSection />
             </main>

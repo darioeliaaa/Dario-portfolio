@@ -66,6 +66,7 @@ function Footer() {
             {[
               { title: "Chi sono", href: "/#about" },
               { title: "Progetti", href: "/#projects" },
+              { title: "Dimostrativi", href: "/#demo" },
               { title: "Tariffe", href: "/#tariffe" },
               { title: "CV", href: "/cv" },
               { title: "Contatti", href: "/#contact" },

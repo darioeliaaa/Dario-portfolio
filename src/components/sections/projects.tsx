@@ -84,7 +84,7 @@ const ProjectsSection = () => {
     );
 };
 
-const ProjectCard = ({
+export const ProjectCard = ({
     project,
     featured = false,
 }: {

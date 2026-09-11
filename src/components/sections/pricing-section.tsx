@@ -150,7 +150,7 @@ export default function PricingSection() {
                 <SectionHeader
                     id="tariffe"
                     eyebrow="Tariffe"
-                    index={5}
+                    index={6}
                     title="Servizi e prezzi"
                     desc="Prezzi di partenza trasparenti. Ogni preventivo finale dipende da funzionalità, contenuti e tempi — ne parliamo insieme, senza sorprese."
                     className="static mb-14 md:mb-20"
