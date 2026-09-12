@@ -48,6 +48,14 @@ const config = {
     /** ⚠️ Inserisci qui la tua email pubblica per attivarne la visualizzazione. */
     email: "",
     /**
+     * Indirizzo di ripiego del form contatti: usato SOLO per costruire il
+     * link mailto al momento dell'invio, quando NEXT_PUBLIC_FORM_ENDPOINT non
+     * è configurato. Non viene mai stampato come testo nella pagina — è
+     * `email` qui sopra a decidere cosa è visibile — così non diventa
+     * l'ennesimo indirizzo raccolto dagli scraper.
+     */
+    contactEmail: "darioelia61@gmail.com",
+    /**
      * Foto profilo per la sezione "Chi sono". Lascia vuoto per mostrare il
      * monogramma disegnato; metti una tua foto in /public/assets e indicala qui
      * (es. "/assets/dario.jpg") per sostituirlo.

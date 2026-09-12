@@ -8,10 +8,21 @@ import { cn } from "@/lib/utils";
 import { useToast } from "./ui/use-toast";
 import { Button } from "./ui/button";
 import { z } from "zod";
+import { config } from "@/data/config";
 
-/** Formspree endpoint. Override per-environment without touching the code. */
-const FORM_ENDPOINT =
-    process.env.NEXT_PUBLIC_FORM_ENDPOINT || "https://formspree.io/f/maqljbod";
+/**
+ * Endpoint del form (Formspree, Basin, Web3Forms…), da NEXT_PUBLIC_FORM_ENDPOINT.
+ *
+ * Qui c'era un ID Formspree hardcoded arrivato col template di partenza: un
+ * form register di QUALCUN ALTRO, ancora vivo e che accetta invii. Il
+ * risultato era il peggiore possibile — il visitatore vedeva "Messaggio
+ * inviato", i coriandoli partivano, e il messaggio finiva nella casella del
+ * proprietario di quel form. Meglio nessun endpoint che un endpoint sbagliato:
+ * senza configurazione il form ora ripiega sul client di posta del
+ * visitatore (vedi `mailtoFallback`), che funziona sempre e non richiede
+ * nessun servizio esterno.
+ */
+const FORM_ENDPOINT = process.env.NEXT_PUBLIC_FORM_ENDPOINT?.trim() || "";
 
 const SUBJECTS = [
     "Sito vetrina / Landing page",
@@ -37,7 +48,10 @@ const ContactForm = () => {
     const [subject, setSubject] = React.useState<string>(SUBJECTS[0]);
     const [message, setMessage] = React.useState("");
     const [loading, setLoading] = React.useState(false);
-    const [sent, setSent] = React.useState(false);
+    // "form" = partito davvero verso l'endpoint; "mail" = abbiamo solo aperto
+    // il client di posta, quindi il messaggio NON è ancora stato inviato e la
+    // conferma non deve dire il contrario.
+    const [sent, setSent] = React.useState<null | "form" | "mail">(null);
     const [errors, setErrors] = React.useState<FieldErrors>({});
     // Honeypot: real people never see this field, bots fill everything.
     const honeypot = React.useRef<HTMLInputElement>(null);
@@ -50,7 +64,7 @@ const ContactForm = () => {
 
         // Silently accept-and-drop bot submissions.
         if (honeypot.current?.value) {
-            setSent(true);
+            setSent("form");
             return;
         }
 
@@ -62,6 +76,24 @@ const ContactForm = () => {
                 if (!fieldErrors[field]) fieldErrors[field] = issue.message;
             });
             setErrors(fieldErrors);
+            return;
+        }
+
+        // Nessun endpoint configurato: apriamo il client di posta del
+        // visitatore con tutto già compilato, invece di fingere un invio.
+        if (!FORM_ENDPOINT) {
+            const body = [
+                `Nome: ${fullName}`,
+                `Email: ${email}`,
+                `Richiesta: ${subject}`,
+                "",
+                message,
+            ].join("\n");
+            window.location.href =
+                `mailto:${config.contactEmail}` +
+                `?subject=${encodeURIComponent(`Nuovo contatto dal portfolio — ${subject}`)}` +
+                `&body=${encodeURIComponent(body)}`;
+            setSent("mail");
             return;
         }
 
@@ -119,7 +151,7 @@ const ContactForm = () => {
             setSubject(SUBJECTS[0]);
             // Stay put: the old version pushed back to "/", yanking the reader
             // away from the section they were reading.
-            setSent(true);
+            setSent("form");
         } catch {
             toast({
                 title: "Errore",
@@ -141,11 +173,15 @@ const ContactForm = () => {
                 className="flex flex-col items-center gap-3 rounded-xl border border-border bg-secondary/30 px-6 py-10 text-center"
             >
                 <CheckCircle2 className="h-8 w-8 text-spark" />
-                <p className="font-display text-lg font-bold">Messaggio inviato!</p>
-                <p className="max-w-sm text-sm text-muted-foreground">
-                    Grazie per avermi scritto. Ti rispondo di solito entro 24 ore.
+                <p className="font-display text-lg font-bold">
+                    {sent === "mail" ? "Ci siamo quasi!" : "Messaggio inviato!"}
                 </p>
-                <Button variant="outline" size="sm" onClick={() => setSent(false)}>
+                <p className="max-w-sm text-sm text-muted-foreground">
+                    {sent === "mail"
+                        ? "Ho aperto il tuo programma di posta con il messaggio già pronto: premi invia da lì e ti rispondo di solito entro 24 ore."
+                        : "Grazie per avermi scritto. Ti rispondo di solito entro 24 ore."}
+                </p>
+                <Button variant="outline" size="sm" onClick={() => setSent(null)}>
                     Invia un altro messaggio
                 </Button>
             </div>

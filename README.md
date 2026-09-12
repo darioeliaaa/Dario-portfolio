@@ -79,7 +79,7 @@ Quasi tutto si cambia dai file dentro `src/data/`:
 
 | Variabile | Serve per |
 |---|---|
-| `NEXT_PUBLIC_FORM_ENDPOINT` | Endpoint del form contatti (default: Formspree già configurato) |
+| `NEXT_PUBLIC_FORM_ENDPOINT` | Endpoint del form contatti, da creare col proprio account (Formspree, Basin…). Se manca, il form apre il client di posta del visitatore invece di inviare |
 | `NEXT_PUBLIC_WS_URL` | Funzionalità realtime (cursori live, presenza) — vuoto = disattivate |
 | `UMAMI_DOMAIN`, `UMAMI_SITE_ID` | Analytics Umami |
 | `NEXT_PUBLIC_GA_ID` | Google Analytics |
