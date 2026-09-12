@@ -38,7 +38,7 @@ freelance e un CV generato dagli stessi dati del sito.
 | **Styling** | Tailwind CSS, shadcn/ui, Aceternity UI |
 | **Animazioni** | GSAP + ScrollTrigger, Motion (Framer Motion), Lenis |
 | **3D** | Spline Runtime |
-| **Form** | Formspree + validazione Zod |
+| **Form** | Rotta interna `/api/contact` + Resend, validazione Zod su client e server |
 
 ---
 
@@ -79,7 +79,10 @@ Quasi tutto si cambia dai file dentro `src/data/`:
 
 | Variabile | Serve per |
 |---|---|
-| `NEXT_PUBLIC_FORM_ENDPOINT` | Endpoint del form contatti, da creare col proprio account (Formspree, Basin…). Se manca, il form apre il client di posta del visitatore invece di inviare |
+| `RESEND_API_KEY` | **Obbligatoria.** Chiave [Resend](https://resend.com) con cui `/api/contact` invia le email del form |
+| `CONTACT_TO_EMAIL` | Destinatario dei messaggi (default: `config.contactEmail`) |
+| `CONTACT_FROM_EMAIL` | Mittente, su dominio verificato in Resend (default: `onboarding@resend.dev`) |
+| `NEXT_PUBLIC_FORM_ENDPOINT` | Opzionale: servizio esterno (Formspree, Basin…) al posto della rotta interna |
 | `NEXT_PUBLIC_WS_URL` | Funzionalità realtime (cursori live, presenza) — vuoto = disattivate |
 | `UMAMI_DOMAIN`, `UMAMI_SITE_ID` | Analytics Umami |
 | `NEXT_PUBLIC_GA_ID` | Google Analytics |

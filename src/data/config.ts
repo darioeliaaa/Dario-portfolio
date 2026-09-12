@@ -48,11 +48,11 @@ const config = {
     /** ⚠️ Inserisci qui la tua email pubblica per attivarne la visualizzazione. */
     email: "",
     /**
-     * Indirizzo di ripiego del form contatti: usato SOLO per costruire il
-     * link mailto al momento dell'invio, quando NEXT_PUBLIC_FORM_ENDPOINT non
-     * è configurato. Non viene mai stampato come testo nella pagina — è
-     * `email` qui sopra a decidere cosa è visibile — così non diventa
-     * l'ennesimo indirizzo raccolto dagli scraper.
+     * Dove arrivano i messaggi del form contatti. Lo legge solo il server
+     * (src/app/api/contact/route.ts), quindi non finisce mai nel bundle né
+     * viene stampato come testo nella pagina — è `email` qui sopra a decidere
+     * cosa è visibile — e non diventa l'ennesimo indirizzo raccolto dagli
+     * scraper. Sovrascrivibile con la variabile CONTACT_TO_EMAIL.
      */
     contactEmail: "darioelia61@gmail.com",
     /**

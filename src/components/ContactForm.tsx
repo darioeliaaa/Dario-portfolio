@@ -8,21 +8,22 @@ import { cn } from "@/lib/utils";
 import { useToast } from "./ui/use-toast";
 import { Button } from "./ui/button";
 import { z } from "zod";
-import { config } from "@/data/config";
 
 /**
- * Endpoint del form (Formspree, Basin, Web3Forms…), da NEXT_PUBLIC_FORM_ENDPOINT.
+ * Il messaggio parte dal sito stesso: POST alla nostra rotta, che invia
+ * l'email lato server (src/app/api/contact/route.ts) tenendo la chiave fuori
+ * dal browser.
  *
- * Qui c'era un ID Formspree hardcoded arrivato col template di partenza: un
- * form register di QUALCUN ALTRO, ancora vivo e che accetta invii. Il
- * risultato era il peggiore possibile — il visitatore vedeva "Messaggio
- * inviato", i coriandoli partivano, e il messaggio finiva nella casella del
- * proprietario di quel form. Meglio nessun endpoint che un endpoint sbagliato:
- * senza configurazione il form ora ripiega sul client di posta del
- * visitatore (vedi `mailtoFallback`), che funziona sempre e non richiede
- * nessun servizio esterno.
+ * Qui c'era un ID Formspree hardcoded arrivato col template di partenza — un
+ * form di QUALCUN ALTRO, ancora vivo e che accettava invii: il visitatore
+ * leggeva "Messaggio inviato" e il messaggio finiva nella casella del
+ * proprietario di quel form.
+ *
+ * NEXT_PUBLIC_FORM_ENDPOINT resta come scorciatoia per puntare a un servizio
+ * esterno (Formspree, Basin…) senza toccare il codice, ma non serve: se è
+ * vuota si usa la rotta interna.
  */
-const FORM_ENDPOINT = process.env.NEXT_PUBLIC_FORM_ENDPOINT?.trim() || "";
+const FORM_ENDPOINT = process.env.NEXT_PUBLIC_FORM_ENDPOINT?.trim() || "/api/contact";
 
 const SUBJECTS = [
     "Sito vetrina / Landing page",
@@ -48,10 +49,10 @@ const ContactForm = () => {
     const [subject, setSubject] = React.useState<string>(SUBJECTS[0]);
     const [message, setMessage] = React.useState("");
     const [loading, setLoading] = React.useState(false);
-    // "form" = partito davvero verso l'endpoint; "mail" = abbiamo solo aperto
-    // il client di posta, quindi il messaggio NON è ancora stato inviato e la
-    // conferma non deve dire il contrario.
-    const [sent, setSent] = React.useState<null | "form" | "mail">(null);
+    const [sent, setSent] = React.useState(false);
+    // Il messaggio d'errore del server, mostrato così com'è: distingue
+    // "servizio non configurato" da "hai inviato troppi messaggi".
+    const [sendError, setSendError] = React.useState("");
     const [errors, setErrors] = React.useState<FieldErrors>({});
     // Honeypot: real people never see this field, bots fill everything.
     const honeypot = React.useRef<HTMLInputElement>(null);
@@ -61,10 +62,11 @@ const ContactForm = () => {
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setErrors({});
+        setSendError("");
 
         // Silently accept-and-drop bot submissions.
         if (honeypot.current?.value) {
-            setSent("form");
+            setSent(true);
             return;
         }
 
@@ -79,24 +81,6 @@ const ContactForm = () => {
             return;
         }
 
-        // Nessun endpoint configurato: apriamo il client di posta del
-        // visitatore con tutto già compilato, invece di fingere un invio.
-        if (!FORM_ENDPOINT) {
-            const body = [
-                `Nome: ${fullName}`,
-                `Email: ${email}`,
-                `Richiesta: ${subject}`,
-                "",
-                message,
-            ].join("\n");
-            window.location.href =
-                `mailto:${config.contactEmail}` +
-                `?subject=${encodeURIComponent(`Nuovo contatto dal portfolio — ${subject}`)}` +
-                `&body=${encodeURIComponent(body)}`;
-            setSent("mail");
-            return;
-        }
-
         setLoading(true);
         try {
             const res = await fetch(FORM_ENDPOINT, {
@@ -108,15 +92,19 @@ const ContactForm = () => {
                 body: JSON.stringify({
                     name: fullName,
                     email,
-                    _subject: `Nuovo contatto dal portfolio — ${subject}`,
                     subject,
                     message,
+                    // Honeypot: vuoto per le persone, pieno per i bot. Il
+                    // server lo ricontrolla e scarta in silenzio.
+                    company: honeypot.current?.value ?? "",
                 }),
             });
 
+            const data = await res.json().catch(() => ({}));
             if (!res.ok) {
-                const data = await res.json().catch(() => ({}));
-                throw new Error(data.error || `Request failed (${res.status})`);
+                throw new Error(
+                    data.error || "Non sono riuscito a inviare il messaggio. Riprova tra poco."
+                );
             }
 
             toast({
@@ -151,11 +139,18 @@ const ContactForm = () => {
             setSubject(SUBJECTS[0]);
             // Stay put: the old version pushed back to "/", yanking the reader
             // away from the section they were reading.
-            setSent("form");
-        } catch {
+            setSent(true);
+        } catch (err) {
+            const msg =
+                err instanceof Error && err.message
+                    ? err.message
+                    : "Qualcosa è andato storto! Per favore riprova.";
+            // Anche nel form, non solo nel toast: il toast sparisce da solo e
+            // chi stava scrivendo si ritroverebbe senza sapere cos'è successo.
+            setSendError(msg);
             toast({
                 title: "Errore",
-                description: "Qualcosa è andato storto! Per favore riprova.",
+                description: msg,
                 className: cn(
                     "top-0 w-full flex justify-center fixed md:max-w-7xl md:top-4 md:right-4"
                 ),
@@ -173,15 +168,11 @@ const ContactForm = () => {
                 className="flex flex-col items-center gap-3 rounded-xl border border-border bg-secondary/30 px-6 py-10 text-center"
             >
                 <CheckCircle2 className="h-8 w-8 text-spark" />
-                <p className="font-display text-lg font-bold">
-                    {sent === "mail" ? "Ci siamo quasi!" : "Messaggio inviato!"}
-                </p>
+                <p className="font-display text-lg font-bold">Messaggio inviato!</p>
                 <p className="max-w-sm text-sm text-muted-foreground">
-                    {sent === "mail"
-                        ? "Ho aperto il tuo programma di posta con il messaggio già pronto: premi invia da lì e ti rispondo di solito entro 24 ore."
-                        : "Grazie per avermi scritto. Ti rispondo di solito entro 24 ore."}
+                    Grazie per avermi scritto. Ti rispondo di solito entro 24 ore.
                 </p>
-                <Button variant="outline" size="sm" onClick={() => setSent(null)}>
+                <Button variant="outline" size="sm" onClick={() => setSent(false)}>
                     Invia un altro messaggio
                 </Button>
             </div>
@@ -282,6 +273,15 @@ const ContactForm = () => {
                     Non condividerò mai i tuoi dati con nessun altro. Promesso.
                 </p>
             </div>
+
+            {sendError && (
+                <p
+                    role="alert"
+                    className="mb-3 rounded-lg border border-destructive/40 bg-destructive/10 px-3 py-2 text-sm text-destructive"
+                >
+                    {sendError}
+                </p>
+            )}
 
             <Button disabled={loading} className="w-full" size="lg" type="submit">
                 {loading ? (
