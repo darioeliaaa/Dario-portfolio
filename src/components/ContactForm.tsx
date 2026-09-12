@@ -61,6 +61,12 @@ const ContactForm = () => {
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        // Va preso QUI, in modo sincrono: React azzera `e.currentTarget` non
+        // appena l'handler passa un `await` (il fetch qui sotto), quindi
+        // leggerlo più avanti — dopo l'invio — dà `null` e manda in crash il
+        // componente. Il nodo DOM catturato ora resta valido: il form non
+        // viene smontato durante l'attesa della risposta.
+        const formEl = e.currentTarget;
         setErrors({});
         setSendError("");
 
@@ -115,7 +121,7 @@ const ContactForm = () => {
 
             // A little reward for taking the time to write — origin follows
             // the submit button so the burst feels tied to the click itself.
-            const rect = (e.currentTarget as HTMLFormElement)
+            const rect = formEl
                 .querySelector('button[type="submit"]')
                 ?.getBoundingClientRect();
             import("canvas-confetti").then(({ default: confetti }) => {
