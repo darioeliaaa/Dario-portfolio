@@ -61,7 +61,15 @@ const config = {
      * (es. "/assets/dario.jpg") per sostituirlo.
      */
     avatar: "",
-    site: "https://dario-portfolio-phi.vercel.app",
+    /**
+     * Dominio vero e proprio — quello che finisce, letteralmente, dentro le
+     * anteprime social: è il testo che l'immagine OG stampa in basso, ed è il
+     * valore di og:url/canonical/sitemap. Era rimasto sull'URL provvisorio di
+     * Vercel da prima che darioelia.it fosse collegato: chiunque condivideva
+     * il sito vedeva la card con scritto "dario-portfolio-phi.vercel.app"
+     * invece del dominio vero.
+     */
+    site: "https://www.darioelia.it",
 
     /**
      * Il CV vero e proprio, quello che viene scaricato dalla pagina /cv.
