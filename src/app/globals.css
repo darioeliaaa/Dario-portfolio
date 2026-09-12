@@ -347,6 +347,22 @@ body > canvas {
     pointer-events: auto;
   }
 
+  /* …tranne quello che è puramente decorativo, che non deve MAI rubare un
+     click. La regola qui sopra elenca `span` e `svg` per tipo, quindi vale
+     (0,1,1) e batte per specificità l'utility `.pointer-events-none` (0,1,0);
+     e siccome sta in @layer utilities vince anche sul `pointer-events: none`
+     di .glow-orb e .ghost-number, dichiarato in @layer components (un layer
+     successivo batte il precedente a prescindere dalla specificità).
+     Risultato: ogni velo decorativo `absolute inset-0` tornava cliccabile e
+     si mangiava i click di ciò che copriva — sul desktop il riflesso di
+     TiltCard rendeva inutilizzabili i campi del form contatti, i link social
+     e i bottoni delle tariffe. Il selettore con attributo vale (0,2,0) e
+     vince su entrambe. */
+  .canvas-overlay-mode [aria-hidden="true"],
+  .canvas-overlay-mode .pointer-events-none {
+    pointer-events: none;
+  }
+
   /* Ink gradient for display type — reads as solid at a glance, but gives the
      big headings a bit of depth. */
   .text-gradient {
