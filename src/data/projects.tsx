@@ -392,7 +392,7 @@ const projects: Project[] = [
         title: "Dario Elia - Portfolio",
         src: "/assets/projects-screenshots/portfolio/landing.png",
         screenshots: ["landing.png"],
-        live: "https://dario-portfolio-phi.vercel.app",
+        live: "https://www.darioelia.it",
         github:"https://github.com/darioeliaaa/Dario-portfolio",
         skills: {
             frontend: [
