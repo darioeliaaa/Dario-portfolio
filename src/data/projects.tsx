@@ -488,6 +488,121 @@ const demoProjects: Project[] = [
             );
         },
     },
+    {
+        id: "trediciTattoo",
+        category: "Sito Vetrina · Case Study",
+        title: "TREDICI — Studio di Tatuaggi",
+        src: "/assets/projects-screenshots/trediciTattoo/trediciTattoo.png",
+        screenshots: ["trediciTattoo.png"],
+        skills: {
+            frontend: [
+                PROJECT_SKILLS.angular,
+                PROJECT_SKILLS.ts,
+                PROJECT_SKILLS.html,
+            ],
+            backend: [PROJECT_SKILLS.ssr, PROJECT_SKILLS.express],
+        },
+        live: "https://tredici-tattoo.vercel.app",
+        github: "https://github.com/darioeliaaa/tredici-tattoo",
+        get content() {
+            return (
+                <div>
+                    <TypographyP className="font-mono text-2xl text-center">
+                        Sito vetrina multi-pagina per uno studio di tatuaggi indipendente.
+                    </TypographyP>
+                    <TypographyP className="font-mono mt-4">
+                        Un case study personale, non un incarico commissionato: la fascia
+                        &quot;Sito Vetrina&quot; del mio listino, portata al limite. Il punto
+                        di partenza non era una griglia di card qualunque ma un vero foglio
+                        flash da studio — carta chiara, inchiostro nero, un solo colore
+                        d&apos;accento: il viola da stencil transfer, quello del ricalco
+                        sulla pelle prima di tatuare.
+                    </TypographyP>
+
+                    <TypographyH3 className="my-4 mt-8">🖤 Un&apos;estetica fuori dagli schemi</TypographyH3>
+                    <ul className="list-disc list-inside font-mono mb-4 space-y-2">
+                        <li><strong>Foglio flash vero:</strong> i 12 pezzi disponibili sono card in stile flash sheet, con icone disegnate a mano (sprite SVG) invece delle solite foto stock.</li>
+                        <li><strong>Tipografia da locandina:</strong> un display serif deciso per i titoli e un monospace da macchina da scrivere per il corpo, a rompere la solita coppia sans-serif/sans-serif dei siti generati con l&apos;IA.</li>
+                        <li><strong>Un solo accento cromatico:</strong> il viola stencil compare col contagocce — su carta chiara e inchiostro nero, basta e avanza.</li>
+                    </ul>
+
+                    <TypographyH3 className="my-4 mt-8">⚙️ Architettura</TypographyH3>
+                    <ul className="list-disc list-inside font-mono mb-4 space-y-2">
+                        <li><strong>Angular 22</strong> standalone e <strong>zoneless</strong>, con routing lazy-loaded su 6 pagine (Home, Galleria, Artisti, Stili &amp; Prezzi, Prenota, Contatti).</li>
+                        <li><strong>SSR e prerendering:</strong> <code>@angular/ssr</code>, tutte le rotte generate staticamente in build — zero server Node necessario in produzione.</li>
+                        <li><strong>Galleria a signal:</strong> il filtro per stile (Blackwork/Fineline/Tradizionale) è un signal, non manipolazione diretta del DOM.</li>
+                        <li><strong>Prenotazione:</strong> Reactive Form con upload di riferimento immagine e validazione su artista, stile, zona del corpo e dimensione.</li>
+                    </ul>
+
+                    <TypographyH3 className="my-4 mt-8">🔍 SEO &amp; dati locali</TypographyH3>
+                    <p className="font-mono mb-2">
+                        Ogni pagina imposta il proprio <code>title</code> e <code>description</code>
+                        dal componente stesso, e nell&apos;<code>&lt;head&gt;</code> è iniettato
+                        structured data schema.org (<code>TattooParlor</code>) con indirizzo e
+                        orari leggibili direttamente da Google — lo stesso trattamento che
+                        userei per un cliente vero con un negozio fisico da far trovare.
+                    </p>
+                </div>
+            );
+        },
+    },
+    {
+        id: "unaNotteDiStelle",
+        category: "Landing Page · Case Study",
+        title: "Una Notte di Stelle",
+        src: "/assets/projects-screenshots/unaNotteDiStelle/unaNotteDiStelle.png",
+        screenshots: ["unaNotteDiStelle.png"],
+        skills: {
+            frontend: [
+                PROJECT_SKILLS.angular,
+                PROJECT_SKILLS.ts,
+                PROJECT_SKILLS.html,
+            ],
+            backend: [PROJECT_SKILLS.ssr, PROJECT_SKILLS.express],
+        },
+        live: "https://una-notte-di-stelle.vercel.app",
+        github: "https://github.com/darioeliaaa/una-notte-di-stelle",
+        get content() {
+            return (
+                <div>
+                    <TypographyP className="font-mono text-2xl text-center">
+                        Landing page per un evento immaginario di osservazione astronomica.
+                    </TypographyP>
+                    <TypographyP className="font-mono mt-4">
+                        Un case study personale, non un incarico commissionato: la fascia
+                        &quot;Landing Page&quot; del mio listino, per un evento inventato di
+                        osservazione delle Geminidi sul Piano di Lorica, in Sila. L&apos;idea
+                        di partenza era trattare la pagina come una vera carta del cielo,
+                        non l&apos;ennesima one-page a sezioni impilate.
+                    </TypographyP>
+
+                    <TypographyH3 className="my-4 mt-8">✦ Una pagina come una carta del cielo</TypographyH3>
+                    <ul className="list-disc list-inside font-mono mb-4 space-y-2">
+                        <li><strong>Cielo animato:</strong> un canvas 2D disegna a mano stelle e stelle cadenti, senza nessuna libreria di grafica di terze parti.</li>
+                        <li><strong>Costellazione che si scrive:</strong> una linea SVG collega le sezioni una a una mentre scorri, invece del solito indicatore di progresso a barra.</li>
+                        <li><strong>Countdown a quadrante:</strong> il conto alla rovescia è un quadrante con le tacche disegnato su misura, non l&apos;ennesimo orologio digitale copiaincollato.</li>
+                    </ul>
+
+                    <TypographyH3 className="my-4 mt-8">⚙️ Architettura</TypographyH3>
+                    <ul className="list-disc list-inside font-mono mb-4 space-y-2">
+                        <li><strong>Angular 22</strong> standalone e <strong>zoneless</strong>: countdown, form e animazioni di reveal allo scroll girano tutti su signal.</li>
+                        <li><strong>SSR e prerendering:</strong> <code>@angular/ssr</code> genera HTML statico reale per i crawler, non una pagina vuota in attesa di JavaScript.</li>
+                        <li><strong>Countdown SSR-corretto:</strong> il valore iniziale si calcola in modo sincrono nel costruttore (pura <code>Date</code>, nessun DOM), così anche l&apos;HTML pre-renderizzato mostra il numero vero.</li>
+                        <li><strong>Form di prenotazione:</strong> Reactive Form per iscriversi alla serata, con validazione dei campi.</li>
+                    </ul>
+
+                    <TypographyH3 className="my-4 mt-8">🔍 SEO</TypographyH3>
+                    <p className="font-mono mb-2">
+                        Title e description impostati via <code>Title</code>/<code>Meta</code>
+                        di Angular, Open Graph per l&apos;anteprima su WhatsApp e Instagram,
+                        <code>lang=&quot;it&quot;</code>, <code>robots.txt</code> e
+                        <code>sitemap.xml</code> — la data e il luogo dell&apos;evento nella
+                        demo sono volutamente inventati.
+                    </p>
+                </div>
+            );
+        },
+    },
 ];
 
 export { demoProjects };
