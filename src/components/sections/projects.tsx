@@ -76,7 +76,7 @@ const ProjectsSection = () => {
                     <ProjectCard
                         key={project.id}
                         project={project}
-                        featured={i === 0}
+                        layout={i === 0 ? "featured" : "default"}
                     />
                 ))}
             </div>
@@ -84,17 +84,26 @@ const ProjectsSection = () => {
     );
 };
 
+/**
+ * Come la card occupa la griglia. "featured" è il riquadro alto due righe
+ * della sezione Progetti; "wide" è la fascia a tutta larghezza usata dai
+ * Progetti dimostrativi, che sono quattro e su tre colonne lascerebbero
+ * altrimenti due caselle vuote in fondo.
+ */
+type CardLayout = "default" | "featured" | "wide";
+
 export const ProjectCard = ({
     project,
-    featured = false,
+    layout = "default",
 }: {
     project: Project;
-    featured?: boolean;
+    layout?: CardLayout;
 }) => {
     const stack = [
         ...(project.skills.frontend ?? []),
         ...(project.skills.backend ?? []),
     ];
+    const highlighted = layout !== "default";
 
     return (
         <ResponsiveDialog>
@@ -103,7 +112,8 @@ export const ProjectCard = ({
                 className={cn(
                     "group pointer-events-auto block w-full bg-transparent text-left",
                     "rounded-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
-                    featured && "sm:col-span-2 lg:col-span-2 lg:row-span-2"
+                    layout === "featured" && "sm:col-span-2 lg:col-span-2 lg:row-span-2",
+                    layout === "wide" && "lg:col-span-3"
                 )}
             >
                 <TiltCard
@@ -115,7 +125,9 @@ export const ProjectCard = ({
                     <div
                         className={cn(
                             "relative w-full overflow-hidden",
-                            featured ? "aspect-[3/2] lg:aspect-[16/13]" : "aspect-[3/2]"
+                            layout === "featured" && "aspect-[3/2] lg:aspect-[16/13]",
+                            layout === "wide" && "aspect-[3/2] lg:aspect-[21/9]",
+                            layout === "default" && "aspect-[3/2]"
                         )}
                     >
                         <ScrollingPreview
@@ -134,7 +146,7 @@ export const ProjectCard = ({
                             <Maximize2 className="h-3.5 w-3.5" />
                         </span>
 
-                        {featured && (
+                        {highlighted && (
                             <span className="accent-gradient absolute left-3 top-3 z-20 rounded-full px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-white shadow-elevated">
                                 In evidenza
                             </span>
@@ -147,7 +159,7 @@ export const ProjectCard = ({
                             <h3
                                 className={cn(
                                     "mt-2 font-display font-bold leading-tight",
-                                    featured ? "text-xl md:text-2xl" : "text-lg"
+                                    highlighted ? "text-xl md:text-2xl" : "text-lg"
                                 )}
                             >
                                 {project.title}
