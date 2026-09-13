@@ -432,6 +432,81 @@ const projects: Project[] = [
  */
 const demoProjects: Project[] = [
     {
+        id: "sidero",
+        category: "Sito Aziendale · Case Study",
+        title: "Sìdero — Cantina in Cirò",
+        src: "/assets/projects-screenshots/sidero/sidero.png",
+        screenshots: ["sidero.png"],
+        skills: {
+            frontend: [
+                PROJECT_SKILLS.angular,
+                PROJECT_SKILLS.ts,
+                PROJECT_SKILLS.html,
+            ],
+            backend: [PROJECT_SKILLS.ssr, PROJECT_SKILLS.express],
+        },
+        live: "https://sidero-cantina.vercel.app",
+        github: "https://github.com/darioeliaaa/sidero-cantina",
+        get content() {
+            return (
+                <div>
+                    <TypographyP className="font-mono text-2xl text-center">
+                        Sito aziendale bilingue per una cantina vitivinicola con
+                        vocazione all&apos;export.
+                    </TypographyP>
+                    <TypographyP className="font-mono mt-4">
+                        Un case study personale, non un incarico commissionato: la fascia
+                        &quot;Sito Aziendale&quot; del mio listino. Il punto non era fare
+                        l&apos;ennesima brochure di vino — foto di vigneto al tramonto,
+                        serif dorato, &quot;la nostra passione dal 1968&quot; — ma un
+                        <strong> archivio</strong>: ogni vino è una scheda catalogata, ogni
+                        parcella una voce con i suoi dati, il territorio una sezione
+                        stratigrafica. Carta di calce, inchiostro ferroso, righe sottili
+                        come su una tavola catastale.
+                    </TypographyP>
+
+                    <TypographyH3 className="my-4 mt-8">🍷 Il colore lo decide il vino</TypographyH3>
+                    <p className="font-mono mb-2">
+                        L&apos;unico colore forte del sito è il vino stesso: una variabile
+                        CSS cambia da una scheda all&apos;altra — rubino, buccia di cipolla,
+                        oro paglierino, granato — e con lei si tingono testata, tacche del
+                        profilo e bordi dei campi. Quattro etichette, quattro pagine che
+                        sembrano quattro posti diversi, con un foglio di stile solo.
+                    </p>
+                    <p className="font-mono mb-2">
+                        Nessuna fotografia in tutto il sito: la mappa delle sei parcelle, la
+                        sezione del suolo fino a tre metri, la ruota dell&apos;anno in vigna
+                        e lo schema stradale sono <strong>SVG disegnati a mano</strong>.
+                    </p>
+
+                    <TypographyH3 className="my-4 mt-8">🌍 Multilingua, non &quot;tradotto&quot;</TypographyH3>
+                    <ul className="list-disc list-inside font-mono mb-4 space-y-2">
+                        <li><strong>Slug diversi per lingua:</strong> <code>/it/vini</code> e <code>/en/wines</code> sono due URL distinti e indicizzabili, con hreflang e x-default; il selettore lingua resta sulla stessa pagina invece di rimbalzare in home.</li>
+                        <li><strong>Contenuti diversi, non traduzioni:</strong> la pagina Distribuzione in italiano parla a un ristorante — cartoni da sei, consegna in settimana, agente di zona. In inglese parla a un importatore — pallet interi, Incoterms, e-AD, esclusiva di territorio. Due pubblici, due domande diverse.</li>
+                        <li><strong>Anche i title:</strong> in inglese le schede vino puntano su &quot;Gaglioppo from Cirò, Calabria&quot;, non sulla denominazione italiana per esteso che in inglese non cerca nessuno.</li>
+                    </ul>
+
+                    <TypographyH3 className="my-4 mt-8">⚙️ Architettura</TypographyH3>
+                    <ul className="list-disc list-inside font-mono mb-4 space-y-2">
+                        <li><strong>Angular 22</strong> standalone e zoneless, due alberi di route (uno per lingua): dieci componenti coprono <strong>trenta indirizzi</strong>.</li>
+                        <li><strong>SSR e prerendering</strong> di tutte e 30 le pagine, schede vino e articoli inclusi, generati da <code>getPrerenderParams</code>.</li>
+                        <li><strong>Sitemap e robots.txt generati dalla build</strong>, leggendo le pagine appena prerenderizzate: non possono divergere dal sito reale.</li>
+                        <li><strong>Form B2B</strong> che mostra il payload JSON pronto per un webhook verso Airtable o HubSpot, con la lingua della richiesta già dentro — il commerciale deve sapere in che lingua richiamare.</li>
+                    </ul>
+
+                    <TypographyH3 className="my-4 mt-8">🔍 SEO</TypographyH3>
+                    <p className="font-mono mb-2">
+                        Title e description per pagina e per lingua, canonical e hreflang
+                        reciproci, structured data schema.org <code>Winery</code> con
+                        indirizzo, coordinate e orari, e redirect 308 dalla root alla lingua
+                        predefinita gestito lato server. Azienda, dati e contatti sono di
+                        fantasia.
+                    </p>
+                </div>
+            );
+        },
+    },
+    {
         id: "pelaggi",
         category: "Sito Vetrina · Case Study",
         title: "Azienda Agricola",
