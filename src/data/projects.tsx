@@ -88,6 +88,18 @@ const PROJECT_SKILLS = {
         fg: "white",
         icon: <SiThreedotjs />,
     },
+    three: {
+        title: "Three.js",
+        bg: "black",
+        fg: "white",
+        icon: <SiThreedotjs />,
+    },
+    glsl: {
+        title: "GLSL",
+        bg: "black",
+        fg: "white",
+        icon: <span className="text-xs font-bold">GL</span>,
+    },
     vercel: {
         title: "Vercel",
         bg: "black",
@@ -431,6 +443,75 @@ const projects: Project[] = [
  * consegnato davvero e cosa è un esercizio di stile.
  */
 const demoProjects: Project[] = [
+    {
+        id: "piccantomane",
+        category: "E-Commerce · Case Study",
+        title: "Piccantomane",
+        src: "/assets/projects-screenshots/piccantomane/piccantomane.png",
+        screenshots: ["piccantomane.png"],
+        skills: {
+            frontend: [
+                PROJECT_SKILLS.angular,
+                PROJECT_SKILLS.ts,
+                PROJECT_SKILLS.three,
+                PROJECT_SKILLS.glsl,
+            ],
+            backend: [PROJECT_SKILLS.ssr, PROJECT_SKILLS.express],
+        },
+        live: "https://piccantemane.vercel.app",
+        github: "https://github.com/darioeliaaa/piccantemane",
+        get content() {
+            return (
+                <div>
+                    <TypographyP className="font-mono text-2xl text-center">
+                        E-commerce completo per un produttore di salse piccanti calabresi.
+                    </TypographyP>
+                    <TypographyP className="font-mono mt-4">
+                        Un case study personale, non un incarico commissionato: la fascia
+                        &quot;E-Commerce Base&quot; del mio listino, con dentro il 3D vero.
+                        L&apos;idea di partenza era scappare dall&apos;estetica da e-shop
+                        gourmet — bottiglia fotografata in controluce, fondo bianco, tre
+                        peperoncini come indicatore di piccantezza — e trattare ogni salsa
+                        come una <strong>sostanza da classificare</strong>: classe di rischio
+                        in etichetta, gradi Scoville reali, scheda di sicurezza.
+                    </TypographyP>
+
+                    <TypographyH3 className="my-4 mt-8">🔥 Il 3D, non finto</TypographyH3>
+                    <ul className="list-disc list-inside font-mono mb-4 space-y-2">
+                        <li><strong>Bottiglia interattiva in Three.js:</strong> geometria costruita a runtime con <code>LatheGeometry</code> da un profilo disegnato a mano — nessun modello scaricato — vetro con <code>transmission</code> fisica e riflessi da ambiente PBR. Si trascina per ruotarla, gira da sola quando è ferma.</li>
+                        <li><strong>Etichetta come texture:</strong> disegnata su <code>&lt;canvas&gt;</code> mentre la pagina gira e avvolta sulla bottiglia, con la stessa composizione grafica della versione piatta usata nel catalogo.</li>
+                        <li><strong>Sfondo a fuoco in GLSL:</strong> uno shader scritto a mano (fbm su rumore a valore, cinque ottave), non un video di fiamme preso da uno stock.</li>
+                    </ul>
+
+                    <TypographyH3 className="my-4 mt-8">🛒 L&apos;e-commerce sotto</TypographyH3>
+                    <ul className="list-disc list-inside font-mono mb-4 space-y-2">
+                        <li><strong>Catalogo</strong> di 12 salse su quattro linee, filtrabile e ordinabile per piccantezza, con formati e prezzi diversi per prodotto.</li>
+                        <li><strong>Carrello persistente:</strong> signal Angular specchiati in <code>localStorage</code>, ma letti solo dopo l&apos;idratazione — altrimenti l&apos;HTML del client non combacia con quello prerenderizzato dal server.</li>
+                        <li><strong>Checkout completo</strong> con Reactive Forms e validazione vera (carta, CAP, email). Il pagamento è dichiaratamente simulato: la logica è pronta, manca solo il gateway.</li>
+                        <li><strong>Pannello ordini</strong> per il negoziante, filtrabile per stato, con tracking — la voce &quot;gestione ordini&quot; del listino, resa visibile invece che promessa.</li>
+                    </ul>
+
+                    <TypographyH3 className="my-4 mt-8">📐 Due dati di piccantezza, non stelline</TypographyH3>
+                    <p className="font-mono mb-2">
+                        Un <strong>manometro Scoville</strong> su scala logaritmica — lineare,
+                        la salsa più dolce e la più estrema finirebbero a un millimetro di
+                        distanza sullo stesso ago — e un <strong>diamante di degustazione</strong>
+                        che riprende la geometria del diamante di classificazione delle
+                        sostanze chimiche, riletto come scheda di gusto: aroma, acidità,
+                        persistenza.
+                    </p>
+
+                    <TypographyH3 className="my-4 mt-8">⚙️ Sotto il cofano</TypographyH3>
+                    <p className="font-mono mb-2">
+                        <strong>Angular 22</strong> standalone e zoneless, <strong>SSR con
+                        prerendering</strong> di tutte e 20 le pagine, sitemap e robots.txt
+                        generati leggendo la build reale. Zero fotografie in tutto il sito:
+                        bottiglie, manometro e diamante sono disegnati o generati.
+                    </p>
+                </div>
+            );
+        },
+    },
     {
         id: "sidero",
         category: "Sito Aziendale · Case Study",
