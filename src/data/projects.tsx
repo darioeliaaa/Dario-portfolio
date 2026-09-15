@@ -444,6 +444,71 @@ const projects: Project[] = [
  */
 const demoProjects: Project[] = [
     {
+        id: "ottone",
+        category: "E-Commerce Avanzato · Case Study",
+        title: "Ottone — Telai a Novi Ligure",
+        src: "/assets/projects-screenshots/ottone/ottone.png",
+        screenshots: ["ottone.png"],
+        skills: {
+            frontend: [
+                PROJECT_SKILLS.angular,
+                PROJECT_SKILLS.ts,
+                PROJECT_SKILLS.three,
+            ],
+            backend: [PROJECT_SKILLS.ssr, PROJECT_SKILLS.express],
+        },
+        live: "https://ottone-telai.vercel.app",
+        github: "https://github.com/darioeliaaa/ottone-telai",
+        get content() {
+            return (
+                <div>
+                    <TypographyP className="font-mono text-2xl text-center">
+                        Atelier di telai da bicicletta su misura, con un configuratore 3D che
+                        ricostruisce la geometria vera a ogni taglia.
+                    </TypographyP>
+                    <TypographyP className="font-mono mt-4">
+                        Un case study personale, non un incarico commissionato: la fascia
+                        &quot;E-Commerce Avanzato&quot; del mio listino, quella dove doveva
+                        succedere qualcosa che i tre progetti precedenti non avevano ancora
+                        mostrato. Un telaista di Novi Ligure — il paese di Coppi, non a caso —
+                        che vende telai in acciaio brasati a mano. L&apos;idea di partenza era
+                        smettere di far finta: la maggior parte dei &quot;configuratori 3D&quot;
+                        cambia una texture su un modello fisso. Qui il telaio{" "}
+                        <strong>non esiste finché non scegli la taglia</strong> — i tubi sono
+                        cilindri disegnati fra punti calcolati dalle quote reali (stack, reach,
+                        angolo sterzo, carro), quindi passare dalla 48 alla 60 allunga e alza la
+                        bici sul serio, non la scala.
+                    </TypographyP>
+
+                    <TypographyH3 className="my-4 mt-8">📐 Un telaio è geometria, non un modello</TypographyH3>
+                    <ul className="list-disc list-inside font-mono mb-4 space-y-2">
+                        <li><strong>Motore di geometria condiviso:</strong> una funzione converte le quote da telaista (stack, reach, angoli, carro) in punti 3D, e la stessa funzione disegna sia il telaio in Three.js nel configuratore sia il profilo SVG piatto usato in catalogo — cambiando taglia le differenze si vedono davvero, sui due lati.</li>
+                        <li><strong>Vista esplosa:</strong> i tubi si allontanano dai giunti per mostrare la brasatura, il mestiere che dà il nome all&apos;officina.</li>
+                        <li><strong>Disponibilità reale:</strong> non un flag sì/no sul prodotto — dipende dalla combinazione tubo × taglia × modello. L&apos;inox non si brasa sui telai da pista, e la riga si disattiva col motivo scritto, non con un generico &quot;non disponibile&quot;.</li>
+                    </ul>
+
+                    <TypographyH3 className="my-4 mt-8">⚙️ Un Web Worker per la taglia, IndexedDB per il carrello</TypographyH3>
+                    <ul className="list-disc list-inside font-mono mb-4 space-y-2">
+                        <li><strong>Calcolo della taglia su un thread a parte:</strong> un Web Worker vero riceve statura, cavallo e apertura braccia e restituisce la taglia consigliata; in SSR/prerendering — dove i Worker non esistono — la stessa funzione pura gira in linea, così il risultato non può divergere fra le due strade.</li>
+                        <li><strong>Carrello su IndexedDB</strong> invece di localStorage: dentro finiscono configurazioni intere (tubi, colore, giunti, extra), non una stringa da serializzare a mano.</li>
+                        <li><strong>Proforma PDF generata nel browser</strong> con pdf-lib, per l&apos;area rivenditori: intestazione, righe, IVA, totale, scaricata al momento — nessun server coinvolto.</li>
+                        <li><strong>Configurazione nell&apos;URL:</strong> ogni scelta si scrive nella query string, il link riapre il telaio esattamente com&apos;era lasciato.</li>
+                    </ul>
+
+                    <TypographyH3 className="my-4 mt-8">⚙️ Sotto il cofano</TypographyH3>
+                    <p className="font-mono mb-2">
+                        <strong>Angular 22</strong> standalone e zoneless, <strong>SSR con
+                        prerendering</strong> di tutte e 15 le pagine, sitemap e robots.txt
+                        generati leggendo la build reale. Comparse allo scroll in CSS puro
+                        (<code>animation-timeline: view()</code>), niente libreria di
+                        animazione. Zero fotografie: ogni telaio, in 3D o in SVG, è disegnato
+                        dalle sue quote.
+                    </p>
+                </div>
+            );
+        },
+    },
+    {
         id: "piccantomane",
         category: "E-Commerce · Case Study",
         title: "Piccantomane",
