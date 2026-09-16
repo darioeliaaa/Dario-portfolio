@@ -266,7 +266,7 @@ const projects: Project[] = [
         id: "tripify",
         category: "Enterprise Travel App",
         title: "Tripify",
-        src: "/assets/projects-screenshots/tripify/Title.jpg",
+        src: "/assets/projects-screenshots/tripify/cover.jpg",
         screenshots: ["landing.png"],
         skills: {
             frontend: [
