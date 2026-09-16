@@ -31,6 +31,7 @@ const SUBJECTS = [
     "Sito vetrina / Landing page",
     "E-commerce",
     "Web app / Portale su misura",
+    "App mobile",
     "Manutenzione o restyling",
     "Proposta di lavoro",
     "Altro",

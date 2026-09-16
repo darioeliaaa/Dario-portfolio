@@ -64,6 +64,17 @@ export const pricingPlans: Plan[] = [
             "Piattaforme collaborative su misura, app per prenotazioni o dashboard personalizzate.",
         features: ["Area riservata utenti", "Logiche di backend custom", "Database dedicato"],
     },
+    {
+        name: "App Mobile",
+        // ⚠️ Prezzo di partenza indicativo, non verificato con te: un'app
+        // nativa costa di più di un sito perché ci sono più fasi (backend
+        // dedicato, test su più dispositivi, pubblicazione sullo store).
+        // Cambialo pure con un numero in cui ti riconosci.
+        price: "2.500€",
+        description:
+            "App nativa Android su misura, dal backend fino alla pubblicazione sullo store.",
+        features: ["Backend dedicato incluso", "Pubblicazione su Google Play", "Notifiche push"],
+    },
 ];
 
 /**
@@ -84,6 +95,8 @@ export function subjectForPlan(planName: string): string {
             return "E-commerce";
         case "Web App / Portali":
             return "Web app / Portale su misura";
+        case "App Mobile":
+            return "App mobile";
         default:
             return "Altro";
     }
