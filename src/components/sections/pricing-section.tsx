@@ -10,64 +10,7 @@ import { SectionHeader } from "./section-header";
 import { Button } from "../ui/button";
 import { TiltCard } from "../ui/tilt-card";
 import { useDragScroll } from "@/hooks/use-drag-scroll";
-
-type Plan = {
-    name: string;
-    price: string;
-    description: string;
-    features: string[];
-    isPopular?: boolean;
-};
-
-const pricingPlans: Plan[] = [
-    {
-        name: "Landing Page",
-        price: "300€",
-        description:
-            "Una singola pagina d'impatto, perfetta per eventi, promozioni o lancio di servizi.",
-        features: ["Sezioni a scorrimento", "Modulo di contatto", "Call-to-action chiare"],
-    },
-    {
-        name: "Sito Vetrina",
-        price: "600€",
-        description:
-            "Ideale per liberi professionisti e piccole attività che vogliono farsi trovare online.",
-        features: ["Fino a 5/6 pagine", "Design responsivo", "Ottimizzazione SEO base"],
-        isPopular: true,
-    },
-    {
-        name: "Sito Aziendale",
-        price: "1.200€",
-        description:
-            "Struttura solida per PMI e studi associati, con funzionalità avanzate.",
-        features: ["Fino a 15 pagine", "Supporto multilingua", "Integrazione newsletter/CRM"],
-    },
-    {
-        name: "E-Commerce Base",
-        price: "1.000€",
-        description:
-            "Per chi inizia a vendere online con un catalogo essenziale e pagamenti sicuri.",
-        features: ["Fino a ~50 prodotti", "Carrello e pagamenti", "Pannello gestione ordini"],
-    },
-    {
-        name: "E-Commerce Avanzato",
-        price: "2.000€",
-        description:
-            "Soluzione completa per negozi affermati o attività con cataloghi complessi.",
-        features: [
-            "Gestione varianti complesse",
-            "Filtri di ricerca avanzati",
-            "Integrazione fatturazione",
-        ],
-    },
-    {
-        name: "Web App / Portali",
-        price: "1.800€",
-        description:
-            "Piattaforme collaborative su misura, app per prenotazioni o dashboard personalizzate.",
-        features: ["Area riservata utenti", "Logiche di backend custom", "Database dedicato"],
-    },
-];
+import { Plan, pricingPlans } from "@/data/pricing-plans";
 
 const MAINTENANCE = [
     { icon: Globe, label: "Rinnovo dominio" },
@@ -131,7 +74,11 @@ const PlanCard = ({ plan, index = 0 }: { plan: Plan; index?: number }) => (
                 ))}
             </ul>
 
-            <Link href="#contact" className="mt-7 block">
+            {/* Il pacchetto scelto viaggia nella query string: ContactForm lo
+                legge all'apertura e precompila oggetto e messaggio da solo —
+                chi clicca da qui non deve più spiegare via email quale dei
+                sei pacchetti aveva in mente. */}
+            <Link href={`/?piano=${encodeURIComponent(plan.name)}#contact`} className="mt-7 block">
                 <Button variant={plan.isPopular ? "default" : "outline"} className="w-full">
                     Richiedi un preventivo
                     <ArrowUpRight className="h-4 w-4" />

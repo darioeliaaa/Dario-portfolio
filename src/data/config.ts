@@ -48,6 +48,11 @@ const config = {
     /** ⚠️ Inserisci qui la tua email pubblica per attivarne la visualizzazione. */
     email: "",
     /**
+     * Link Calendly per una call conoscitiva telefonica. Vuoto = niente
+     * bottone: mai un link morto pubblicato per errore.
+     */
+    calendly: "https://calendly.com/darioelia61/30min",
+    /**
      * Dove arrivano i messaggi del form contatti. Lo legge solo il server
      * (src/app/api/contact/route.ts), quindi non finisce mai nel bundle né
      * viene stampato come testo nella pagina — è `email` qui sopra a decidere

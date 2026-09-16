@@ -1,6 +1,7 @@
 "use client";
 import { CheckCircle2, ChevronRight, Loader2 } from "lucide-react";
 import React from "react";
+import { useSearchParams } from "next/navigation";
 import { Label } from "./ui/label";
 import { Input } from "./ui/ace-input";
 import { Textarea } from "./ui/ace-textarea";
@@ -8,6 +9,7 @@ import { cn } from "@/lib/utils";
 import { useToast } from "./ui/use-toast";
 import { Button } from "./ui/button";
 import { z } from "zod";
+import { planByName, subjectForPlan } from "@/data/pricing-plans";
 
 /**
  * Il messaggio parte dal sito stesso: POST alla nostra rotta, che invia
@@ -58,6 +60,20 @@ const ContactForm = () => {
     const honeypot = React.useRef<HTMLInputElement>(null);
 
     const { toast } = useToast();
+
+    // Chi arriva da un bottone "Richiedi un preventivo" ha già scelto un
+    // pacchetto: lo si legge da ?piano=... — ma useSearchParams() sta in un
+    // componente separato (PlanPrefill, sotto), non qui. Chiamarlo in questo
+    // componente costringerebbe TUTTO il form dentro una Suspense boundary,
+    // e con "Cache Components" attivo la build fallisce lo stesso: il
+    // fallback sarebbe di nuovo questo stesso form, che rilancerebbe la
+    // stessa chiamata. Isolarlo in un figlio minuscolo, con fallback nullo,
+    // lascia il form visibile subito e sposta il problema in un posto dove
+    // sparisce davvero.
+    const applyPlan = React.useCallback((planName: string, price: string) => {
+        setSubject(subjectForPlan(planName));
+        setMessage(`Vorrei un preventivo per: ${planName} (da ${price}).\n\n`);
+    }, []);
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -187,6 +203,12 @@ const ContactForm = () => {
 
     return (
         <form className="mx-auto w-full" onSubmit={handleSubmit} aria-busy={loading} noValidate>
+            {/* Invisibile: legge ?piano=... e precompila oggetto e messaggio.
+                Fallback nullo, così il resto del form non aspetta lei. */}
+            <React.Suspense fallback={null}>
+                <PlanPrefill onApply={applyPlan} />
+            </React.Suspense>
+
             {/* Honeypot — hidden from people and from screen readers. */}
             <div className="absolute h-0 w-0 overflow-hidden" aria-hidden>
                 <label htmlFor="company-website">Non compilare questo campo</label>
@@ -307,6 +329,41 @@ const ContactForm = () => {
 };
 
 export default ContactForm;
+
+/**
+ * L'unica cosa in questo file che chiama useSearchParams(). Isolata qui
+ * apposta: è l'unico pezzo per cui serve davvero una Suspense boundary, e
+ * tenerlo minuscolo tiene il resto del form fuori dal vincolo.
+ */
+const PlanPrefill = ({ onApply }: { onApply: (planName: string, price: string) => void }) => {
+    const searchParams = useSearchParams();
+    const piano = searchParams.get("piano");
+
+    React.useEffect(() => {
+        if (!piano) return;
+        const plan = planByName(piano);
+        if (!plan) return;
+
+        onApply(plan.name, plan.price);
+
+        // Toglie solo "piano" dall'URL. Volutamente window.history diretto e
+        // non router.replace(): quest'ultimo, quando la pagina è già ferma
+        // su un hash (#contact), a volte lo appendeva una seconda volta
+        // invece di sostituirlo ("...#contact#contact") — history.replaceState
+        // fa esattamente e solo quello che gli si scrive.
+        const rest = new URLSearchParams(searchParams);
+        rest.delete("piano");
+        const query = rest.toString();
+        window.history.replaceState(
+            window.history.state,
+            "",
+            `${window.location.pathname}${query ? `?${query}` : ""}${window.location.hash}`
+        );
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [piano]);
+
+    return null;
+};
 
 const FieldError = ({ id, message }: { id: string; message?: string }) =>
     message ? (

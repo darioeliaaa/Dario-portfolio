@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import Link from "next/link";
-import { Mail, MapPin, Clock, ArrowUpRight } from "lucide-react";
+import { Mail, MapPin, Clock, ArrowUpRight, CalendarClock } from "lucide-react";
 import { SiGithub, SiInstagram, SiLinkedin } from "react-icons/si";
 import ContactForm from "../ContactForm";
 import { config } from "@/data/config";
@@ -56,6 +56,34 @@ const ContactSection = () => {
 
         {/* Direct channels */}
         <div className="flex flex-col gap-4">
+          {/* Chi preferisce parlare piuttosto che scrivere non deve cercare
+              questo link in fondo alla pagina: sta prima della lista, non
+              dentro. Sparisce da solo finché config.calendly è vuoto, così
+              non pubblica mai un bottone che porta a un link finto. */}
+          {config.calendly && (
+            <TiltCard className="pointer-events-auto rounded-2xl surface glow-border p-6 md:p-8">
+              <Link
+                href={config.calendly}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group flex items-center gap-4"
+              >
+                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-spark-soft">
+                  <CalendarClock className="h-5 w-5 text-spark" />
+                </span>
+                <span className="min-w-0 flex-1">
+                  <span className="block text-sm font-semibold tracking-tight">
+                    Preferisci parlarne a voce?
+                  </span>
+                  <span className="block text-sm text-muted-foreground">
+                    Prenota una call conoscitiva di 30 minuti, gratis
+                  </span>
+                </span>
+                <ArrowUpRight className="h-4 w-4 shrink-0 text-muted-foreground transition-transform duration-300 ease-smooth group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+              </Link>
+            </TiltCard>
+          )}
+
           <TiltCard className="pointer-events-auto rounded-2xl surface glow-border p-6 md:p-8">
             <h3 className="text-lg font-semibold tracking-tight">
               Preferisci un altro canale?
