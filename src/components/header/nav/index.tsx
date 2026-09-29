@@ -3,7 +3,7 @@ import { motion } from "motion/react";
 import styles from "./style.module.scss";
 import { height } from "../anim";
 import Body from "./body/body";
-import Image from "./image/image";
+import NavPreview from "./image/image";
 
 import { links } from "@/components/header/config";
 import { cn } from "@/lib/utils";
@@ -43,7 +43,7 @@ const Index: React.FC<IndexProps> = ({ setIsActive }) => {
                         setIsActive={setIsActive}
                     />
                 </div>
-                <Image
+                <NavPreview
                     src={links[selectedLink.index].thumbnail}
                     isActive={selectedLink.isActive}
                 />

@@ -66,8 +66,23 @@ Quasi tutto si cambia dai file dentro `src/data/`:
 | `src/data/config.ts` | Nome, ruoli, tagline, email, URL del sito, social, disponibilità, foto profilo |
 | `src/data/constants.ts` | Skill (keycap della tastiera 3D) + formazione ed esperienze |
 | `src/data/projects.tsx` | Progetti: titolo, categoria, screenshot, stack, case study |
+| `scripts/gallery/config.mjs` | Galleria di ogni progetto: schermate in ordine e didascalie |
 | `src/components/sections/pricing.tsx` | Listino servizi |
 | `src/components/header/config.ts` | Voci del menu |
+
+### Gallerie dei progetti
+
+Ogni scheda progetto si apre con una galleria scorrevole (desktop e, per i
+siti, anche telefono) con vista a schermo intero. Per aggiornarla metti le
+schermate originali in una cartella `<raw>/<id-progetto>/<desktop|mobile>/`,
+elencale in `scripts/gallery/config.mjs` e lancia:
+
+```bash
+node scripts/gallery/build.mjs <raw> [id-progetto ...]
+```
+
+Lo script crea le versioni WebP in `public/assets/gallery/` (una per lo
+scorrimento, una a piena risoluzione) e rigenera `src/data/galleries.ts`.
 
 ### ⚠️ Da compilare prima del deploy
 

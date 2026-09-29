@@ -88,7 +88,15 @@ function ResponsiveDialogContent({
 
   return (
     <DrawerContent className={className}>
-      <ScrollArea className="max-h-[85vh] px-4 pb-4 overflow-y-auto!" data-lenis-prevent>{children}</ScrollArea>
+      {/* Radix lays the viewport's content out as a table, which grows to fit
+          wide children; forcing block keeps horizontal carousels (the project
+          gallery) as wide as the screen so they scroll instead. */}
+      <ScrollArea
+        className="max-h-[85vh] px-4 pb-4 overflow-y-auto! [&_[data-radix-scroll-area-viewport]>div]:!block"
+        data-lenis-prevent
+      >
+        {children}
+      </ScrollArea>
     </DrawerContent>
   );
 }

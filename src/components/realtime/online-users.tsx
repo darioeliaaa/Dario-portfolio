@@ -299,6 +299,7 @@ const OnlineUsers = () => {
                   <div className="relative w-8 h-8">
                     <img
                       src={getAvatarUrl(currentUser.avatar)}
+                      alt=""
                       className="w-full h-full rounded-full ring-1 ring-black/10 dark:ring-white/10"
                       style={{ backgroundColor: currentUser.color || '#60a5fa' }}
                     />

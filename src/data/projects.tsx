@@ -168,7 +168,6 @@ export type Project = {
     category: string;
     title: string;
     src: string;
-    screenshots: string[];
     skills: { frontend: Skill[]; backend: Skill[] };
     content: React.ReactNode | any;
     github?: string;
@@ -180,8 +179,7 @@ const projects: Project[] = [
         id: "ohima",
         category: "Sito Web & Gestionale",
         title: "Ohima che pizza",
-        src: "/assets/projects-screenshots/ohimachepizza/home.png",
-        screenshots: ["landing.png"],
+        src: "/assets/projects-screenshots/ohimachepizza/home.webp",
         live: "https://www.ohimachepizza.it",
         github: "https://github.com/darioeliaaa/ohima-che-pizza",
         skills: {
@@ -220,7 +218,6 @@ const projects: Project[] = [
         category: "Gestionale Fondi",
         title: "MoneyMind",
         src: "/assets/projects-screenshots/moneyMind/home.png",
-        screenshots: ["landing.png"],
         skills: {
             frontend: [
                 PROJECT_SKILLS.html,
@@ -267,7 +264,6 @@ const projects: Project[] = [
         category: "Enterprise Travel App",
         title: "Tripify",
         src: "/assets/projects-screenshots/tripify/cover.jpg",
-        screenshots: ["landing.png"],
         skills: {
             frontend: [
                 PROJECT_SKILLS.kotlin,
@@ -322,8 +318,7 @@ const projects: Project[] = [
         id: "wavely",
         category: "Streaming Musicale",
         title: "Wave.ly",
-        src: "/assets/projects-screenshots/wave.ly/home.png",
-        screenshots: ["landing.png"],
+        src: "/assets/projects-screenshots/wave.ly/home.webp",
         skills: {
             frontend: [
                 PROJECT_SKILLS.javaFX,
@@ -339,18 +334,19 @@ const projects: Project[] = [
             return (
                 <div>
                     <TypographyP className="font-mono text-2xl text-center">
-                        Un’applicazione desktop per lo streaming musicale ispirata a Spotify.
+                        Un’applicazione desktop per ascoltare musica, con un’interfaccia costruita da zero in JavaFX.
                     </TypographyP>
                     <TypographyP className="font-mono mt-4">
-                        Wave.ly consente agli utenti di esplorare playlist, artisti e brani, con una coda di riproduzione dinamica e un'interfaccia interattiva progettata in JavaFX.
+                        Wave.ly consente di esplorare album, artisti e playlist, e si tinge del colore della copertina che sta suonando.
                     </TypographyP>
 
                     <TypographyH3 className="my-4 mt-8">🎵 Funzionalità Sviluppate</TypographyH3>
                     <ul className="list-disc list-inside font-mono mb-4 space-y-2">
-                        <li>Sistema di riproduzione con gestione della coda dinamica.</li>
-                        <li>Ricerca avanzata di brani, playlist e artisti.</li>
-                        <li>Profilo utente persistente su database SQLite.</li>
-                        <li>Architettura MVC organizzata con controller JavaFX e Scene Builder.</li>
+                        <li>Lettore a schermo intero con vinile animato, spettro audio in tempo reale e testo che scorre col brano.</li>
+                        <li>Coda riordinabile con il trascinamento, riproduzione casuale e ripetizione di brano o lista.</li>
+                        <li>Ricerca istantanea di brani, album e artisti, con risultati raggruppati.</li>
+                        <li>Statistiche d'ascolto ed equalizzatore a 10 bande con preset.</li>
+                        <li>Account e preferenze su SQLite, con password e codice di recupero cifrati.</li>
                     </ul>
                 </div>
             );
@@ -360,8 +356,7 @@ const projects: Project[] = [
         id: "bulloneco",
         category: "Gestionale Ferramenta",
         title: "Bullone&Co",
-        src: "/assets/projects-screenshots/bulloneeco/home.png",
-        screenshots: ["landing.png"],
+        src: "/assets/projects-screenshots/bulloneeco/home.webp",
         skills: {
             frontend: [
                 PROJECT_SKILLS.javaFX,
@@ -373,7 +368,6 @@ const projects: Project[] = [
             ],
         },
         live: "#",
-        github: "https://github.com/Giammy-bug66/INGSW",
         get content() {
             return (
                 <div>
@@ -392,7 +386,7 @@ const projects: Project[] = [
                         <strong>Pattern Strategy:</strong> Utilizzato per il calcolo dinamico del valore del magazzino, scambiando a runtime algoritmi di pricing e svalutazione temporale.
                     </p>
                     <p className="font-mono mb-2">
-                        <strong>Dashboard:</strong> Interfaccia con tema CSS "Deep Blue Clarity" e KPI card interattive aggiornate live.
+                        <strong>Interfaccia:</strong> Estetica da officina, con catalogo a scaffali, cassetta di prenotazione e report del magazzino con KPI aggiornati live.
                     </p>
                 </div>
             );
@@ -402,8 +396,7 @@ const projects: Project[] = [
         id: "portfolio",
         category: "Portfolio Personale",
         title: "Dario Elia - Portfolio",
-        src: "/assets/projects-screenshots/portfolio/landing.png",
-        screenshots: ["landing.png"],
+        src: "/assets/projects-screenshots/portfolio/landing.webp",
         live: "https://www.darioelia.it",
         github:"https://github.com/darioeliaaa/Dario-portfolio",
         skills: {
@@ -448,7 +441,6 @@ const demoProjects: Project[] = [
         category: "E-Commerce Avanzato · Case Study",
         title: "Ottone — Telai a Novi Ligure",
         src: "/assets/projects-screenshots/ottone/ottone.png",
-        screenshots: ["ottone.png"],
         skills: {
             frontend: [
                 PROJECT_SKILLS.angular,
@@ -513,7 +505,6 @@ const demoProjects: Project[] = [
         category: "E-Commerce · Case Study",
         title: "Piccantomane",
         src: "/assets/projects-screenshots/piccantomane/piccantomane.png",
-        screenshots: ["piccantomane.png"],
         skills: {
             frontend: [
                 PROJECT_SKILLS.angular,
@@ -582,7 +573,6 @@ const demoProjects: Project[] = [
         category: "Sito Aziendale · Case Study",
         title: "Sìdero — Cantina in Cirò",
         src: "/assets/projects-screenshots/sidero/sidero.png",
-        screenshots: ["sidero.png"],
         skills: {
             frontend: [
                 PROJECT_SKILLS.angular,
@@ -657,7 +647,6 @@ const demoProjects: Project[] = [
         category: "Sito Vetrina · Case Study",
         title: "Azienda Agricola",
         src: "/assets/projects-screenshots/pelaggi/home.png",
-        screenshots: ["home.png"],
         skills: {
             frontend: [
                 PROJECT_SKILLS.angular,
@@ -714,7 +703,6 @@ const demoProjects: Project[] = [
         category: "Sito Vetrina · Case Study",
         title: "TREDICI — Studio di Tatuaggi",
         src: "/assets/projects-screenshots/trediciTattoo/trediciTattoo.png",
-        screenshots: ["trediciTattoo.png"],
         skills: {
             frontend: [
                 PROJECT_SKILLS.angular,
@@ -772,7 +760,6 @@ const demoProjects: Project[] = [
         category: "Landing Page · Case Study",
         title: "Una Notte di Stelle",
         src: "/assets/projects-screenshots/unaNotteDiStelle/unaNotteDiStelle.png",
-        screenshots: ["unaNotteDiStelle.png"],
         skills: {
             frontend: [
                 PROJECT_SKILLS.angular,

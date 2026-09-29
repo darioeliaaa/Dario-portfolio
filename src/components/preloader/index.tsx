@@ -62,7 +62,6 @@ function Preloader({ children, disabled = false }: PreloaderProps) {
 
   useEffect(() => {
     if (perfReady && disable3D) bypassLoading();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [perfReady, disable3D]);
   const loadingPercentRef = useRef<{ value: number }>({ value: 0 });
   useEffect(() => {

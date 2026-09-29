@@ -18,6 +18,7 @@ import ScrollingPreview from "../scrolling-preview";
 import { DialogTitle } from "@radix-ui/react-dialog";
 import { TiltCard } from "../ui/tilt-card";
 import { useDragScroll } from "@/hooks/use-drag-scroll";
+import { ProjectGallery } from "../project-gallery";
 
 const ProjectsSection = () => {
     const drag = useDragScroll<HTMLDivElement>();
@@ -239,6 +240,9 @@ export const ProjectCard = ({
                     data-lenis-prevent
                 >
                     <div className="flex w-full flex-col gap-8 overflow-x-hidden p-4 md:p-8">
+                        {/* Screens first: they are what people open a project for. */}
+                        <ProjectGallery projectId={project.id} title={project.title} />
+
                         {/* MOBILE: compact chips */}
                         <div className="flex w-full flex-col gap-5 md:hidden">
                             {(["frontend", "backend"] as const).map((group) =>
