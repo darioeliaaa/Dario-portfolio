@@ -215,16 +215,17 @@ const projects: Project[] = [
     },
     {
         id: "moneymind",
-        category: "Gestionale Fondi",
+        category: "Finanza Personale & Trading",
         title: "MoneyMind",
-        src: "/assets/projects-screenshots/moneyMind/home.png",
+        src: "/assets/projects-screenshots/moneyMind/home.webp",
         skills: {
             frontend: [
-                PROJECT_SKILLS.html,
-                PROJECT_SKILLS.tailwind,
                 PROJECT_SKILLS.angular,
+                PROJECT_SKILLS.ts,
+                PROJECT_SKILLS.html,
             ],
             backend: [
+                PROJECT_SKILLS.java,
                 PROJECT_SKILLS.springBoot,
                 PROJECT_SKILLS.postgres,
             ],
@@ -235,25 +236,45 @@ const projects: Project[] = [
             return (
                 <div>
                     <TypographyP className="font-mono text-2xl text-center">
-                        Un ecosistema finanziario all-in-one per il budget quotidiano e la simulazione di investimenti reali.
+                        Un&apos;app per tenere in ordine i soldi di ogni giorno e provare a investire senza rischiare, con quotazioni reali.
                     </TypographyP>
                     <TypographyP className="font-mono mt-4">
-                        Ho sviluppato MoneyMind per unire il tracciamento delle spese personali e il mondo del trading in un'unica piattaforma intuitiva e reattiva, affrontando sfide architetturali legate alla concorrenza transazionale e all'ottimizzazione delle API.
+                        Progetto universitario di gruppo, in quattro: l&apos;ho avviato io a
+                        novembre 2025 e ho firmato 469 dei 740 commit. Ho scritto il simulatore di
+                        compravendita con il prezzo medio di carico, la cache delle notizie e gran
+                        parte del frontend Angular; accesso, quotazioni e trasferimenti tra wallet
+                        li hanno fatti i miei compagni. A ottobre 2026 ho ridisegnato da capo tutta
+                        l&apos;interfaccia, senza toccare le funzionalità. Le schermate mostrano dati
+                        dimostrativi, non conti reali.
                     </TypographyP>
 
-                    <TypographyH3 className="my-4 mt-8">✨ Funzionalità Principali</TypographyH3>
+                    <TypographyH3 className="my-4 mt-8">🎨 Il nuovo design: la stampa di sicurezza</TypographyH3>
                     <ul className="list-disc list-inside font-mono mb-4 space-y-2">
-                        <li><strong>Gestione Budget:</strong> Tracciamento dettagliato di entrate e uscite con grafici interattivi (Chart.js).</li>
-                        <li><strong>Wallet Condivisi:</strong> Portafogli in comune con logiche avanzate di limiti di spesa e deposito minimo.</li>
-                        <li><strong>Trading & Market Live:</strong> Simulazione di compravendita di Azioni, ETF e Crypto collegata a dati reali (Finnhub/NewsAPI) per il calcolo in tempo reale del PMC.</li>
+                        <li><strong>L&apos;identità viene dalle banconote:</strong> rosette guilloché sulle schede dei saldi, filo iridescente e microtesto. Le rosette non sono immagini: sono curve polari sovrapposte, calcolate in codice e disegnate in SVG.</li>
+                        <li><strong>Un sistema di variabili CSS:</strong> carta verde-grigia, inchiostro scuro, un gradiente iridescente solo dove conta (saldi, wallet, accesso) e due colori per guadagno e perdita.</li>
+                        <li><strong>Tipografia:</strong> Anybody per i titoli, Hanken Grotesk per il testo e Martian Mono per numeri ed etichette.</li>
+                        <li><strong>Grafici su misura:</strong> Chart.js con font, colori e tooltip comuni a tutta l&apos;app; il grafico del titolo è il widget di TradingView ricolorato con la palette di MoneyMind.</li>
+                        <li><strong>Desktop e telefono:</strong> barra laterale su schermo grande, barra a pillola in basso sul telefono, tabelle e grafici che non spingono mai la pagina oltre lo schermo.</li>
                     </ul>
 
-                    <TypographyH3 className="my-4 mt-8">🛠️ Dietro le quinte</TypographyH3>
+                    <TypographyH3 className="my-4 mt-8">✨ Cosa fa</TypographyH3>
+                    <ul className="list-disc list-inside font-mono mb-4 space-y-2">
+                        <li><strong>Budget e movimenti:</strong> entrate e uscite per categoria, mese per mese, con riepilogo, ciambelle e andamento annuale.</li>
+                        <li><strong>Wallet condivisi:</strong> conti in comune a cui si entra con un codice di invito, con budget mensile per membro e limite di prelievo.</li>
+                        <li><strong>Market:</strong> quotazioni reali di azioni, ETF e crypto (Finnhub) e notizie finanziarie (NewsAPI).</li>
+                        <li><strong>Trading simulato:</strong> acquisto e vendita con calcolo del prezzo medio di carico; il portafoglio mostra profitti, perdite e allocazione.</li>
+                    </ul>
+
+                    <TypographyH3 className="my-4 mt-8">🛠️ La mia parte, dietro le quinte</TypographyH3>
+                    <ul className="list-disc list-inside font-mono mb-4 space-y-2">
+                        <li><strong>Compravendita in un&apos;unica transazione:</strong> ogni acquisto o vendita aggiorna la posizione, il totale investito e il movimento di cassa dentro una sola <code>@Transactional</code>: o riesce tutto o non cambia niente. Il prezzo medio di carico si ricalcola a ogni acquisto.</li>
+                        <li><strong>Cache delle notizie:</strong> <code>@Cacheable</code> con <code>@Scheduled</code> ogni 30 minuti, così la chiamata a NewsAPI parte al massimo una volta ogni mezz&apos;ora e il piano gratuito basta.</li>
+                        <li><strong>Frontend Angular:</strong> componenti standalone e senza Zone.js, servizi con HttpClient, tutta la parte grafica e i grafici.</li>
+                    </ul>
                     <p className="font-mono mb-2">
-                        <strong>Integrità Transazionale:</strong> Spostare soldi verso wallet condivisi richiede precisione assoluta. Ho gestito l'atomicità con transazioni ACID (<code>@Transactional</code>) in Spring Boot.
-                    </p>
-                    <p className="font-mono mb-2">
-                        <strong>Caching & API:</strong> Per superare i rate-limit esterni, ho implementato un sistema di cache applicativa aggiornata in background tramite <code>@Scheduled</code>, riducendo a zero i colli di bottiglia di rete.
+                        <strong>Onestà sui limiti:</strong> è una demo universitaria. Le API sono volutamente aperte
+                        (lo dice anche il README) e gli importi sono in <code>double</code>: per portarla in produzione
+                        servirebbero autenticazione con token e <code>BigDecimal</code>.
                     </p>
                 </div>
             );
@@ -646,7 +667,7 @@ const demoProjects: Project[] = [
         id: "pelaggi",
         category: "Sito Vetrina · Case Study",
         title: "Azienda Agricola",
-        src: "/assets/projects-screenshots/pelaggi/home.png",
+        src: "/assets/projects-screenshots/pelaggi/home.webp",
         skills: {
             frontend: [
                 PROJECT_SKILLS.angular,
@@ -665,31 +686,31 @@ const demoProjects: Project[] = [
                     </TypographyP>
                     <TypographyP className="font-mono mt-4">
                         Un case study personale, non un incarico commissionato: l&apos;ho
-                        costruito per mettere alla prova un&apos;estetica editoriale e il
-                        rendering server-side di Angular su un sito dove la SEO locale è
-                        tutto. I contatti e i dati aziendali nella demo sono volutamente
-                        dei segnaposto.
+                        costruito per mettere alla prova il rendering server-side di Angular
+                        su un sito dove la SEO locale è tutto, con un&apos;identità da marchio
+                        vero. I contatti, i prezzi e i dati aziendali nella demo sono
+                        volutamente dei segnaposto.
                     </TypographyP>
 
-                    <TypographyH3 className="my-4 mt-8">🎨 Design editoriale</TypographyH3>
+                    <TypographyH3 className="my-4 mt-8">🫒 Identità visiva</TypographyH3>
                     <ul className="list-disc list-inside font-mono mb-4 space-y-2">
-                        <li><strong>Tipografia:</strong> Playfair Display per i titoli e Inter per il testo, l&apos;accoppiata serif/sans che dà il tono da rivista.</li>
-                        <li><strong>Palette:</strong> verde oliva, oro e crema come variabili CSS, così l&apos;intera identità si cambia da un punto solo.</li>
-                        <li><strong>Angoli vivi:</strong> raggi di 2px invece dei soliti bordi morbidi, per un&apos;impaginazione più asciutta e stampata.</li>
+                        <li><strong>La palette dell&apos;invaiatura:</strong> i colori dell&apos;oliva che matura (verde acerbo, paglia, violaceo, nero) diventano i blocchi colorati delle sezioni, tutti come variabili CSS.</li>
+                        <li><strong>Tipografia:</strong> Caprasimo per i titoli, Figtree per il testo e Red Hat Mono per etichette, orari e valori di laboratorio.</li>
+                        <li><strong>Illustrazioni in SVG:</strong> bottiglia, latte, un rametto con le olive che cambiano colore dalla base alla punta e bollini che girano, tutti componenti Angular. Nessuna immagine da scaricare e nitide a ogni risoluzione.</li>
                     </ul>
 
                     <TypographyH3 className="my-4 mt-8">⚙️ Architettura</TypographyH3>
                     <ul className="list-disc list-inside font-mono mb-4 space-y-2">
-                        <li><strong>Angular 21</strong> con componenti standalone e routing su quattro pagine (Home, Frantoio, Chi Siamo, Contatti).</li>
-                        <li><strong>SSR e prerendering:</strong> <code>@angular/ssr</code> su Express, con tutte le rotte generate staticamente in fase di build.</li>
-                        <li><strong>Form reattivi:</strong> la pagina contatti usa i Reactive Forms con validazione su nome, email e messaggio.</li>
-                        <li><strong>Galleria del frantoio:</strong> carosello scritto a mano, senza librerie, con navigazione avanti/indietro e puntini cliccabili.</li>
+                        <li><strong>Angular 21</strong> con componenti standalone, senza Zone.js e con i signal per lo stato, su quattro pagine (Home, Frantoio, Chi Siamo, Contatti).</li>
+                        <li><strong>SSR e prerendering:</strong> <code>@angular/ssr</code> su Express, con tutte le rotte generate staticamente in fase di build e l&apos;idratazione lato client.</li>
+                        <li><strong>Parti interattive:</strong> la scheda di assaggio delle tre varietà (fruttato, amaro e piccante su scala 0–10, navigabile anche da tastiera), il calendario dell&apos;uliveto che si apre sul mese corrente e la scheda analitica confrontata con i limiti di legge.</li>
+                        <li><strong>Form reattivi:</strong> il modulo contatti cambia campi in base alla richiesta (ordine, visita, molitura) e arriva già compilato dai bottoni &quot;Ordina&quot; del sito, tramite i parametri dell&apos;URL.</li>
                     </ul>
 
                     <TypographyH3 className="my-4 mt-8">🔍 SEO locale</TypographyH3>
                     <p className="font-mono mb-2">
-                        Il punto dell&apos;esercizio: title e meta description scritti attorno
-                        alla query che conta davvero (&quot;olio extravergine a Strongoli&quot;),
+                        Il punto dell&apos;esercizio: un title per ogni pagina e meta description
+                        scritti attorno alla query che conta davvero (&quot;olio extravergine a Strongoli&quot;),
                         Open Graph per l&apos;anteprima su WhatsApp e Instagram, <code>lang=&quot;it&quot;</code>,
                         theme-color per la barra del browser su mobile e HTML già renderizzato
                         alla prima richiesta, senza aspettare il JavaScript.

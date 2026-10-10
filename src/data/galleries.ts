@@ -24,6 +24,216 @@ export type Gallery = {
 };
 
 export const galleries: Record<string, Gallery> = {
+    "moneymind": {
+        "kind": "app",
+        "title": "MoneyMind",
+        "views": {
+            "desktop": [
+                {
+                    "label": "Accesso",
+                    "w": 2880,
+                    "h": 1800,
+                    "rail": "/assets/gallery/moneymind/01-accesso-9c31f2e8-1280.webp",
+                    "railW": 1280,
+                    "full": "/assets/gallery/moneymind/01-accesso-9c31f2e8-2880.webp"
+                },
+                {
+                    "label": "Registrazione",
+                    "w": 2880,
+                    "h": 1800,
+                    "rail": "/assets/gallery/moneymind/02-registrazione-9598a6d9-1280.webp",
+                    "railW": 1280,
+                    "full": "/assets/gallery/moneymind/02-registrazione-9598a6d9-2880.webp"
+                },
+                {
+                    "label": "Dashboard del conto",
+                    "w": 2880,
+                    "h": 1800,
+                    "rail": "/assets/gallery/moneymind/03-dashboard-b03cd59d-1280.webp",
+                    "railW": 1280,
+                    "full": "/assets/gallery/moneymind/03-dashboard-b03cd59d-2880.webp"
+                },
+                {
+                    "label": "Budget per categoria",
+                    "w": 2880,
+                    "h": 1800,
+                    "rail": "/assets/gallery/moneymind/04-budget-7fb98e70-1280.webp",
+                    "railW": 1280,
+                    "full": "/assets/gallery/moneymind/04-budget-7fb98e70-2880.webp"
+                },
+                {
+                    "label": "Nuovo movimento",
+                    "w": 2880,
+                    "h": 1800,
+                    "rail": "/assets/gallery/moneymind/05-movimenti-96835bc2-1280.webp",
+                    "railW": 1280,
+                    "full": "/assets/gallery/moneymind/05-movimenti-96835bc2-2880.webp"
+                },
+                {
+                    "label": "I miei wallet",
+                    "w": 2880,
+                    "h": 1800,
+                    "rail": "/assets/gallery/moneymind/06-wallet-21303774-1280.webp",
+                    "railW": 1280,
+                    "full": "/assets/gallery/moneymind/06-wallet-21303774-2880.webp"
+                },
+                {
+                    "label": "Wallet condiviso",
+                    "w": 2880,
+                    "h": 1800,
+                    "rail": "/assets/gallery/moneymind/07-wallet-condiviso-2a291baf-1280.webp",
+                    "railW": 1280,
+                    "full": "/assets/gallery/moneymind/07-wallet-condiviso-2a291baf-2880.webp"
+                },
+                {
+                    "label": "Gestione wallet · budget e limiti",
+                    "w": 2880,
+                    "h": 1800,
+                    "rail": "/assets/gallery/moneymind/08-gestione-wallet-409daf98-1280.webp",
+                    "railW": 1280,
+                    "full": "/assets/gallery/moneymind/08-gestione-wallet-409daf98-2880.webp"
+                },
+                {
+                    "label": "Market · quotazioni e notizie",
+                    "w": 2880,
+                    "h": 1800,
+                    "rail": "/assets/gallery/moneymind/09-market-74ebf58c-1280.webp",
+                    "railW": 1280,
+                    "full": "/assets/gallery/moneymind/09-market-74ebf58c-2880.webp"
+                },
+                {
+                    "label": "Listino azioni",
+                    "w": 2880,
+                    "h": 1800,
+                    "rail": "/assets/gallery/moneymind/10-listino-8e0e4833-1280.webp",
+                    "railW": 1280,
+                    "full": "/assets/gallery/moneymind/10-listino-8e0e4833-2880.webp"
+                },
+                {
+                    "label": "Grafico del titolo",
+                    "w": 2880,
+                    "h": 1800,
+                    "rail": "/assets/gallery/moneymind/11-grafico-8220ff3f-1280.webp",
+                    "railW": 1280,
+                    "full": "/assets/gallery/moneymind/11-grafico-8220ff3f-2880.webp"
+                },
+                {
+                    "label": "Ordine simulato",
+                    "w": 2880,
+                    "h": 1800,
+                    "rail": "/assets/gallery/moneymind/12-ordine-3549bf8c-1280.webp",
+                    "railW": 1280,
+                    "full": "/assets/gallery/moneymind/12-ordine-3549bf8c-2880.webp"
+                },
+                {
+                    "label": "Portafoglio",
+                    "w": 2880,
+                    "h": 1800,
+                    "rail": "/assets/gallery/moneymind/13-portafoglio-cee0f6a6-1280.webp",
+                    "railW": 1280,
+                    "full": "/assets/gallery/moneymind/13-portafoglio-cee0f6a6-2880.webp"
+                },
+                {
+                    "label": "Allocazione e titoli",
+                    "w": 2880,
+                    "h": 1800,
+                    "rail": "/assets/gallery/moneymind/14-allocazione-4b8689e6-1280.webp",
+                    "railW": 1280,
+                    "full": "/assets/gallery/moneymind/14-allocazione-4b8689e6-2880.webp"
+                },
+                {
+                    "label": "Profilo",
+                    "w": 2880,
+                    "h": 1800,
+                    "rail": "/assets/gallery/moneymind/15-profilo-f48d9da4-1280.webp",
+                    "railW": 1280,
+                    "full": "/assets/gallery/moneymind/15-profilo-f48d9da4-2880.webp"
+                },
+                {
+                    "label": "Impostazioni",
+                    "w": 2880,
+                    "h": 1800,
+                    "rail": "/assets/gallery/moneymind/16-impostazioni-d771e26a-1280.webp",
+                    "railW": 1280,
+                    "full": "/assets/gallery/moneymind/16-impostazioni-d771e26a-2880.webp"
+                },
+                {
+                    "label": "Chi siamo",
+                    "w": 2880,
+                    "h": 1800,
+                    "rail": "/assets/gallery/moneymind/17-chi-siamo-bf777771-1280.webp",
+                    "railW": 1280,
+                    "full": "/assets/gallery/moneymind/17-chi-siamo-bf777771-2880.webp"
+                }
+            ],
+            "mobile": [
+                {
+                    "label": "Accesso",
+                    "w": 1170,
+                    "h": 2532,
+                    "rail": "/assets/gallery/moneymind/m-01-accesso-5a700973-640.webp",
+                    "railW": 640,
+                    "full": "/assets/gallery/moneymind/m-01-accesso-5a700973-1170.webp"
+                },
+                {
+                    "label": "Dashboard",
+                    "w": 1170,
+                    "h": 2532,
+                    "rail": "/assets/gallery/moneymind/m-02-dashboard-5f90bd55-640.webp",
+                    "railW": 640,
+                    "full": "/assets/gallery/moneymind/m-02-dashboard-5f90bd55-1170.webp"
+                },
+                {
+                    "label": "Budget per categoria",
+                    "w": 1170,
+                    "h": 2532,
+                    "rail": "/assets/gallery/moneymind/m-03-budget-02c44f87-640.webp",
+                    "railW": 640,
+                    "full": "/assets/gallery/moneymind/m-03-budget-02c44f87-1170.webp"
+                },
+                {
+                    "label": "I miei wallet",
+                    "w": 1170,
+                    "h": 2532,
+                    "rail": "/assets/gallery/moneymind/m-04-wallet-78cfb486-640.webp",
+                    "railW": 640,
+                    "full": "/assets/gallery/moneymind/m-04-wallet-78cfb486-1170.webp"
+                },
+                {
+                    "label": "Market",
+                    "w": 1170,
+                    "h": 2532,
+                    "rail": "/assets/gallery/moneymind/m-05-market-fc69e598-640.webp",
+                    "railW": 640,
+                    "full": "/assets/gallery/moneymind/m-05-market-fc69e598-1170.webp"
+                },
+                {
+                    "label": "Portafoglio",
+                    "w": 1170,
+                    "h": 2532,
+                    "rail": "/assets/gallery/moneymind/m-06-portafoglio-1076037e-640.webp",
+                    "railW": 640,
+                    "full": "/assets/gallery/moneymind/m-06-portafoglio-1076037e-1170.webp"
+                },
+                {
+                    "label": "Allocazione",
+                    "w": 1170,
+                    "h": 2532,
+                    "rail": "/assets/gallery/moneymind/m-07-allocazione-c7169e27-640.webp",
+                    "railW": 640,
+                    "full": "/assets/gallery/moneymind/m-07-allocazione-c7169e27-1170.webp"
+                },
+                {
+                    "label": "Profilo",
+                    "w": 1170,
+                    "h": 2532,
+                    "rail": "/assets/gallery/moneymind/m-08-profilo-c3452801-640.webp",
+                    "railW": 640,
+                    "full": "/assets/gallery/moneymind/m-08-profilo-c3452801-1170.webp"
+                }
+            ]
+        }
+    },
     "tripify": {
         "kind": "mobile",
         "title": "Tripify",
@@ -993,63 +1203,144 @@ export const galleries: Record<string, Gallery> = {
                     "path": "/",
                     "w": 2880,
                     "h": 1800,
-                    "rail": "/assets/gallery/pelaggi/01-home-7fae6043-1280.webp",
+                    "rail": "/assets/gallery/pelaggi/01-home-81c5f81d-1280.webp",
                     "railW": 1280,
-                    "full": "/assets/gallery/pelaggi/01-home-7fae6043-2880.webp"
+                    "full": "/assets/gallery/pelaggi/01-home-81c5f81d-2880.webp"
                 },
                 {
-                    "label": "I tre pilastri",
+                    "label": "Tre promesse",
                     "path": "/",
                     "w": 2880,
                     "h": 1800,
-                    "rail": "/assets/gallery/pelaggi/02-pilastri-1bfb3946-1280.webp",
+                    "rail": "/assets/gallery/pelaggi/02-promesse-1012af1c-1280.webp",
                     "railW": 1280,
-                    "full": "/assets/gallery/pelaggi/02-pilastri-1bfb3946-2880.webp"
+                    "full": "/assets/gallery/pelaggi/02-promesse-1012af1c-2880.webp"
+                },
+                {
+                    "label": "Le tre varietà",
+                    "path": "/",
+                    "w": 2880,
+                    "h": 1800,
+                    "rail": "/assets/gallery/pelaggi/03-varieta-185ed1c4-1280.webp",
+                    "railW": 1280,
+                    "full": "/assets/gallery/pelaggi/03-varieta-185ed1c4-2880.webp"
+                },
+                {
+                    "label": "Scheda di assaggio",
+                    "path": "/",
+                    "w": 2880,
+                    "h": 1800,
+                    "rail": "/assets/gallery/pelaggi/04-ottobratica-b4937785-1280.webp",
+                    "railW": 1280,
+                    "full": "/assets/gallery/pelaggi/04-ottobratica-b4937785-2880.webp"
+                },
+                {
+                    "label": "L'anno dell'ulivo",
+                    "path": "/",
+                    "w": 2880,
+                    "h": 1800,
+                    "rail": "/assets/gallery/pelaggi/05-calendario-fc5f96fc-1280.webp",
+                    "railW": 1280,
+                    "full": "/assets/gallery/pelaggi/05-calendario-fc5f96fc-2880.webp"
+                },
+                {
+                    "label": "I formati",
+                    "path": "/",
+                    "w": 2880,
+                    "h": 1800,
+                    "rail": "/assets/gallery/pelaggi/06-formati-ddbe2ca7-1280.webp",
+                    "railW": 1280,
+                    "full": "/assets/gallery/pelaggi/06-formati-ddbe2ca7-2880.webp"
                 },
                 {
                     "label": "Dalla terra alla tavola",
                     "path": "/",
                     "w": 2880,
                     "h": 1800,
-                    "rail": "/assets/gallery/pelaggi/03-tavola-5819352c-1280.webp",
+                    "rail": "/assets/gallery/pelaggi/07-storia-b6b1d66b-1280.webp",
                     "railW": 1280,
-                    "full": "/assets/gallery/pelaggi/03-tavola-5819352c-2880.webp"
+                    "full": "/assets/gallery/pelaggi/07-storia-b6b1d66b-2880.webp"
                 },
                 {
                     "label": "Il frantoio",
                     "path": "/frantoio",
                     "w": 2880,
                     "h": 1800,
-                    "rail": "/assets/gallery/pelaggi/04-frantoio-07aa3f3c-1280.webp",
+                    "rail": "/assets/gallery/pelaggi/08-frantoio-2d658e42-1280.webp",
                     "railW": 1280,
-                    "full": "/assets/gallery/pelaggi/04-frantoio-07aa3f3c-2880.webp"
+                    "full": "/assets/gallery/pelaggi/08-frantoio-2d658e42-2880.webp"
                 },
                 {
-                    "label": "I nostri lavori",
+                    "label": "Ora per ora",
                     "path": "/frantoio",
                     "w": 2880,
                     "h": 1800,
-                    "rail": "/assets/gallery/pelaggi/05-lavori-f0178fb4-1280.webp",
+                    "rail": "/assets/gallery/pelaggi/09-processo-b65d599b-1280.webp",
                     "railW": 1280,
-                    "full": "/assets/gallery/pelaggi/05-lavori-f0178fb4-2880.webp"
+                    "full": "/assets/gallery/pelaggi/09-processo-b65d599b-2880.webp"
+                },
+                {
+                    "label": "Scheda analitica",
+                    "path": "/frantoio",
+                    "w": 2880,
+                    "h": 1800,
+                    "rail": "/assets/gallery/pelaggi/10-analisi-e8e0bc48-1280.webp",
+                    "railW": 1280,
+                    "full": "/assets/gallery/pelaggi/10-analisi-e8e0bc48-2880.webp"
+                },
+                {
+                    "label": "Molitura conto terzi",
+                    "path": "/frantoio",
+                    "w": 2880,
+                    "h": 1800,
+                    "rail": "/assets/gallery/pelaggi/11-molitura-63ab5d26-1280.webp",
+                    "railW": 1280,
+                    "full": "/assets/gallery/pelaggi/11-molitura-63ab5d26-2880.webp"
                 },
                 {
                     "label": "La nostra storia",
                     "path": "/chi-siamo",
                     "w": 2880,
                     "h": 1800,
-                    "rail": "/assets/gallery/pelaggi/06-chi-siamo-91591d9e-1280.webp",
+                    "rail": "/assets/gallery/pelaggi/12-chi-siamo-8189abf2-1280.webp",
                     "railW": 1280,
-                    "full": "/assets/gallery/pelaggi/06-chi-siamo-91591d9e-2880.webp"
+                    "full": "/assets/gallery/pelaggi/12-chi-siamo-8189abf2-2880.webp"
+                },
+                {
+                    "label": "Tre generazioni",
+                    "path": "/chi-siamo",
+                    "w": 2880,
+                    "h": 1800,
+                    "rail": "/assets/gallery/pelaggi/13-generazioni-55db8561-1280.webp",
+                    "railW": 1280,
+                    "full": "/assets/gallery/pelaggi/13-generazioni-55db8561-2880.webp"
+                },
+                {
+                    "label": "Quello che non facciamo",
+                    "path": "/chi-siamo",
+                    "w": 2880,
+                    "h": 1800,
+                    "rail": "/assets/gallery/pelaggi/14-regole-807f3369-1280.webp",
+                    "railW": 1280,
+                    "full": "/assets/gallery/pelaggi/14-regole-807f3369-2880.webp"
                 },
                 {
                     "label": "Contatti",
                     "path": "/contatti",
                     "w": 2880,
                     "h": 1800,
-                    "rail": "/assets/gallery/pelaggi/07-contatti-0e7720bd-1280.webp",
+                    "rail": "/assets/gallery/pelaggi/15-contatti-ac22a46a-1280.webp",
                     "railW": 1280,
-                    "full": "/assets/gallery/pelaggi/07-contatti-0e7720bd-2880.webp"
+                    "full": "/assets/gallery/pelaggi/15-contatti-ac22a46a-2880.webp"
+                },
+                {
+                    "label": "Messaggio inviato",
+                    "path": "/contatti",
+                    "w": 2880,
+                    "h": 1800,
+                    "rail": "/assets/gallery/pelaggi/16-conferma-f7b7912f-1280.webp",
+                    "railW": 1280,
+                    "full": "/assets/gallery/pelaggi/16-conferma-f7b7912f-2880.webp"
                 }
             ],
             "mobile": [
@@ -1057,41 +1348,113 @@ export const galleries: Record<string, Gallery> = {
                     "label": "Home",
                     "w": 1170,
                     "h": 2532,
-                    "rail": "/assets/gallery/pelaggi/m-01-home-d7506af3-640.webp",
+                    "rail": "/assets/gallery/pelaggi/m-01-home-4b8fef77-640.webp",
                     "railW": 640,
-                    "full": "/assets/gallery/pelaggi/m-01-home-d7506af3-1170.webp"
+                    "full": "/assets/gallery/pelaggi/m-01-home-4b8fef77-1170.webp"
                 },
                 {
-                    "label": "I tre pilastri",
+                    "label": "L'illustrazione",
                     "w": 1170,
                     "h": 2532,
-                    "rail": "/assets/gallery/pelaggi/m-02-pilastri-430fcae2-640.webp",
+                    "rail": "/assets/gallery/pelaggi/m-02-bottiglia-0359d869-640.webp",
                     "railW": 640,
-                    "full": "/assets/gallery/pelaggi/m-02-pilastri-430fcae2-1170.webp"
+                    "full": "/assets/gallery/pelaggi/m-02-bottiglia-0359d869-1170.webp"
+                },
+                {
+                    "label": "Tre promesse",
+                    "w": 1170,
+                    "h": 2532,
+                    "rail": "/assets/gallery/pelaggi/m-03-promesse-bc2a53f5-640.webp",
+                    "railW": 640,
+                    "full": "/assets/gallery/pelaggi/m-03-promesse-bc2a53f5-1170.webp"
+                },
+                {
+                    "label": "Scheda di assaggio",
+                    "w": 1170,
+                    "h": 2532,
+                    "rail": "/assets/gallery/pelaggi/m-04-varieta-767dfdfd-640.webp",
+                    "railW": 640,
+                    "full": "/assets/gallery/pelaggi/m-04-varieta-767dfdfd-1170.webp"
+                },
+                {
+                    "label": "L'anno dell'ulivo",
+                    "w": 1170,
+                    "h": 2532,
+                    "rail": "/assets/gallery/pelaggi/m-05-calendario-816f3160-640.webp",
+                    "railW": 640,
+                    "full": "/assets/gallery/pelaggi/m-05-calendario-816f3160-1170.webp"
+                },
+                {
+                    "label": "I formati",
+                    "w": 1170,
+                    "h": 2532,
+                    "rail": "/assets/gallery/pelaggi/m-06-formati-8b0e489a-640.webp",
+                    "railW": 640,
+                    "full": "/assets/gallery/pelaggi/m-06-formati-8b0e489a-1170.webp"
+                },
+                {
+                    "label": "Menu",
+                    "w": 1170,
+                    "h": 2532,
+                    "rail": "/assets/gallery/pelaggi/m-07-menu-f0d7cba2-640.webp",
+                    "railW": 640,
+                    "full": "/assets/gallery/pelaggi/m-07-menu-f0d7cba2-1170.webp"
                 },
                 {
                     "label": "Il frantoio",
                     "w": 1170,
                     "h": 2532,
-                    "rail": "/assets/gallery/pelaggi/m-03-frantoio-c5d10d04-640.webp",
+                    "rail": "/assets/gallery/pelaggi/m-08-frantoio-b1569590-640.webp",
                     "railW": 640,
-                    "full": "/assets/gallery/pelaggi/m-03-frantoio-c5d10d04-1170.webp"
+                    "full": "/assets/gallery/pelaggi/m-08-frantoio-b1569590-1170.webp"
                 },
                 {
-                    "label": "I nostri lavori",
+                    "label": "Ora per ora",
                     "w": 1170,
                     "h": 2532,
-                    "rail": "/assets/gallery/pelaggi/m-04-lavori-40a8146d-640.webp",
+                    "rail": "/assets/gallery/pelaggi/m-09-processo-90089809-640.webp",
                     "railW": 640,
-                    "full": "/assets/gallery/pelaggi/m-04-lavori-40a8146d-1170.webp"
+                    "full": "/assets/gallery/pelaggi/m-09-processo-90089809-1170.webp"
+                },
+                {
+                    "label": "Scheda analitica",
+                    "w": 1170,
+                    "h": 2532,
+                    "rail": "/assets/gallery/pelaggi/m-10-analisi-35a7b3d2-640.webp",
+                    "railW": 640,
+                    "full": "/assets/gallery/pelaggi/m-10-analisi-35a7b3d2-1170.webp"
                 },
                 {
                     "label": "La nostra storia",
                     "w": 1170,
                     "h": 2532,
-                    "rail": "/assets/gallery/pelaggi/m-05-chi-siamo-a643e1b6-640.webp",
+                    "rail": "/assets/gallery/pelaggi/m-11-chi-siamo-89330a81-640.webp",
                     "railW": 640,
-                    "full": "/assets/gallery/pelaggi/m-05-chi-siamo-a643e1b6-1170.webp"
+                    "full": "/assets/gallery/pelaggi/m-11-chi-siamo-89330a81-1170.webp"
+                },
+                {
+                    "label": "Quello che non facciamo",
+                    "w": 1170,
+                    "h": 2532,
+                    "rail": "/assets/gallery/pelaggi/m-12-regole-5b947d60-640.webp",
+                    "railW": 640,
+                    "full": "/assets/gallery/pelaggi/m-12-regole-5b947d60-1170.webp"
+                },
+                {
+                    "label": "Contatti",
+                    "w": 1170,
+                    "h": 2532,
+                    "rail": "/assets/gallery/pelaggi/m-13-contatti-d4f2274e-640.webp",
+                    "railW": 640,
+                    "full": "/assets/gallery/pelaggi/m-13-contatti-d4f2274e-1170.webp"
+                },
+                {
+                    "label": "Il modulo d'ordine",
+                    "w": 1170,
+                    "h": 2532,
+                    "rail": "/assets/gallery/pelaggi/m-14-modulo-2ffda2a5-640.webp",
+                    "railW": 640,
+                    "full": "/assets/gallery/pelaggi/m-14-modulo-2ffda2a5-1170.webp"
                 }
             ]
         }
