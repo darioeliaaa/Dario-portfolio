@@ -1,6 +1,6 @@
 import { TypographyH3, TypographyP } from "@/components/ui/typography";
 import { ReactNode } from "react";
-// Spline has no thesvg entry — keep the Three.js mark as its stand-in.
+// Three.js non ha un file in /public/assets/logos: uso il marchio di react-icons.
 import { SiThreedotjs } from "react-icons/si";
 
 // Renders a brand SVG from /public as a monochrome glyph that inherits the
@@ -81,12 +81,6 @@ const PROJECT_SKILLS = {
         bg: "black",
         fg: "white",
         icon: <span className="text-xs font-bold">FX</span>,
-    },
-    spline: {
-        title: "Spline",
-        bg: "black",
-        fg: "white",
-        icon: <SiThreedotjs />,
     },
     three: {
         title: "Three.js",
@@ -425,7 +419,7 @@ const projects: Project[] = [
                 PROJECT_SKILLS.ts,
                 PROJECT_SKILLS.next,
                 PROJECT_SKILLS.tailwind,
-                PROJECT_SKILLS.spline,
+                PROJECT_SKILLS.three,
             ],
             backend: [],
         },
@@ -441,7 +435,12 @@ const projects: Project[] = [
 
                     <TypographyH3 className="my-4 mt-8">Esperienza Immersiva</TypographyH3>
                     <p className="font-mono mb-2">
-                        Non è solo un semplice contenitore di informazioni, ma la dimostrazione pratica della mia cura per il frontend. Dai dettagli della tastiera interattiva Spline 3D fino all'adattabilità responsiva garantita da Tailwind CSS.
+                        Non è solo un semplice contenitore di informazioni, ma la dimostrazione pratica della mia cura per il frontend. Dai dettagli della tastiera 3D interattiva, dove ogni tasto è una tecnologia, fino all'adattabilità responsiva garantita da Tailwind CSS.
+                    </p>
+
+                    <TypographyH3 className="my-4 mt-8">Punto di partenza</TypographyH3>
+                    <p className="font-mono mb-2">
+                        Il sito parte dal template open source di Naresh Khatri, che ho riscritto e personalizzato: sezioni, gallerie, form contatti, CV e SEO. La tastiera 3D era una scena Spline: l'ho riscritta da zero in Three.js, con 37 tasti generati da codice, uno per ogni tecnologia che uso o che ho studiato.
                     </p>
                 </div>
             );

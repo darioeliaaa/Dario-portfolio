@@ -1,6 +1,7 @@
 "use client";
 
-import { EXPERIENCE, SkillNames, SKILLS, type Experience } from "@/data/constants";
+import { EXPERIENCE, SKILLS, type Experience } from "@/data/constants";
+import { SkillIcon } from "../keyboard/skill-icon";
 import { SectionHeader } from "./section-header";
 import { cn } from "@/lib/utils";
 import SectionWrapper from "../ui/section-wrapper";
@@ -115,20 +116,17 @@ const ExperienceCard = ({
         {experience.skills.length > 0 && (
           <div className="mt-5 flex flex-wrap gap-2 border-t border-border pt-4">
             {experience.skills.map((skillName) => {
-              const skill = SKILLS[skillName as SkillNames];
+              const skill = SKILLS[skillName];
               if (!skill) return null;
               return (
                 <span
                   key={skillName}
                   className="inline-flex items-center gap-1.5 rounded-full border border-border bg-secondary/40 px-2.5 py-1 text-xs text-muted-foreground transition-colors hover:text-foreground"
                 >
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={skill.icon}
-                    alt=""
-                    aria-hidden
-                    loading="lazy"
-                    className="h-3.5 w-3.5 object-contain"
+                  <SkillIcon
+                    id={skillName}
+                    colored
+                    className="h-3.5 w-3.5 shrink-0"
                   />
                   {skill.label}
                 </span>

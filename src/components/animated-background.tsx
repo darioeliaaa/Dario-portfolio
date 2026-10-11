@@ -1,579 +1,498 @@
 "use client";
-import React, { Suspense, useEffect, useRef, useState } from "react";
-import { Application, SPEObject, SplineEvent } from "@splinetool/runtime";
+import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-const Spline = React.lazy(() => import("@splinetool/react-spline"));
-import { Skill, SkillNames, SKILLS } from "@/data/constants";
-import { sleep } from "@/lib/utils";
-import { useMediaQuery } from "@/hooks/use-media-query";
-import { usePreloader } from "./preloader";
 import { useTheme } from "next-themes";
-import { Section, getKeyboardState } from "./animated-background-config";
-import { useSounds } from "./realtime/hooks/use-sounds";
+import { SKILLS, type Skill } from "@/data/constants";
+import { SKILL_KEYS, type SkillNames } from "@/data/skill-keys";
 import { usePerfProfile } from "@/hooks/use-perf-profile";
+import { setKeyboard3DStatus } from "@/hooks/use-keyboard-3d-status";
+import { usePreloader } from "./preloader";
+import { useSounds } from "./realtime/hooks/use-sounds";
+import { KeyCard } from "./keyboard/key-card";
+// Solo tipi: il motore (three.js + loghi, circa 170 KB compressi) è un chunk a parte,
+// scaricato con l'import dinamico qui sotto solo quando la scena parte davvero.
+import type { KeyboardEngine, KeyboardTheme } from "./keyboard/keyboard-engine";
+import { Section, getKeyboardState } from "./animated-background-config";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const KeyboardScene = ({ maxDpr }: { maxDpr: number }) => {
-  const { isLoading, bypassLoading } = usePreloader();
-  const { theme } = useTheme();
-  const isMobile = useMediaQuery("(max-width: 767px)");
-  const splineContainer = useRef<HTMLDivElement>(null);
-  const [splineApp, setSplineApp] = useState<Application>();
-  const selectedSkillRef = useRef<Skill | null>(null);
-
-  const { playPressSound, playReleaseSound } = useSounds();
-
-  const [selectedSkill, setSelectedSkill] = useState<Skill | null>(null);
-  const [activeSection, setActiveSection] = useState<Section>("hero");
-
-  // Animation controllers refs
-  const keycapAnimationsRef = useRef<{ start: () => void; stop: () => void }>(null);
-
-  const [keyboardRevealed, setKeyboardRevealed] = useState(false);
-
-  /**
-   * Write the scene's text variables, but only if the published file actually
-   * declares them. The current .spline doesn't, and every unguarded
-   * `setVariable` logged "No variable named heading was found" on each keypress.
-   * The visible label is rendered as HTML below instead.
-   */
-  const setSceneText = (heading: string, desc: string) => {
-    if (!splineApp) return;
-    try {
-      if (splineApp.getVariable("heading") !== undefined) {
-        splineApp.setVariable("heading", heading);
-      }
-      if (splineApp.getVariable("desc") !== undefined) {
-        splineApp.setVariable("desc", desc);
-      }
-    } catch {
-      /* scene without those variables — the HTML card covers it */
-    }
-  };
-
-  // --- Event Handlers ---
-
-  const handleMouseHover = (e: SplineEvent) => {
-    if (!splineApp || selectedSkillRef.current?.name === e.target.name) return;
-
-    if (e.target.name === "body" || e.target.name === "platform") {
-      if (selectedSkillRef.current) playReleaseSound();
-      setSelectedSkill(null);
-      selectedSkillRef.current = null;
-      setSceneText("", "");
-    } else {
-      if (!selectedSkillRef.current || selectedSkillRef.current.name !== e.target.name) {
-        const skill = SKILLS[e.target.name as SkillNames];
-        if (skill) {
-          if (selectedSkillRef.current) playReleaseSound();
-          playPressSound();
-          setSelectedSkill(skill);
-          selectedSkillRef.current = skill;
-        }
-      }
-    }
-  };
-
-  const handleSplineInteractions = () => {
-    if (!splineApp) return;
-
-    const isInputFocused = () => {
-      const activeElement = document.activeElement;
-      return (
-        activeElement &&
-        (activeElement.tagName === "INPUT" ||
-          activeElement.tagName === "TEXTAREA" ||
-          (activeElement as HTMLElement).isContentEditable)
-      );
-    };
-
-    splineApp.addEventListener("keyUp", () => {
-      if (!splineApp || isInputFocused()) return;
-      playReleaseSound();
-      setSceneText("", "");
-    });
-    splineApp.addEventListener("keyDown", (e) => {
-      if (!splineApp || isInputFocused()) return;
-      const skill = SKILLS[e.target.name as SkillNames];
-      if (skill) {
-        playPressSound();
-        setSelectedSkill(skill);
-        selectedSkillRef.current = skill;
-        setSceneText(skill.label, skill.shortDescription);
-      }
-    });
-    splineApp.addEventListener("mouseHover", handleMouseHover);
-  };
-
-  // --- Animation Setup Helpers ---
-
-  const createSectionTimeline = (
-    triggerId: string,
-    targetSection: Section,
-    prevSection: Section,
-    start: string = "top 50%",
-    end: string = "bottom bottom"
-  ) => {
-    if (!splineApp) return;
-    const kbd = splineApp.findObjectByName("keyboard");
-    if (!kbd) return;
-
-    return gsap.timeline({
-      scrollTrigger: {
-        trigger: triggerId,
-        start,
-        end,
-        scrub: true,
-        onEnter: () => {
-          setActiveSection(targetSection);
-          const state = getKeyboardState({ section: targetSection, isMobile });
-          gsap.to(kbd.scale, { ...state.scale, duration: 1 });
-          gsap.to(kbd.position, { ...state.position, duration: 1 });
-          gsap.to(kbd.rotation, { ...state.rotation, duration: 1 });
-        },
-        onLeaveBack: () => {
-          setActiveSection(prevSection);
-          const state = getKeyboardState({ section: prevSection, isMobile, });
-          gsap.to(kbd.scale, { ...state.scale, duration: 1 });
-          gsap.to(kbd.position, { ...state.position, duration: 1 });
-          gsap.to(kbd.rotation, { ...state.rotation, duration: 1 });
-        },
-      },
-    });
-  };
-
-  const setupScrollAnimations = (): gsap.core.Timeline[] => {
-    if (!splineApp || !splineContainer.current) return [];
-    const kbd = splineApp.findObjectByName("keyboard");
-    if (!kbd) return [];
-
-    // Initial state
-    const heroState = getKeyboardState({ section: "hero", isMobile });
-    gsap.set(kbd.scale, heroState.scale);
-    gsap.set(kbd.position, heroState.position);
-
-    // Section transitions
-    return [
-      createSectionTimeline("#skills", "skills", "hero"),
-      createSectionTimeline("#projects", "projects", "skills", "top 70%"),
-      createSectionTimeline("#contact", "contact", "projects", "top 30%"),
-    ].filter(Boolean) as gsap.core.Timeline[];
-  };
-
-  /**
-   * The published scene ships a "bongo-cat" easter egg (an animated cat
-   * typing) that used to pop up over the projects section. Permanently
-   * hidden per design direction — kept as a no-op hide instead of leaving a
-   * dead reference to "bongo-cat"/"frame-1"/"frame-2" scattered around.
-   */
-  const hideBongoCat = () => {
-    const framesParent = splineApp?.findObjectByName("bongo-cat");
-    if (framesParent) framesParent.visible = false;
-  };
-
-  const getKeycapsAnimation = () => {
-    if (!splineApp) return { start: () => { }, stop: () => { } };
-
-    // Track the infinite "float" tweens separately from the finite "settle"
-    // tweens so start()/stop() each kill exactly what the other created — and
-    // never a tween a newer call has since started (a stale kill landing late is
-    // how the yoyo got stuck running on fast scrub).
-    let floatTweens: gsap.core.Tween[] = [];
-    let settleTweens: gsap.core.Tween[] = [];
-    const killFloat = () => { floatTweens.forEach((t) => t.kill()); floatTweens = []; };
-    const killSettle = () => { settleTweens.forEach((t) => t.kill()); settleTweens = []; };
-
-    const start = () => {
-      killSettle();
-      killFloat();
-      Object.values(SKILLS)
-        .sort(() => Math.random() - 0.5)
-        .forEach((skill, idx) => {
-          const keycap = splineApp.findObjectByName(skill.name);
-          if (!keycap) return;
-          floatTweens.push(
-            gsap.to(keycap.position, {
-              y: Math.random() * 200 + 200,
-              duration: Math.random() * 2 + 2,
-              delay: idx * 0.6,
-              repeat: -1,
-              yoyo: true,
-              yoyoEase: "none",
-              ease: "elastic.out(1,0.3)",
-            })
-          );
-        });
-    };
-
-    const stop = () => {
-      killFloat();
-      killSettle();
-      // Finite — GSAP disposes them on completion, so no cleanup timer needed.
-      Object.values(SKILLS).forEach((skill) => {
-        const keycap = splineApp.findObjectByName(skill.name);
-        if (!keycap) return;
-        settleTweens.push(
-          gsap.to(keycap.position, {
-            y: 0,
-            duration: 4,
-            ease: "elastic.out(1,0.7)",
-          })
-        );
-      });
-    };
-
-    return { start, stop };
-  };
-
-    const updateKeyboardTransform = async () => {
-        if (!splineApp) return;
-        const kbd = splineApp.findObjectByName("keyboard");
-        if (!kbd) return;
-
-        // Re-assert here too: the scene graph isn't fully populated yet the
-        // first time hideBongoCat() runs (right as splineApp is set), so that
-        // early call can silently no-op. By now "keyboard" itself resolves
-        // fine, so "bongo-cat" reliably will too.
-        hideBongoCat();
-
-        kbd.visible = false;
-        await sleep(400);
-        kbd.visible = true;
-        setKeyboardRevealed(true);
-
-        // ✨ HACK ESTREMO PER SAFARI / IOS / ANDROID ✨
-        // 1. Salviamo la posizione di scroll attuale
-        const currentY = window.scrollY;
-
-        // 2. Facciamo un micro-scroll invisibile di 1 pixel per svegliare Safari
-        window.scrollTo(0, currentY + 1);
-
-        // 3. Cambiamo fisicamente l'altezza del div per un istante per far scattare il ResizeObserver di Spline
-        if (splineContainer.current) {
-            splineContainer.current.style.height = "99dvh";
-        }
-
-        setTimeout(() => {
-            // 4. Ripristiniamo tutto
-            window.scrollTo(0, currentY);
-            if (splineContainer.current) {
-                splineContainer.current.style.height = "100dvh";
-            }
-            // 5. Costringiamo GSAP e Spline a ricalcolare tutto ora che il browser è sveglio
-            window.dispatchEvent(new Event("resize"));
-            ScrollTrigger.refresh();
-        }, 100);
-
-        // FAILSAFE: Garantiamo che sappia di essere su mobile anche se Next.js è in ritardo
-        const actualIsMobile = typeof window !== 'undefined' ? window.innerWidth <= 767 : isMobile;
-        const currentState = getKeyboardState({ section: activeSection, isMobile: actualIsMobile });
-
-        gsap.fromTo(
-            kbd.scale,
-            { x: 0.01, y: 0.01, z: 0.01 },
-            {
-                ...currentState.scale,
-                duration: 1.5,
-                ease: "elastic.out(1, 0.6)",
-            }
-        );
-
-        const allObjects = splineApp.getAllObjects();
-        const keycaps = allObjects.filter((obj) => obj.name === "keycap");
-
-        await sleep(900);
-
-        if (actualIsMobile) {
-            const mobileKeyCaps = allObjects.filter((obj) => obj.name === "keycap-mobile");
-            mobileKeyCaps.forEach((keycap) => { keycap.visible = true; });
-        } else {
-            const desktopKeyCaps = allObjects.filter((obj) => obj.name === "keycap-desktop");
-            desktopKeyCaps.forEach(async (keycap, idx) => {
-                await sleep(idx * 70);
-                keycap.visible = true;
-            });
-        }
-
-        keycaps.forEach(async (keycap, idx) => {
-            keycap.visible = false;
-            await sleep(idx * 70);
-            keycap.visible = true;
-            gsap.fromTo(
-                keycap.position,
-                { y: 200 },
-                { y: 50, duration: 0.5, delay: 0.1, ease: "bounce.out" }
-            );
-        });
-    };
-
-  // --- Effects ---
-
-  // Initialize GSAP and Spline interactions
-  useEffect(() => {
-    if (!splineApp) return;
-    handleSplineInteractions();
-    const timelines = setupScrollAnimations();
-    hideBongoCat();
-    keycapAnimationsRef.current = getKeycapsAnimation();
-
-    // The published scene has its own internal trigger (set up in the Spline
-    // editor, entirely outside this JS layer) that re-shows "bongo-cat" on
-    // some scroll/state event of its own, re-asserted continuously enough
-    // that even a 400ms interval lost the race. Force it hidden every frame
-    // instead — cheap (one boolean write) and wins against whatever cadence
-    // the scene's own trigger runs on.
-    let bongoWatchdog = requestAnimationFrame(function tick() {
-      hideBongoCat();
-      bongoWatchdog = requestAnimationFrame(tick);
-    });
-
-    return () => {
-      cancelAnimationFrame(bongoWatchdog);
-      keycapAnimationsRef.current?.stop()
-      // Kill the section ScrollTriggers so they don't orphan when the scene
-      // unmounts (e.g. toggling reduced motion) and fire on the disposed app.
-      timelines.forEach((tl) => {
-        tl.scrollTrigger?.kill();
-        tl.kill();
-      });
-    }
-
-  }, [splineApp, isMobile]);
-
-  // Handle keyboard text visibility based on theme and section
-  useEffect(() => {
-    if (!splineApp) return;
-    const textDesktopDark = splineApp.findObjectByName("text-desktop-dark");
-    const textDesktopLight = splineApp.findObjectByName("text-desktop");
-    const textMobileDark = splineApp.findObjectByName("text-mobile-dark");
-    const textMobileLight = splineApp.findObjectByName("text-mobile");
-
-    if (!textDesktopDark || !textDesktopLight || !textMobileDark || !textMobileLight) return;
-
-    const setVisibility = (
-      dDark: boolean,
-      dLight: boolean,
-      mDark: boolean,
-      mLight: boolean
-    ) => {
-      textDesktopDark.visible = dDark;
-      textDesktopLight.visible = dLight;
-      textMobileDark.visible = mDark;
-      textMobileLight.visible = mLight;
-    };
-
-    if (activeSection !== "skills") {
-      setVisibility(false, false, false, false);
-    } else if (theme === "dark") {
-      isMobile
-        ? setVisibility(false, false, false, true)
-        : setVisibility(false, true, false, false);
-    } else {
-      isMobile
-        ? setVisibility(false, false, true, false)
-        : setVisibility(true, false, false, false);
-    }
-  }, [theme, splineApp, isMobile, activeSection]);
-
-  useEffect(() => {
-    if (!selectedSkill || !splineApp) return;
-    setSceneText(selectedSkill.label, selectedSkill.shortDescription);
-  }, [selectedSkill]);
-
-  // Handle rotation and teardown animations based on active section
-  useEffect(() => {
-    if (!splineApp) return;
-
-    // Marks this run superseded so the delayed (await sleep) start/stop calls
-    // below don't fire after activeSection has moved on — otherwise fast
-    // scrolling overlaps runs and a stale keycap start() can land last, leaving
-    // the float (yoyo) running forever.
-    let cancelled = false;
-
-    let rotateKeyboard: gsap.core.Tween | undefined;
-    let teardownKeyboard: gsap.core.Tween | undefined;
-
-    const kbd = splineApp.findObjectByName("keyboard");
-
-    if (kbd) {
-      rotateKeyboard = gsap.to(kbd.rotation, {
-        y: Math.PI * 2 + kbd.rotation.y,
-        duration: 10,
-        repeat: -1,
-        yoyo: true,
-        yoyoEase: true,
-        ease: "back.inOut",
-        delay: 2.5,
-        paused: true, // Start paused
-      });
-
-      teardownKeyboard = gsap.fromTo(
-        kbd.rotation,
-        { y: 0, x: -Math.PI, z: 0 },
-        {
-          y: -Math.PI / 2,
-          duration: 5,
-          repeat: -1,
-          yoyo: true,
-          yoyoEase: true,
-          delay: 2.5,
-          immediateRender: false,
-          paused: true,
-        }
-      );
-    }
-
-    const manageAnimations = async () => {
-      // Reset text if not in skills
-      if (activeSection !== "skills") {
-        setSceneText("", "");
-      }
-
-      // Handle Rotate/Teardown Tweens
-      if (activeSection === "hero") {
-        rotateKeyboard?.restart();
-        teardownKeyboard?.pause();
-      } else if (activeSection === "contact") {
-        rotateKeyboard?.pause();
-      } else {
-        rotateKeyboard?.pause();
-        teardownKeyboard?.pause();
-      }
-
-      // Handle Contact Section Animations
-      if (activeSection === "contact") {
-        await sleep(600);
-        if (cancelled) return;
-        teardownKeyboard?.restart();
-        keycapAnimationsRef.current?.start();
-      } else {
-        await sleep(600);
-        if (cancelled) return;
-        teardownKeyboard?.pause();
-        keycapAnimationsRef.current?.stop();
-      }
-    };
-
-    manageAnimations();
-
-    return () => {
-      cancelled = true;
-      rotateKeyboard?.kill();
-      teardownKeyboard?.kill();
-    };
-  }, [activeSection, splineApp]);
-
-  // Reveal keyboard on load/route change
-  useEffect(() => {
-    // Rebuild the URL from the current pathname so the hash is always *replaced*
-    // rather than appended. Using router.push("/" + hash) stacked fragments on
-    // refresh (e.g. "/#skills#skills#skills") because the existing hash in the
-    // address bar was never stripped first. replaceState also avoids polluting
-    // browser history with an entry per scrolled-through section.
-    const hash = activeSection === "hero" ? "" : `#${activeSection}`;
-    const url = window.location.pathname + window.location.search + hash;
-    window.history.replaceState(window.history.state, "", url);
-
-    if (!splineApp || isLoading || keyboardRevealed) return;
-    updateKeyboardTransform();
-  }, [splineApp, isLoading, activeSection]);
-
-  // Cap the renderer's pixel ratio once the scene is ready, and clean up the
-  // resize listener on unmount / DPR change (previously added in onLoad and
-  // never removed).
-  useEffect(() => {
-    if (!splineApp) return;
-    return capSplinePixelRatio(splineApp, maxDpr);
-  }, [splineApp, maxDpr]);
-
-  // Pause the entire WebGL render loop (and the keyboard's infinite tweens /
-  // bongo-cat interval, which are only visible through it) while the tab is
-  // hidden. Spline keeps rendering at full tilt in a background tab otherwise —
-  // a pointless, continuous GPU/battery drain.
-  useEffect(() => {
-    if (!splineApp) return;
-    const onVisibility = () => {
-      if (document.hidden) splineApp.stop();
-      else splineApp.play();
-    };
-    document.addEventListener("visibilitychange", onVisibility);
-    return () => document.removeEventListener("visibilitychange", onVisibility);
-  }, [splineApp]);
-
-    return (
-        <>
-            <Suspense fallback={null}>
-                <Spline
-                    className="w-full h-[100dvh] fixed inset-0"
-                    ref={splineContainer}
-                    onLoad={(app: Application) => {
-                        setSplineApp(app);
-                        bypassLoading();
-
-                        setTimeout(() => {
-                            window.dispatchEvent(new Event("resize"));
-                        }, 150);
-                    }}
-                    scene="/assets/skills-keyboard.spline"
-                />
-            </Suspense>
-
-            {/* No floating HTML card here on purpose: the marquee pinned at the
-                bottom of the Skills section (skills.tsx) already lists every
-                technology by name+icon, and each keycap's own engraving shows
-                which one it is — a popup repeating that on hover/press was
-                redundant chrome. Hover/press sound feedback (playPressSound /
-                playReleaseSound) and setSceneText still run for whenever the
-                published .spline scene starts declaring "heading"/"desc"
-                variables of its own. */}
-        </>
-    );
+const MOBILE_QUERY = "(max-width: 767px)";
+const TAU = Math.PI * 2;
+
+// Da quale punto di scroll comanda ciascuna sezione (stessi start di sempre).
+// About ed esperienza non hanno una posa propria: la tastiera resta come l'ha lasciata la sezione prima.
+const SECTION_TRIGGERS: { id: Section; start: string }[] = [
+  { id: "skills", start: "top 50%" },
+  { id: "projects", start: "top 70%" },
+  { id: "contact", start: "top 30%" },
+];
+
+// Il preloader non resta su meno di così, anche se il motore è pronto subito:
+// altrimenti il conteggio lampeggia e sparisce.
+const MIN_SPLASH_MS = 1300;
+// Dopo la fine del preloader, il tempo di far scorrere via la tendina prima dell'intro dei tasti.
+const REVEAL_DELAY = 0.35;
+// Quanto resta aperta la scheda dopo un tap (sul touch non c'è un "esci dal tasto").
+const TOUCH_HOLD_MS = 2600;
+// Respiro prima di chiudere la scheda quando il puntatore passa da un tasto all'altro.
+const CARD_CLOSE_MS = 220;
+
+/** Tasti raggiungibili da tastiera fisica: la prima lettera dell'etichetta (premi di nuovo per scorrere i tasti con la stessa iniziale). */
+const LETTER_KEYS = SKILL_KEYS.reduce((map, key) => {
+  const letter = key.label.charAt(0).toLowerCase();
+  map.set(letter, [...(map.get(letter) ?? []), key.id]);
+  return map;
+}, new Map<string, SkillNames[]>());
+
+// In contatti la tastiera sta dietro titolo, form e card: più tenue, per lasciare leggere il testo.
+const SECTION_OPACITY: Partial<Record<Section, number>> = { contact: 0.55 };
+
+const isInputFocused = () => {
+  const el = document.activeElement as HTMLElement | null;
+  return !!el && (el.tagName === "INPUT" || el.tagName === "TEXTAREA" || el.tagName === "SELECT" || el.isContentEditable);
 };
 
 /**
- * Gate the heavy WebGL scene behind device/preference detection.
+ * Coreografia della tastiera: posa per sezione legata allo scroll, rotazione continua in hero,
+ * ondeggio e float in contatti, cambio breakpoint e resize. Lavora solo sulla `pose` del motore
+ * (che GSAP anima direttamente) e su setExcited/setMobile.
+ */
+function runChoreography(engine: KeyboardEngine, host: HTMLElement) {
+  const mq = window.matchMedia(MOBILE_QUERY);
+  let isMobile = mq.matches;
+  let section: Section = "hero";
+  // Rotazione e float partono a intro finita: prima i tasti stanno ancora cadendo.
+  let intro = false;
+  let ambient: gsap.core.Animation | null = null;
+  let floatCall: gsap.core.Tween | null = null;
+  let resizeTimer: ReturnType<typeof setTimeout> | undefined;
+
+  const { pose } = engine;
+
+  /** Porta la tastiera sulla posa della sezione. `rotation: false` lascia stare la rotazione (resize). */
+  const applyPose = (
+    target: Section,
+    { immediate = false, duration = 1, rotation = true }: { immediate?: boolean; duration?: number; rotation?: boolean } = {},
+  ) => {
+    const state = getKeyboardState({ section: target, isMobile });
+    if (immediate) {
+      gsap.killTweensOf([pose, pose.position, pose.rotation]);
+      pose.scale = state.scale.x;
+      gsap.set(pose.position, state.position);
+      if (rotation) gsap.set(pose.rotation, state.rotation);
+      return;
+    }
+    // overwrite "auto": una posa nuova toglie solo le proprietà che si sovrappongono a quelle ancora in corso.
+    gsap.to(pose, { scale: state.scale.x, duration, overwrite: "auto" });
+    gsap.to(pose.position, { ...state.position, duration, overwrite: "auto" });
+    if (rotation) {
+      // Dopo qualche giro in hero la y è lontana da quella di destinazione: si torna per la via più corta.
+      const y = state.rotation.y + Math.round((pose.rotation.y - state.rotation.y) / TAU) * TAU;
+      gsap.to(pose.rotation, { ...state.rotation, y, duration, overwrite: "auto" });
+    }
+  };
+
+  const stopAmbient = () => {
+    ambient?.kill();
+    ambient = null;
+    floatCall?.kill();
+    floatCall = null;
+  };
+
+  const startAmbient = (target: Section, now = false) => {
+    stopAmbient();
+    if (!intro) return;
+
+    if (target === "hero") {
+      // Un giro completo e ritorno, lento e con un po' di rimbalzo (come prima).
+      ambient = gsap.to(pose.rotation, {
+        y: `+=${TAU}`,
+        duration: 10,
+        ease: "back.inOut",
+        repeat: -1,
+        yoyo: true,
+        yoyoEase: true,
+        overwrite: "auto",
+      });
+    } else if (target === "contact") {
+      // Niente capovolgimento (mostrerebbe il fondo della scheda): la tastiera sta dritta,
+      // ondeggia piano da una parte all'altra e i tasti galleggiano.
+      const base = getKeyboardState({ section: "contact", isMobile }).rotation.y;
+      const sway = 0.5;
+      ambient = gsap
+        .timeline({ delay: now ? 0 : 1.05 })
+        .to(pose.rotation, { y: base - sway, duration: 1.4, ease: "sine.inOut", overwrite: "auto" })
+        .to(pose.rotation, { y: base + sway, duration: 5.5, ease: "sine.inOut", repeat: -1, yoyo: true });
+    }
+
+    // Il float parte (o si ferma) un attimo dopo l'arrivo nella sezione, per non sovrapporsi allo spostamento.
+    floatCall = gsap.delayedCall(now ? 0 : 0.6, () => engine.setExcited(target === "contact"));
+  };
+
+  /** L'indirizzo segue la sezione: replaceState, così la cronologia non si riempie di una voce per sezione. */
+  const syncHash = (target: Section) => {
+    const hash = target === "hero" ? "" : `#${target}`;
+    if (window.location.hash === hash) return;
+    window.history.replaceState(window.history.state, "", window.location.pathname + window.location.search + hash);
+  };
+
+  const setSection = (next: Section) => {
+    if (next === section) return;
+    section = next;
+    host.style.opacity = String(SECTION_OPACITY[next] ?? 1);
+    syncHash(next);
+    applyPose(next);
+    startAmbient(next);
+  };
+
+  // I punti di cambio sezione. Tutti i passaggi richiamano lo stesso calcolo: con un salto di scroll
+  // che scavalca più sezioni l'ordine dei callback non conta, vince la sezione in cui si è davvero.
+  const entries = SECTION_TRIGGERS.filter(({ id }) => document.getElementById(id));
+  let armed = false;
+  const sync = () => {
+    if (armed) setSection(sectionAtScroll());
+  };
+  const triggers = entries.map(({ id, start }) =>
+    ScrollTrigger.create({
+      trigger: `#${id}`,
+      start,
+      end: "bottom bottom",
+      onEnter: sync,
+      onEnterBack: sync,
+      onLeave: sync,
+      onLeaveBack: sync,
+      onRefresh: sync,
+    }),
+  );
+
+  /** Sezione "in carica" allo scroll attuale: l'ultima il cui start è stato superato. */
+  function sectionAtScroll(): Section {
+    let current: Section = "hero";
+    triggers.forEach((trigger, i) => {
+      if (trigger.scroll() >= trigger.start) current = entries[i].id;
+    });
+    return current;
+  }
+
+  // Posa iniziale (anche se la pagina si apre a metà): subito, senza tween e senza toccare l'indirizzo.
+  section = sectionAtScroll();
+  host.style.opacity = String(SECTION_OPACITY[section] ?? 1);
+  applyPose(section, { immediate: true });
+  armed = true;
+
+  const onBreakpoint = (e: MediaQueryListEvent) => {
+    isMobile = e.matches;
+    engine.setMobile(isMobile);
+    applyPose(section, { duration: 1.2 });
+    startAmbient(section, true);
+  };
+  mq.addEventListener("change", onBreakpoint);
+
+  // La scala dipende dalla larghezza della finestra: dopo un resize si riallinea la posa.
+  const onResize = () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => applyPose(section, { duration: 0.3, rotation: false }), 80);
+  };
+  window.addEventListener("resize", onResize, { passive: true });
+
+  return {
+    /** Da chiamare quando l'intro dei tasti è finita. */
+    onRevealed() {
+      intro = true;
+      startAmbient(section, true);
+    },
+    dispose() {
+      clearTimeout(resizeTimer);
+      window.removeEventListener("resize", onResize);
+      mq.removeEventListener("change", onBreakpoint);
+      stopAmbient();
+      triggers.forEach((trigger) => trigger.kill());
+      gsap.killTweensOf([pose, pose.position, pose.rotation]);
+    },
+  };
+}
+
+const KeyboardScene = ({ maxDpr }: { maxDpr: number }) => {
+  const { isLoading, bypassLoading } = usePreloader();
+  const { resolvedTheme } = useTheme();
+  const theme: KeyboardTheme = resolvedTheme === "light" ? "light" : "dark";
+  const { playPressSound, playReleaseSound } = useSounds();
+
+  const hostRef = useRef<HTMLDivElement>(null);
+  const cardRef = useRef<HTMLDivElement>(null);
+  const engineRef = useRef<KeyboardEngine | null>(null);
+  const revealRef = useRef<(() => void) | null>(null);
+
+  const [selectedSkill, setSelectedSkill] = useState<Skill | null>(null);
+  // Ultimo tasto mostrato: resta nella scheda mentre si dissolve.
+  const [cardSkill, setCardSkill] = useState<Skill | null>(null);
+
+  // I valori che il motore (creato una volta sola) deve poter leggere aggiornati.
+  const live = useRef({ theme, maxDpr, isLoading, bypassLoading, playPressSound, playReleaseSound });
+  live.current = { theme, maxDpr, isLoading, bypassLoading, playPressSound, playReleaseSound };
+
+  /** Mette la scheda sotto la tastiera, centrata sui suoi tasti, e dentro lo schermo. */
+  const placeCard = () => {
+    const engine = engineRef.current;
+    const card = cardRef.current;
+    if (!engine || !card) return;
+    let minX = Infinity;
+    let maxX = -Infinity;
+    let maxY = -Infinity;
+    for (const { id } of SKILL_KEYS) {
+      const p = engine.getKeyScreenPosition(id);
+      if (!p) continue;
+      minX = Math.min(minX, p.x);
+      maxX = Math.max(maxX, p.x);
+      maxY = Math.max(maxY, p.y);
+    }
+    if (!Number.isFinite(minX)) return;
+    const width = card.offsetWidth;
+    const height = card.offsetHeight;
+    const gap = Math.min(Math.max(engine.getBounds().height * 0.19, 28), 100);
+    const x = Math.min(Math.max((minX + maxX) / 2, width / 2 + 12), window.innerWidth - width / 2 - 12);
+    const y = Math.min(maxY + gap, window.innerHeight - height - 16);
+    card.style.transform = `translate(${Math.round(x - width / 2)}px, ${Math.round(y)}px)`;
+  };
+  const placeCardRef = useRef(placeCard);
+  placeCardRef.current = placeCard;
+
+  // La scheda segue la tastiera finché è aperta (la posa può muoversi, il layout cambiare).
+  useEffect(() => {
+    placeCardRef.current();
+    if (!selectedSkill) return;
+    const timer = setInterval(() => placeCardRef.current(), 120);
+    return () => clearInterval(timer);
+  }, [selectedSkill, cardSkill]);
+
+  // Tema, pixel ratio e fine del preloader arrivano al motore già creato.
+  useEffect(() => {
+    engineRef.current?.setTheme(theme);
+  }, [theme]);
+  useEffect(() => {
+    engineRef.current?.setMaxDpr(maxDpr);
+  }, [maxDpr]);
+  useEffect(() => {
+    if (!isLoading) revealRef.current?.();
+  }, [isLoading]);
+
+  // Ciclo di vita del motore: un canvas e un motore per ogni montaggio (StrictMode e
+  // Fast Refresh compresi), tutto smontato per intero a cleanup.
+  useEffect(() => {
+    const host = hostRef.current;
+    if (!host) return;
+    let cancelled = false;
+    let teardown: (() => void) | null = null;
+
+    setKeyboard3DStatus("loading");
+
+    const fail = (reason?: unknown) => {
+      if (cancelled) return;
+      if (reason) console.warn("Tastiera 3D non disponibile, resta la versione 2D.", reason);
+      setKeyboard3DStatus("failed");
+      live.current.bypassLoading();
+    };
+
+    import("./keyboard/keyboard-engine")
+      .then(({ KeyboardEngine }) => {
+        if (cancelled) return;
+        if (!KeyboardEngine.isWebGLAvailable()) return fail();
+
+        // Il canvas lo creo qui, non in JSX: ogni motore ha il suo e dispose(true) può rilasciare il contesto GL.
+        const canvas = document.createElement("canvas");
+        canvas.setAttribute("aria-hidden", "true");
+        canvas.className = "block h-full w-full";
+        host.appendChild(canvas);
+
+        let engine: KeyboardEngine | null = null;
+        const timers = new Set<ReturnType<typeof setTimeout>>();
+        let choreography: ReturnType<typeof runChoreography> | null = null;
+        let revealCall: gsap.core.Tween | null = null;
+        let selectedId: SkillNames | null = null;
+        let heldCode: string | null = null;
+        let lastPointer = "mouse";
+        const letterCycle = new Map<string, number>();
+
+        const after = (ms: number, fn: () => void) => {
+          const t = setTimeout(() => {
+            timers.delete(t);
+            fn();
+          }, ms);
+          timers.add(t);
+          return t;
+        };
+        let closeTimer: ReturnType<typeof setTimeout> | undefined;
+        let touchTimer: ReturnType<typeof setTimeout> | undefined;
+        const cancel = (t: ReturnType<typeof setTimeout> | undefined) => {
+          if (t === undefined) return;
+          clearTimeout(t);
+          timers.delete(t);
+        };
+
+        // --- Selezione: stessa logica sonora di prima (suono al cambio di tasto, release in uscita) ---
+
+        const clearSelection = (withSound: boolean) => {
+          cancel(touchTimer);
+          if (selectedId === null) return;
+          selectedId = null;
+          if (withSound) live.current.playReleaseSound();
+          cancel(closeTimer);
+          closeTimer = after(CARD_CLOSE_MS, () => setSelectedSkill(null));
+        };
+
+        const select = (id: SkillNames | null) => {
+          if (id === selectedId) return;
+          if (id === null) return clearSelection(true);
+          if (selectedId !== null) live.current.playReleaseSound();
+          live.current.playPressSound();
+          selectedId = id;
+          cancel(closeTimer);
+          const skill = SKILLS[id];
+          setCardSkill(skill);
+          setSelectedSkill(skill);
+        };
+
+        const onPointerType = (e: PointerEvent) => {
+          lastPointer = e.pointerType;
+        };
+        window.addEventListener("pointerdown", onPointerType, { capture: true, passive: true });
+        window.addEventListener("pointermove", onPointerType, { capture: true, passive: true });
+
+        // Il tasto fisico "evoca" il tasto della tastiera 3D con la stessa iniziale.
+        const onKeyDown = (e: KeyboardEvent) => {
+          if (e.repeat || e.ctrlKey || e.metaKey || e.altKey || e.key.length !== 1 || document.hidden || isInputFocused()) return;
+          // Con una finestra aperta (galleria, menu) i tasti servono a lei, non alla tastiera sullo sfondo.
+          if (document.querySelector('[role="dialog"]')) return;
+          const letter = e.key.toLowerCase();
+          const ids = LETTER_KEYS.get(letter);
+          if (!ids || !engine) return;
+          const step = ((letterCycle.get(letter) ?? -1) + 1) % ids.length;
+          letterCycle.set(letter, step);
+          heldCode = e.code;
+          cancel(touchTimer);
+          void engine.pressKey(ids[step], 220);
+          select(ids[step]);
+        };
+        const onKeyUp = (e: KeyboardEvent) => {
+          if (heldCode === null || e.code !== heldCode) return;
+          heldCode = null;
+          clearSelection(true);
+        };
+        // Se la finestra perde il focus a tasto premuto il keyup non arriva: si lascia andare il tasto.
+        const onBlur = () => {
+          if (heldCode === null) return;
+          heldCode = null;
+          clearSelection(false);
+        };
+        window.addEventListener("keydown", onKeyDown);
+        window.addEventListener("keyup", onKeyUp);
+        window.addEventListener("blur", onBlur);
+
+        let splashCall: ReturnType<typeof setTimeout> | undefined;
+
+        const dispose = () => {
+          window.removeEventListener("pointerdown", onPointerType, { capture: true });
+          window.removeEventListener("pointermove", onPointerType, { capture: true });
+          window.removeEventListener("keydown", onKeyDown);
+          window.removeEventListener("keyup", onKeyUp);
+          window.removeEventListener("blur", onBlur);
+          timers.forEach((t) => clearTimeout(t));
+          timers.clear();
+          clearTimeout(splashCall);
+          revealCall?.kill();
+          revealRef.current = null;
+          engineRef.current = null;
+          choreography?.dispose();
+          host.style.opacity = "";
+          if (engine) {
+            engine.onHover = null;
+            engine.onPress = null;
+            engine.dispose(true);
+          }
+          canvas.remove();
+        };
+
+        try {
+          engine = new KeyboardEngine({
+            canvas,
+            theme: live.current.theme,
+            mobile: window.matchMedia(MOBILE_QUERY).matches,
+            maxDpr: live.current.maxDpr,
+          });
+          engineRef.current = engine;
+          const kb = engine;
+
+          kb.onHover = (id) => {
+            // Sul touch l'hover scatta anche all'inizio di uno scroll: conta solo il tap (onPress).
+            if (lastPointer === "touch") return;
+            select(id);
+          };
+          kb.onPress = (id, down) => {
+            if (!down) return;
+            select(id);
+            if (lastPointer === "touch") {
+              cancel(touchTimer);
+              touchTimer = after(TOUCH_HOLD_MS, () => clearSelection(true));
+            }
+          };
+
+          choreography = runChoreography(kb, host);
+
+          // Intro: appena il preloader è finito (se lo è già, subito).
+          let revealStarted = false;
+          revealRef.current = () => {
+            if (revealStarted || live.current.isLoading) return;
+            revealStarted = true;
+            revealCall = gsap.delayedCall(REVEAL_DELAY, () => {
+              void kb.reveal().then(() => {
+                if (!cancelled) choreography?.onRevealed();
+              });
+            });
+          };
+          revealRef.current();
+
+          setKeyboard3DStatus("ready");
+          // La tendina del preloader serviva a coprire il caricamento della scena: ora che c'è, via.
+          splashCall = setTimeout(() => live.current.bypassLoading(), Math.max(0, MIN_SPLASH_MS - performance.now()));
+        } catch (error) {
+          dispose();
+          return fail(error);
+        }
+
+        teardown = dispose;
+      })
+      .catch(fail);
+
+    return () => {
+      cancelled = true;
+      teardown?.();
+      teardown = null;
+      setKeyboard3DStatus("loading");
+    };
+  }, []);
+
+  return (
+    <>
+      <div ref={hostRef} className="w-full h-[100dvh] fixed inset-0 transition-opacity duration-700" />
+      <KeyCard skill={cardSkill} open={selectedSkill !== null} cardRef={cardRef} />
+    </>
+  );
+};
+
+/**
+ * Gate della scena WebGL su rilevamento dispositivo e preferenze.
  *
- * The gate lives here in the parent (not inside KeyboardScene) on purpose: when
- * 3D is disabled — e.g. the user toggles reduced motion — KeyboardScene fully
- * UNMOUNTS, tearing down its Spline app, GSAP tweens, ScrollTriggers and reveal
- * state. Re-enabling remounts it from a clean slate. (Gating with an internal
- * early-return instead kept the component mounted, so it came back with stale
- * `keyboardRevealed` state and never re-initialised the keycaps.)
- *
- * Waiting for `ready` also avoids a flash-mount that would fetch the heavy
- * runtime chunk + scene before detection has run; the Preloader bypasses its
- * splash when 3D is disabled.
+ * Il gate sta qui nel genitore (non dentro KeyboardScene) apposta: quando il 3D viene
+ * disabilitato (es. si attiva la riduzione del movimento) KeyboardScene si SMONTA per
+ * intero: motore, tween GSAP, ScrollTrigger e canvas spariscono, e riattivando riparte
+ * da zero. Aspettare `ready` evita anche di scaricare il chunk del motore prima che
+ * il rilevamento sia avvenuto; il Preloader salta la tendina quando il 3D è disabilitato.
  */
 const AnimatedBackground = () => {
   const { disable3D, maxDpr, ready } = usePerfProfile();
   if (!ready || disable3D) return null;
   return <KeyboardScene maxDpr={maxDpr} />;
 };
-
-/**
- * Cap the Spline/Three.js renderer's pixel ratio. The scene is published with
- * pixelRatio=0 ("device"), so on a 2–3x screen it renders 4–9x the pixels of a
- * 1x canvas — a huge GPU cost. We clamp it and reapply on resize, since Spline
- * re-reads devicePixelRatio when the canvas resizes. Returns a disposer that
- * removes the resize listener (so it isn't leaked across reloads/unmounts).
- */
-function capSplinePixelRatio(app: Application, maxDpr: number) {
-  const apply = () => {
-    try {
-      const renderer = (app as unknown as { _renderer?: { setPixelRatio?: (n: number) => void } })
-        ._renderer;
-      if (renderer?.setPixelRatio) {
-        renderer.setPixelRatio(Math.min(window.devicePixelRatio, maxDpr));
-      }
-    } catch {
-      /* internal API moved — fail silent, scene still renders */
-    }
-  };
-  apply();
-  window.addEventListener("resize", apply, { passive: true });
-  return () => window.removeEventListener("resize", apply);
-}
 
 export default AnimatedBackground;

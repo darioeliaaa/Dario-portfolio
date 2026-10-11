@@ -20,7 +20,7 @@ export const SectionHeader = ({
 }: {
   id: string;
   title: string | ReactNode;
-  desc?: string;
+  desc?: ReactNode;
   /** Small uppercase kicker above the title. */
   eyebrow?: string;
   /** 1-based section order — renders as a giant faint numeral behind the

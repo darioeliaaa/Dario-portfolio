@@ -44,7 +44,7 @@ const BIO = config.description.long
 const STATS = [
   { value: 23, suffix: "", label: "anni" },
   { value: projects.length, suffix: "", label: "progetti" },
-  { value: Object.keys(SKILLS).length, suffix: "+", label: "tecnologie" },
+  { value: Object.keys(SKILLS).length, suffix: "", label: "tecnologie" },
   { value: 2023, suffix: "", label: "dal" },
 ];
 

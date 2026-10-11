@@ -48,10 +48,10 @@ function Preloader({ children, disabled = false }: PreloaderProps) {
   const [loadingPercent, setLoadingPercent] = useState(skip ? 100 : 0);
   const loadingTween = useRef<gsap.core.Tween>(null);
 
-  // The splash exists only to mask the Spline 3D scene loading. On low-end /
-  // reduced-motion devices that scene is never loaded, so its onLoad (which
-  // normally dismisses the splash) never fires — bypass immediately instead of
-  // leaving the page stuck behind the loader.
+  // La schermata di caricamento serve solo a coprire la creazione della scena
+  // 3D (la tastiera), che la chiude con bypassLoading quando è pronta. Su
+  // dispositivi poveri o con movimento ridotto la scena non parte mai: la
+  // saltiamo subito, invece di lasciare la pagina ferma dietro il loader.
   const { disable3D, ready: perfReady } = usePerfProfile();
 
   const bypassLoading = () => {

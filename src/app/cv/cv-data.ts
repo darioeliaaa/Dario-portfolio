@@ -238,10 +238,10 @@ export const PORTFOLIO_CARD: Card = {
         href: "https://www.darioelia.it"
     },
     meta: [
-        "Next.js, TypeScript, Tailwind CSS, Spline, GSAP"
+        "Next.js, TypeScript, Tailwind CSS, Three.js, GSAP"
     ],
     text: [
-        "Raccoglie tutti i progetti qui sopra con gallerie di schermate. Parte dal template open source di Naresh Khatri (tastiera 3D in Spline in cui ogni tasto è una tecnologia), che ho riscritto e personalizzato: sezioni, gallerie, form contatti con validazione lato server, CV e SEO. Codice su ",
+        "Raccoglie tutti i progetti qui sopra con gallerie di schermate. Parte dal template open source di Naresh Khatri, che ho riscritto e personalizzato: tastiera 3D in Three.js (un tasto per ogni tecnologia), sezioni, gallerie, form contatti con validazione lato server, CV e SEO. Codice su ",
         {
             label: "github.com/darioeliaaa",
             href: "https://github.com/darioeliaaa"

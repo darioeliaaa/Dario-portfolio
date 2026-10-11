@@ -461,7 +461,7 @@ body > canvas {
 
 /* Accessibility + low-end escape hatch: when the OS requests reduced motion,
    neutralize CSS animations/transitions globally. The heavy JS/WebGL effects
-   (Spline scene, particle canvas, elastic cursor) are gated separately in
+   (3D keyboard, particle canvas, elastic cursor) are gated separately in
    use-perf-profile.ts; this covers the long tail of decorative CSS motion. */
 @media (prefers-reduced-motion: reduce) {
   *,

@@ -35,7 +35,7 @@ export default function Footer() {
                     animate="enter"
                     exit="exit"
                 >
-                    <span>3D:</span> Spline
+                    <span>3D:</span> Three.js
                 </motion.li>
             </ul>
             {/* Blog e Newsletter sono stati rimossi */}

@@ -15,7 +15,7 @@ import { BlurIn } from "../reveal-animations";
 import ScrollDownIcon from "../scroll-down-icon";
 import { SiGithub, SiLinkedin, SiInstagram } from "react-icons/si";
 import { config } from "@/data/config";
-import { SKILLS } from "@/data/constants";
+import { SKILLS, SkillNames } from "@/data/constants";
 import RotatingText from "../ui/rotating-text";
 
 import SectionWrapper from "../ui/section-wrapper";
@@ -26,9 +26,22 @@ const SOCIALS = [
     { href: config.social.instagram, label: "Instagram", Icon: SiInstagram },
 ].filter((s) => Boolean(s.href));
 
-const TICKER_ITEMS = Object.values(SKILLS)
-    .slice(0, 12)
-    .map((s) => s.label);
+// Un assaggio variegato (un po' di ogni categoria): l'elenco completo sta nella
+// sezione Competenze, qui è solo la striscia in fondo alla prima schermata.
+const TICKER_ITEMS = [
+    SkillNames.JAVA,
+    SkillNames.TS,
+    SkillNames.SPRING_BOOT,
+    SkillNames.ANGULAR,
+    SkillNames.KOTLIN,
+    SkillNames.COMPOSE,
+    SkillNames.NEXTJS,
+    SkillNames.THREEJS,
+    SkillNames.KEYCLOAK,
+    SkillNames.POSTGRES,
+    SkillNames.JAVAFX,
+    SkillNames.DOCKER,
+].map((id) => SKILLS[id].label);
 
 const HeroSection = () => {
     const { isLoading } = usePreloader();

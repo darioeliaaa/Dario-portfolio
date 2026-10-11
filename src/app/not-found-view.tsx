@@ -2,10 +2,14 @@
 
 import React, { Suspense } from "react";
 import Link from "next/link";
-import Spline from "@splinetool/react-spline";
 import { ArrowLeft, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { usePerfProfile } from "@/hooks/use-perf-profile";
+
+// Caricamento a richiesta: con un import statico il runtime di Spline (oltre 500 KB
+// compressi) finiva nel codice iniziale di OGNI pagina, perché la pagina 404 fa parte
+// dell'albero del layout, anche per chi la 404 non la vede mai.
+const Spline = React.lazy(() => import("@splinetool/react-spline"));
 
 export default function NotFoundView() {
   const { disable3D, ready } = usePerfProfile();

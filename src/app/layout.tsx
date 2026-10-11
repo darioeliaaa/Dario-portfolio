@@ -104,11 +104,6 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <head>
-        {/* The Spline runtime lazy-loads its wasm from unpkg; warm the
-            connection early so the 3D scene starts faster. */}
-        <link rel="preconnect" href="https://unpkg.com" crossOrigin="anonymous" />
-        {/* Skill icons (devicon) are served from jsDelivr. */}
-        <link rel="preconnect" href="https://cdn.jsdelivr.net" crossOrigin="anonymous" />
         {/* Guarded: an unconditional <Script src={undefined}> renders an
             empty, broken <script> tag when Umami isn't configured — which is
             the default (both env vars are optional/unset). */}

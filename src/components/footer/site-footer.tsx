@@ -111,7 +111,7 @@ function Footer() {
             {config.author}. Tutti i diritti riservati.
           </p>
           <p className="text-xs text-muted-foreground">
-            Costruito con Next.js, Tailwind CSS e Spline.
+            Costruito con Next.js, Tailwind CSS e Three.js.
           </p>
           <BackToTop />
         </div>
