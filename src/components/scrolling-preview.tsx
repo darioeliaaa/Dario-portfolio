@@ -39,11 +39,37 @@ const ScrollingPreview = ({
   bg?: string;
 }) => {
   const reduceMotion = useReducedMotion();
+  const rootRef = useRef<HTMLDivElement>(null);
   const viewportRef = useRef<HTMLDivElement>(null);
   const [scrollPx, setScrollPx] = useState(0);
   const [bgReady, setBgReady] = useState(false);
+  // Le immagini partono solo quando la scheda sta per entrare nello schermo:
+  // prima si scaricavano tutte insieme al caricamento della pagina, anche
+  // quelle della sezione Progetti, molto più in basso.
+  const [near, setNear] = useState(false);
 
   useEffect(() => {
+    const el = rootRef.current;
+    if (!el) return;
+    if (typeof IntersectionObserver === "undefined") {
+      setNear(true);
+      return;
+    }
+    const io = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((e) => e.isIntersecting)) {
+          setNear(true);
+          io.disconnect();
+        }
+      },
+      { rootMargin: "800px 0px" }
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (!near) return;
     let cancelled = false;
     const img = new window.Image();
     const compute = () => {
@@ -63,12 +89,12 @@ const ScrollingPreview = ({
       cancelled = true;
       window.removeEventListener("resize", compute);
     };
-  }, [src]);
+  }, [src, near]);
 
   // Preload the wallpaper so a missing/404 file falls back to the gradient
   // instead of rendering a broken background.
   useEffect(() => {
-    if (!bg) {
+    if (!bg || !near) {
       setBgReady(false);
       return;
     }
@@ -80,7 +106,7 @@ const ScrollingPreview = ({
     return () => {
       cancelled = true;
     };
-  }, [bg]);
+  }, [bg, near]);
 
   const scrolls = scrollPx > 0;
   const animate = !reduceMotion && scrolls;
@@ -97,6 +123,7 @@ const ScrollingPreview = ({
 
   return (
     <div
+      ref={rootRef}
       className="pointer-events-none absolute inset-0"
       role="img"
       aria-label={alt}
@@ -134,7 +161,7 @@ const ScrollingPreview = ({
           style={{
             position: "absolute",
             inset: 0,
-            backgroundImage: `url("${src}")`,
+            backgroundImage: near ? `url("${src}")` : "none",
             // Tall pages fill width and pan; normal images cover the frame.
             backgroundSize: scrolls ? "100% auto" : "cover",
             backgroundRepeat: "no-repeat",

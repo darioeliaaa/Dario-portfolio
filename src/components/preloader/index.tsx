@@ -64,6 +64,11 @@ function Preloader({ children, disabled = false }: PreloaderProps) {
     if (perfReady && disable3D) bypassLoading();
   }, [perfReady, disable3D]);
   const loadingPercentRef = useRef<{ value: number }>({ value: 0 });
+  // Il numero mostrato cambia a passi di 5: aggiornare lo stato solo quando il
+  // passo cambia evita ~130 render a schermo intero (ogni consumatore del
+  // contesto, compresa la scena 3D, si ridisegnava a ogni fotogramma mentre
+  // sta caricando).
+  const lastStepRef = useRef(-1);
   useEffect(() => {
     if (skip) return;
     loadingTween.current = gsap.to(loadingPercentRef.current, {
@@ -71,7 +76,12 @@ function Preloader({ children, disabled = false }: PreloaderProps) {
       duration: LOADING_TIME,
       ease: "slow(0.7,0.7,false)",
       onUpdate: () => {
-        setLoadingPercent(loadingPercentRef.current.value);
+        const value = loadingPercentRef.current.value;
+        const step = value - (value % 5);
+        if (step !== lastStepRef.current) {
+          lastStepRef.current = step;
+          setLoadingPercent(value);
+        }
       },
       onComplete: () => {
         setIsLoading(false);

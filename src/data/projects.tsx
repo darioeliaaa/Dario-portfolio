@@ -284,7 +284,7 @@ const projects: Project[] = [
         id: "tripify",
         category: "Enterprise Travel App",
         title: "Tripify",
-        src: "/assets/projects-screenshots/tripify/cover.jpg",
+        src: "/assets/projects-screenshots/tripify/cover.webp",
         skills: {
             frontend: [
                 PROJECT_SKILLS.kotlin,
@@ -461,7 +461,7 @@ const demoProjects: Project[] = [
         id: "ottone",
         category: "E-Commerce Avanzato · Case Study",
         title: "Ottone — Telai a Novi Ligure",
-        src: "/assets/projects-screenshots/ottone/ottone.png",
+        src: "/assets/projects-screenshots/ottone/ottone.webp",
         skills: {
             frontend: [
                 PROJECT_SKILLS.angular,
@@ -525,7 +525,7 @@ const demoProjects: Project[] = [
         id: "piccantomane",
         category: "E-Commerce · Case Study",
         title: "Piccantomane",
-        src: "/assets/projects-screenshots/piccantomane/piccantomane.png",
+        src: "/assets/projects-screenshots/piccantomane/piccantomane.webp",
         skills: {
             frontend: [
                 PROJECT_SKILLS.angular,
@@ -593,7 +593,7 @@ const demoProjects: Project[] = [
         id: "sidero",
         category: "Sito Aziendale · Case Study",
         title: "Sìdero — Cantina in Cirò",
-        src: "/assets/projects-screenshots/sidero/sidero.png",
+        src: "/assets/projects-screenshots/sidero/sidero.webp",
         skills: {
             frontend: [
                 PROJECT_SKILLS.angular,
@@ -723,7 +723,7 @@ const demoProjects: Project[] = [
         id: "trediciTattoo",
         category: "Sito Vetrina · Case Study",
         title: "TREDICI — Studio di Tatuaggi",
-        src: "/assets/projects-screenshots/trediciTattoo/trediciTattoo.png",
+        src: "/assets/projects-screenshots/trediciTattoo/trediciTattoo.webp",
         skills: {
             frontend: [
                 PROJECT_SKILLS.angular,
@@ -780,7 +780,7 @@ const demoProjects: Project[] = [
         id: "unaNotteDiStelle",
         category: "Landing Page · Case Study",
         title: "Una Notte di Stelle",
-        src: "/assets/projects-screenshots/unaNotteDiStelle/unaNotteDiStelle.png",
+        src: "/assets/projects-screenshots/unaNotteDiStelle/unaNotteDiStelle.webp",
         skills: {
             frontend: [
                 PROJECT_SKILLS.angular,
