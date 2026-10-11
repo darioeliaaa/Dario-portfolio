@@ -16,110 +16,45 @@ import {
 import { SiGithub, SiLinkedin } from "react-icons/si";
 import { buttonVariants } from "@/components/ui/button";
 import { config } from "@/data/config";
-import { EXPERIENCE } from "@/data/constants";
-import projects, { demoProjects } from "@/data/projects";
 import { cn } from "@/lib/utils";
+import {
+  CASE_NOTE,
+  CASE_STUDIES,
+  EDUCATION_CV,
+  EXPERIENCE_CV,
+  GDPR,
+  LANGUAGES,
+  MAIN_PROJECTS,
+  PORTFOLIO_CARD,
+  PROFILE,
+  ROLE_LINE,
+  SKILL_GROUPS,
+  UNI_PROJECTS,
+  WORK_STYLE,
+  type Card,
+  type Entry,
+  type Part,
+} from "./cv-data";
 
 /**
  * Versione web del curriculum. Il documento *autoritativo* è il PDF reale in
  * /public (config.cv): è quello che il bottone consegna a chi scarica, ed è
  * quello che conta quando il CV finisce in mano a un recruiter. Questa pagina
- * è la sua trasposizione leggibile e indicizzabile, quindi i testi qui sotto
- * sono trascritti dal PDF e vanno riallineati a mano ogni volta che il PDF
+ * è la sua trasposizione leggibile e indicizzabile: i testi stanno in
+ * ./cv-data.ts, trascritti dal PDF, e vanno riallineati ogni volta che il PDF
  * cambia — meglio due file da tenere in pari che una pagina che promette
  * qualcosa di diverso dal file scaricato.
  *
- * Niente più "Salva come PDF" via window.print(): generava un *secondo* PDF,
+ * Niente "Salva come PDF" via window.print(): generava un *secondo* PDF,
  * diverso da quello ufficiale. Il print stylesheet resta comunque valido se
  * qualcuno stampa la pagina dal browser.
  *
- * Le skill sono stringhe semplici, non il `SkillNames`/`SKILLS` della
- * tastiera: quell'enum è legato a ciò che è fisicamente inciso sui tasti del
- * modello 3D, una preoccupazione diversa (e molto più volatile) da "cosa va
- * scritto sul CV". Condividerlo significava che un rimescolamento della
- * tastiera poteva riscrivere in silenzio le competenze dichiarate.
+ * Le schede progetto del portfolio (src/data/projects.tsx) e l'esperienza
+ * della home (src/data/constants.ts) sono un'altra cosa: qui conta solo ciò
+ * che c'è scritto nel PDF.
  */
 
-/** Trascritto dal PDF — sezione PROFILO. */
-const PROFILE =
-  "Studente di Informatica all'Unical (DEMACS) con il pallino per le interfacce fuori dagli schemi. Costruisco applicazioni intere, dal database al pixel che l'utente tocca per primo: ho sviluppato e consegnato il sito e il gestionale di una pizzeria vera, ho fatto assistenza tecnica dal vivo sotto pressione, e all'università ho affrontato progetti via via più grandi, fino a un sistema a microservizi con app Android nativa realizzato in team. Cerco la mia prima occasione come sviluppatore full-stack junior.";
-
-/** Trascritte dal PDF — sezione COMPETENZE TECNICHE. */
-const SKILL_GROUPS: { title: string; skills: string[] }[] = [
-  {
-    title: "Linguaggi",
-    skills: [
-      "Java",
-      "TypeScript",
-      "JavaScript",
-      "Kotlin",
-      "Python",
-      "C++",
-      "C",
-      "SQL",
-      "HTML5",
-      "CSS3",
-    ],
-  },
-  {
-    title: "Backend",
-    skills: [
-      "Spring Boot",
-      "Spring Security",
-      "JWT",
-      "OAuth2/OIDC",
-      "REST API",
-      "Microservizi",
-      "WebSocket",
-    ],
-  },
-  {
-    title: "Frontend",
-    skills: [
-      "Angular",
-      "React",
-      "Next.js",
-      "Tailwind CSS",
-      "GSAP",
-      "Three.js/Spline",
-    ],
-  },
-  {
-    title: "Mobile",
-    skills: ["Kotlin", "Jetpack Compose"],
-  },
-  {
-    title: "Database",
-    skills: ["PostgreSQL", "MySQL", "SQLite"],
-  },
-  {
-    title: "Desktop UI",
-    skills: ["JavaFX", "Java Swing"],
-  },
-  {
-    title: "DevOps & Tool",
-    skills: [
-      "Docker",
-      "Git/GitHub",
-      "Vercel",
-      "Render",
-      "Keycloak",
-      "RabbitMQ",
-      "Maven",
-    ],
-  },
-];
-
-/** Trascritte dal PDF — sezione LINGUE. */
-const LANGUAGES: { name: string; level: string }[] = [
-  { name: "Italiano", level: "Madrelingua" },
-  { name: "Inglese", level: "B2" },
-];
-
 export default function CvView() {
-  const education = EXPERIENCE.filter((e) => e.kind === "education");
-  const work = EXPERIENCE.filter((e) => e.kind === "work");
-
   return (
     <div className="min-h-screen font-sans">
       {/* Toolbar */}
@@ -167,7 +102,7 @@ export default function CvView() {
           <h1 className="font-display text-3xl font-bold tracking-tight md:text-4xl">
             {config.author}
           </h1>
-          <p className="mt-1.5 text-base text-muted-foreground">{config.role}</p>
+          <p className="mt-1.5 text-base text-muted-foreground">{ROLE_LINE}</p>
 
           <ul className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-muted-foreground">
             <li className="inline-flex items-center gap-1.5">
@@ -224,36 +159,69 @@ export default function CvView() {
           </p>
         </Section>
 
-        {education.length > 0 && (
-          <Section title="Formazione" icon={GraduationCap}>
-            <div className="flex flex-col gap-5">
-              {education.map((item) => (
-                <EntryBlock key={item.id} item={item} />
-              ))}
-            </div>
-          </Section>
-        )}
+        <Section title="Esperienza" icon={Briefcase}>
+          <div className="flex flex-col gap-5">
+            {EXPERIENCE_CV.map((item) => (
+              <EntryBlock key={item.title} item={item} />
+            ))}
+          </div>
+        </Section>
 
-        {work.length > 0 && (
-          <Section title="Esperienza" icon={Briefcase}>
-            <div className="flex flex-col gap-5">
-              {work.map((item) => (
-                <EntryBlock key={item.id} item={item} />
-              ))}
-            </div>
-          </Section>
-        )}
+        <Section title="Progetti principali">
+          <div className="flex flex-col gap-5">
+            {MAIN_PROJECTS.map((item) => (
+              <EntryBlock key={item.title} item={item} />
+            ))}
+          </div>
+        </Section>
 
-        <Section title="Competenze tecniche">
+        <Section title="Altri progetti universitari">
+          <div className="grid gap-5 sm:grid-cols-2">
+            {UNI_PROJECTS.map((item) => (
+              <CardBlock key={item.title} item={item} />
+            ))}
+          </div>
+        </Section>
+
+        <Section title="Case study personali">
+          <p className="mb-4 text-sm leading-relaxed text-muted-foreground">
+            {CASE_NOTE}
+          </p>
+          <div className="grid gap-5 sm:grid-cols-2">
+            {CASE_STUDIES.map((item) => (
+              <CardBlock key={item.title} item={item} />
+            ))}
+          </div>
+        </Section>
+
+        <Section title="Portfolio">
+          <CardBlock item={PORTFOLIO_CARD} />
+        </Section>
+
+        <Section title="Competenze">
           <div className="grid gap-4 sm:grid-cols-2">
             {SKILL_GROUPS.map((group) => (
               <div key={group.title}>
                 <h3 className="text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">
                   {group.title}
                 </h3>
-                <p className="mt-1.5 text-sm leading-relaxed">
-                  {group.skills.join(" · ")}
-                </p>
+                <p className="mt-1.5 text-sm leading-relaxed">{group.skills}</p>
+              </div>
+            ))}
+          </div>
+        </Section>
+
+        <Section title="Istruzione" icon={GraduationCap}>
+          <div className="flex flex-col gap-4">
+            {EDUCATION_CV.map((item) => (
+              <div key={item.title}>
+                <div className="flex flex-col gap-0.5 sm:flex-row sm:items-baseline sm:justify-between sm:gap-4">
+                  <h3 className="text-sm font-semibold">{item.title}</h3>
+                  <span className="shrink-0 text-xs text-muted-foreground">
+                    {item.when}
+                  </span>
+                </div>
+                <p className="text-sm text-muted-foreground">{item.org}</p>
               </div>
             ))}
           </div>
@@ -270,56 +238,14 @@ export default function CvView() {
           </div>
         </Section>
 
-        {/* I case study dimostrativi chiudono la lista: la loro `category`
-            dice già che sono esercizi personali, come nel PDF. */}
-        <Section title="Progetti selezionati">
-          <div className="flex flex-col gap-4">
-            {[...projects, ...demoProjects].map((project) => (
-              <div key={project.id}>
-                <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-                  <h3 className="text-sm font-semibold">{project.title}</h3>
-                  <span className="text-xs text-muted-foreground">
-                    {project.category}
-                  </span>
-                </div>
-                <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
-                  {[
-                    ...(project.skills.frontend ?? []),
-                    ...(project.skills.backend ?? []),
-                  ]
-                    .map((s) => s.title)
-                    .join(" · ")}
-                </p>
-                <div className="mt-1 flex flex-wrap gap-x-4 text-xs text-muted-foreground">
-                  {project.live && project.live !== "#" && (
-                    <a
-                      href={project.live}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="underline underline-offset-2 hover:text-foreground"
-                    >
-                      Sito
-                    </a>
-                  )}
-                  {project.github && project.github !== "#" && (
-                    <a
-                      href={project.github}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="underline underline-offset-2 hover:text-foreground"
-                    >
-                      Codice
-                    </a>
-                  )}
-                </div>
-              </div>
-            ))}
-          </div>
+        <Section title="Come lavoro">
+          <p className="text-sm leading-relaxed text-muted-foreground">
+            {WORK_STYLE}
+          </p>
         </Section>
 
         <p className="mt-10 border-t border-border pt-4 text-[11px] leading-relaxed text-muted-foreground">
-          Autorizzo il trattamento dei miei dati personali ai sensi del Reg. UE
-          2016/679 (GDPR) e del D.Lgs. 196/2003.
+          {GDPR}
         </p>
       </motion.article>
     </div>
@@ -344,28 +270,109 @@ const Section = ({
   </section>
 );
 
-const EntryBlock = ({ item }: { item: (typeof EXPERIENCE)[number] }) => (
+/** Testo in linea con eventuali link, come nel PDF. */
+const Parts = ({ parts }: { parts: Part[] }) => (
+  <>
+    {parts.map((part, i) =>
+      typeof part === "string" ? (
+        <React.Fragment key={i}>{part}</React.Fragment>
+      ) : (
+        <a
+          key={i}
+          href={part.href}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="underline underline-offset-2 hover:text-foreground"
+        >
+          {part.label}
+        </a>
+      )
+    )}
+  </>
+);
+
+const EntryBlock = ({ item }: { item: Entry }) => (
   <div>
     <div className="flex flex-col gap-0.5 sm:flex-row sm:items-baseline sm:justify-between sm:gap-4">
       <h3 className="text-sm font-semibold">{item.title}</h3>
-      <span className="shrink-0 text-xs text-muted-foreground">
-        {item.startDate} — {item.endDate}
-      </span>
+      <span className="shrink-0 text-xs text-muted-foreground">{item.when}</span>
     </div>
-    <p className="text-sm text-muted-foreground">{item.company}</p>
-    <ul className={cn("mt-2 space-y-1.5")}>
-      {item.description.map((point, i) => (
-        <li
-          key={i}
-          className="relative pl-4 text-sm leading-relaxed text-muted-foreground"
-        >
+    {item.meta && (
+      <p className="text-sm text-muted-foreground">
+        <Parts parts={item.meta} />
+      </p>
+    )}
+    {item.bullets && (
+      <ul className="mt-2 space-y-1.5">
+        {item.bullets.map((bullet, i) => (
+          <li
+            key={i}
+            className="relative pl-4 text-sm leading-relaxed text-muted-foreground"
+          >
+            <span
+              aria-hidden
+              className="absolute left-0 top-[0.6em] h-1 w-1 rounded-full bg-muted-foreground/50"
+            />
+            {bullet.label && (
+              <strong className="font-semibold text-foreground">
+                {bullet.label}{" "}
+              </strong>
+            )}
+            {bullet.text}
+          </li>
+        ))}
+      </ul>
+    )}
+    {item.tags && (
+      <div className="mt-2.5 flex flex-wrap gap-1.5">
+        {item.tags.map((tag) => (
           <span
-            aria-hidden
-            className="absolute left-0 top-[0.6em] h-1 w-1 rounded-full bg-muted-foreground/50"
-          />
-          {point}
-        </li>
-      ))}
-    </ul>
+            key={tag}
+            className="rounded-full border border-border px-2 py-0.5 text-[11px] text-muted-foreground"
+          >
+            {tag}
+          </span>
+        ))}
+      </div>
+    )}
+  </div>
+);
+
+const CardBlock = ({ item }: { item: Card }) => (
+  <div>
+    <h3 className="text-sm font-semibold">
+      {item.titleLink ? (
+        <>
+          <a
+            href={item.titleLink.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="underline underline-offset-2 hover:text-foreground"
+          >
+            {item.titleLink.label}
+          </a>
+          {item.title.replace(item.titleLink.label, "")}
+        </>
+      ) : (
+        item.title
+      )}
+    </h3>
+    {item.meta && (
+      <p className="mt-0.5 text-xs text-muted-foreground">
+        <Parts parts={item.meta} />
+      </p>
+    )}
+    <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">
+      <Parts parts={item.text} />
+      {item.mine && (
+        <>
+          {" "}
+          <strong className="font-semibold text-foreground">
+            {item.mine.label}
+          </strong>{" "}
+          {item.mine.text}
+        </>
+      )}
+    </p>
   </div>
 );

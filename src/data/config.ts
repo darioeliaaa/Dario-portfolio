@@ -89,7 +89,7 @@ const config = {
      *
      * Per aggiornarlo: sostituisci public/Dario_Elia_CV.pdf con la nuova
      * versione (stesso nome, così il link non cambia mai) e allinea i
-     * contenuti di src/app/cv/cv-view.tsx.
+     * contenuti di src/app/cv/cv-data.ts.
      */
     cv: {
         href: "/Dario_Elia_CV.pdf",
