@@ -38,6 +38,10 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "/",
   },
+  // Verifica della proprietà del sito su Google Search Console.
+  verification: {
+    google: "Ex-Sw0RFL2YbsepMyz5QqGvwntIHu6JSlWECf_kVeK8",
+  },
   openGraph: {
     title: config.title,
     description: config.description.short,
