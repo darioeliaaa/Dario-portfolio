@@ -47,6 +47,12 @@ const LETTER_KEYS = SKILL_KEYS.reduce((map, key) => {
 
 // In contatti la tastiera sta dietro titolo, form e card: più tenue, per lasciare leggere il testo.
 const SECTION_OPACITY: Partial<Record<Section, number>> = { contact: 0.55 };
+// Anche in "chi sono" ed esperienza la tastiera passa dietro testo e card (non hanno una posa propria):
+// più tenue lì, finché la sezione è a metà schermo.
+const DIM_SECTIONS: { id: string; opacity: number }[] = [
+  { id: "about", opacity: 0.4 },
+  { id: "experience", opacity: 0.4 },
+];
 
 const isInputFocused = () => {
   const el = document.activeElement as HTMLElement | null;
@@ -138,10 +144,16 @@ function runChoreography(engine: KeyboardEngine, host: HTMLElement, onSkillsTogg
     window.history.replaceState(window.history.state, "", window.location.pathname + window.location.search + hash);
   };
 
+  // Opacità: quella della sezione di pagina in cui si è (about/esperienza) vince su quella della posa.
+  let dim: number | null = null;
+  const applyOpacity = () => {
+    host.style.opacity = String(dim ?? SECTION_OPACITY[section] ?? 1);
+  };
+
   const setSection = (next: Section) => {
     if (next === section) return;
     section = next;
-    host.style.opacity = String(SECTION_OPACITY[next] ?? 1);
+    applyOpacity();
     syncHash(next);
     applyPose(next);
     startAmbient(next);
@@ -189,9 +201,30 @@ function runChoreography(engine: KeyboardEngine, host: HTMLElement, onSkillsTogg
     : null;
   onSkillsToggle(skillsTrigger?.isActive ?? false);
 
+  const dimActive = new Map<string, number>();
+  const syncDim = () => {
+    dim = dimActive.size ? Math.min(...dimActive.values()) : null;
+    applyOpacity();
+  };
+  const dimTriggers = DIM_SECTIONS.filter(({ id }) => document.getElementById(id)).map(({ id, opacity }) => {
+    const set = (active: boolean) => {
+      if (active) dimActive.set(id, opacity);
+      else dimActive.delete(id);
+      syncDim();
+    };
+    const trigger = ScrollTrigger.create({
+      trigger: `#${id}`,
+      start: "top 50%",
+      end: "bottom 50%",
+      onToggle: (self) => set(self.isActive),
+      onRefresh: (self) => set(self.isActive),
+    });
+    set(trigger.isActive);
+    return trigger;
+  });
+
   // Posa iniziale (anche se la pagina si apre a metà): subito, senza tween e senza toccare l'indirizzo.
   section = sectionAtScroll();
-  host.style.opacity = String(SECTION_OPACITY[section] ?? 1);
   applyPose(section, { immediate: true });
   armed = true;
 
@@ -223,6 +256,7 @@ function runChoreography(engine: KeyboardEngine, host: HTMLElement, onSkillsTogg
       stopAmbient();
       triggers.forEach((trigger) => trigger.kill());
       skillsTrigger?.kill();
+      dimTriggers.forEach((trigger) => trigger.kill());
       gsap.killTweensOf([pose, pose.position, pose.rotation]);
     },
   };
