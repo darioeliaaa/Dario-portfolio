@@ -56,9 +56,10 @@ const isInputFocused = () => {
 /**
  * Coreografia della tastiera: posa per sezione legata allo scroll, rotazione continua in hero,
  * ondeggio e float in contatti, cambio breakpoint e resize. Lavora solo sulla `pose` del motore
- * (che GSAP anima direttamente) e su setExcited/setMobile.
+ * (che GSAP anima direttamente) e su setExcited/setMobile. `onSkillsToggle` dice quando la
+ * pagina è davvero nella sezione competenze (l'unica in cui la scheda con nome e descrizione si mostra).
  */
-function runChoreography(engine: KeyboardEngine, host: HTMLElement) {
+function runChoreography(engine: KeyboardEngine, host: HTMLElement, onSkillsToggle: (active: boolean) => void) {
   const mq = window.matchMedia(MOBILE_QUERY);
   let isMobile = mq.matches;
   let section: Section = "hero";
@@ -175,6 +176,19 @@ function runChoreography(engine: KeyboardEngine, host: HTMLElement) {
     return current;
   }
 
+  // La sezione competenze "vera": dal suo inizio (stesso punto della posa) fino a metà schermo sul suo fondo.
+  // Esperienza non ha una posa propria, quindi la tastiera ci resta dietro in posa skills, ma la scheda no.
+  const skillsTrigger = document.getElementById("skills")
+    ? ScrollTrigger.create({
+        trigger: "#skills",
+        start: "top 50%",
+        end: "bottom 50%",
+        onToggle: (self) => onSkillsToggle(self.isActive),
+        onRefresh: (self) => onSkillsToggle(self.isActive),
+      })
+    : null;
+  onSkillsToggle(skillsTrigger?.isActive ?? false);
+
   // Posa iniziale (anche se la pagina si apre a metà): subito, senza tween e senza toccare l'indirizzo.
   section = sectionAtScroll();
   host.style.opacity = String(SECTION_OPACITY[section] ?? 1);
@@ -208,6 +222,7 @@ function runChoreography(engine: KeyboardEngine, host: HTMLElement) {
       mq.removeEventListener("change", onBreakpoint);
       stopAmbient();
       triggers.forEach((trigger) => trigger.kill());
+      skillsTrigger?.kill();
       gsap.killTweensOf([pose, pose.position, pose.rotation]);
     },
   };
@@ -310,6 +325,8 @@ const KeyboardScene = ({ maxDpr }: { maxDpr: number }) => {
         let choreography: ReturnType<typeof runChoreography> | null = null;
         let revealCall: gsap.core.Tween | null = null;
         let selectedId: SkillNames | null = null;
+        // Il tasto si preme e suona sempre; nome e descrizione compaiono solo nella sezione competenze.
+        let inSkills = false;
         let heldCode: string | null = null;
         let lastPointer = "mouse";
         const letterCycle = new Map<string, number>();
@@ -348,7 +365,19 @@ const KeyboardScene = ({ maxDpr }: { maxDpr: number }) => {
           live.current.playPressSound();
           selectedId = id;
           cancel(closeTimer);
+          if (!inSkills) return;
           const skill = SKILLS[id];
+          setCardSkill(skill);
+          setSelectedSkill(skill);
+        };
+
+        /** Entrando in competenze con un tasto già sotto il puntatore la scheda si apre; uscendo si chiude. */
+        const setInSkills = (active: boolean) => {
+          if (active === inSkills) return;
+          inSkills = active;
+          cancel(closeTimer);
+          if (!active || selectedId === null) return setSelectedSkill(null);
+          const skill = SKILLS[selectedId];
           setCardSkill(skill);
           setSelectedSkill(skill);
         };
@@ -437,7 +466,7 @@ const KeyboardScene = ({ maxDpr }: { maxDpr: number }) => {
             }
           };
 
-          choreography = runChoreography(kb, host);
+          choreography = runChoreography(kb, host, setInSkills);
 
           // Intro: appena il preloader è finito (se lo è già, subito).
           let revealStarted = false;

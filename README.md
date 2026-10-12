@@ -18,7 +18,7 @@ freelance e un CV generato dagli stessi dati del sito.
 
 | | |
 |---|---|
-| **Tastiera 3D interattiva** | Scena Three.js scritta a mano (`src/components/keyboard/`): 37 keycap, uno per tecnologia, con il logo sul tasto; hover/press mostrano nome e descrizione della tecnologia, con suoni reali |
+| **Tastiera 3D interattiva** | Scena Three.js scritta a mano (`src/components/keyboard/`): 37 keycap, uno per tecnologia, con il logo sul tasto; i tasti si premono ovunque, con suoni reali; nella sezione Competenze hover/press mostrano anche nome e descrizione della tecnologia |
 | **Scroll choreography** | GSAP + ScrollTrigger + Lenis: la tastiera si sposta, ruota e ondeggia seguendo le sezioni |
 | **Chi sono** | Bio, statistiche e aree di competenza |
 | **Progetti** | Card con anteprima animata dello screenshot + modale con stack e case study |
